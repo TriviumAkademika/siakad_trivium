@@ -1,16 +1,74 @@
 @import 'tailwindcss';
-/* other stuff */
- @plugin "daisyui";
+
+/* Konfigurasi Warna Latar Belakang */
+.bg-putih {
+    background-color: #FDFDFD;
+}
+.bg-sidebar {
+    background-color: #DAEBFF;
+}
+.bg-info {
+    background-color: #DEF1FF;
+}
+
+/* Konfigurasi Warna Teks */
+.text-hitam {
+    color: #464646;
+}
+.text-putih {
+    color: #FDFDFD;
+}
+.text-info {
+    color: #064974;
+}
+
+/* Konfigurasi Warna Border */
+.border-default {
+    border-width: 1.5px;
+    border-color: #464646;
+}
+.border-default:focus {
+    border-color: #0068AB;
+}
+
+
+/* Konfigurasi Warna Outline Text Field */
+.ring-biru:focus {
+    --tw-ring-color: #0068AB;
+  }  
+
+/* Konfigurasi Warna Shadow */
+.shadow-abu {
+    box-shadow: 0px 0px 10px rgba(101, 101, 101, 0.4);
+}
+
+/* Konfigurasi Button */
+.button-default {
+    background-color: #3584FC;
+    color: #FDFDFD;
+    border-radius: 12px;
+    padding: 8px;
+    font-size: 16px;
+    font-weight: normal;
+}
+.button-default:hover {
+    background-color: #1F65F1;
+    color: #FDFDFD;
+}
+
+/* Konfigurasi Input Autofill */
+input:-webkit-autofill {
+    background-color: #FDFDFD !important; /* Warna Latar Belakang Input */
+    -webkit-box-shadow: 0 0 0px 1000px #FDFDFD inset !important;
+    -webkit-text-fill-color: #464646 !important; /* Warna Teks Input */
+    color: #464646 !important;
+}
+
+/* Other Stuff */
+@plugin "daisyui";
 @source "../views";
-
-
-
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
-}
