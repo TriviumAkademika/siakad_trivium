@@ -10,7 +10,7 @@ class DosenSeeder extends Seeder
     public function run(): void
     {
         // Hapus semua data dosen sebelum melakukan seeding
-        Dosen::truncate(); // Akan menghapus semua data di tabel dosen
+        // Dosen::truncate(); // Akan menghapus semua data di tabel dosen
 
         $dosens = [
             [

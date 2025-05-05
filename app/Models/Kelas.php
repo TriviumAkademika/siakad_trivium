@@ -10,8 +10,8 @@ class Kelas extends Model
     protected $fillable = ['id_dosen', 'tahun_masuk', 'prodi', 'paralel'];
     public $timestamps = false;
 
-    // public function dosen()
-    // {
-    //     return $this->belongsTo(Dosen::class, 'id_dosen');
-    // }
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'id_dosen');
+    }
 }

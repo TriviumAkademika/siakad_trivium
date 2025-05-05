@@ -4,24 +4,24 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateKelasTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('kelas', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('id_kelas');
+            $table->unsignedBigInteger('id_dosen');
+            $table->year('tahun_masuk');
+            $table->string('prodi', 50);
+            $table->string('paralel', 5);
+
+            // Foreign key constraint
+            $table->foreign('id_dosen')->references('id_dosen')->on('dosen')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('kelas');
     }
-};
+}
