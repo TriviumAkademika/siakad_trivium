@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             DosenSeeder::class,
             MatkulSeeder::class,
             WaktuSeeder::class,
+            RuanganSeeder::class,
         ]);
 
         
