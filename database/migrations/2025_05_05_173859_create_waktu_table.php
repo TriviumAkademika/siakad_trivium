@@ -4,24 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateWaktuTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('waktus', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('id_waktu');
+            $table->string('hari', 10);
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('waktus');
     }
-};
+}
