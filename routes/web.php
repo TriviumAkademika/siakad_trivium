@@ -13,3 +13,7 @@ Route::get('/app', function () {
 Route::get('/login', function () {
     return view('pages.login');
 });
+
+Route::get('/dashboard', function () {
+    return view('mahasiswa.dashboard');
+});
