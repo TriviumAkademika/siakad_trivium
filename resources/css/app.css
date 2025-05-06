@@ -14,6 +14,19 @@
     background-color: #3584FC;
 }
 
+/* Konfigurasi Warna Brand */
+.bg-brand50  {background-color: #EEF6FF;}
+.bg-brand100 {background-attachment: #DAEBFF;}
+.bg-brand200 {background-attachment: #BDDCFF;}
+.bg-brand300 {background-attachment: #90C7FF;}
+.bg-brand400 {background-attachment: #51A2FF;}
+.bg-brand500 {background-attachment: #3584FC;}
+.bg-brand600 {background-attachment: #1F65F1;}
+.bg-brand700 {background-attachment: #174EDE;}
+.bg-brand800 {background-attachment: #1941B4;}
+.bg-brand900 {background-attachment: #1A3A8E;}
+.bg-brand950 {background-attachment: #152556;}
+
 /* Konfigurasi Warna Teks */
 .text-hitam {
     color: #464646;
