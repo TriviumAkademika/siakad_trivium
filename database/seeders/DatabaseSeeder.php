@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders; 
 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -27,11 +27,8 @@ class DatabaseSeeder extends Seeder
             RuanganSeeder::class,
             KelasSeeder::class,
             MahasiswaSeeder::class,
+            JadwalSeeder::class,
+            FrsSeeder::class,  // Pastikan ini sudah benar
         ]);
-
-        
-
-
     }
-
 }
