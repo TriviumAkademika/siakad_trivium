@@ -13,8 +13,8 @@
         <div class="w-full md:w-2/5 bg-putih">
             <div class="w-full px-8 pt-16 md:px-16 md:pt-32">
                 <div class="flex items-end gap-2">
-                    <img src="{{ asset('assets/icons/logo.svg') }}" class="w-10 md:w-12" alt="Trivium Akademika">
-                    <h1 class="text-2xl md:text-3xl text-hitam font-medium">Trivium Akademika</h1>
+                    <img src="{{ asset('assets/icons/logo.svg') }}" class="w-10" alt="Trivium Akademika">
+                    <h1 class="text-2xl text-hitam font-medium">Trivium Akademika</h1>
                 </div>
             </div>
             {{-- Form Login --}}

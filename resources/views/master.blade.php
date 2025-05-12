@@ -6,13 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {{-- Font Plus Jakarta Sans --}}
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    {{-- Icon Material Design --}}
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    {{-- Icon Phosphoricons --}}
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"
+    />
+    {{-- Icon Page --}}
     <link rel="icon" href="{{ asset('assets/icons/logo.svg') }}" type="image/svg+xml">
     @vite('resources/css/app.css')
     <title>@yield('title')</title>
 </head>
-<body class="flex bg-putih">
+<body class="flex w-screen h-screen bg-putih">
     @yield('content')
 </body>
 </html>

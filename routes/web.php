@@ -26,6 +26,10 @@ Route::get('/login', function () {
     return view('pages.login');
 });
 
+Route::get('/dashboard', function () {
+    return view('mahasiswa.dashboard');
+});
+
 Route::resource('dosen', DosenController::class);
 Route::resource('mahasiswa', MahasiswaController::class);
 Route::resource('kelas', KelasController::class);
