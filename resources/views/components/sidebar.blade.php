@@ -13,21 +13,28 @@
             </div>
             {{-- Dashboard --}}
             <div class="flex items-center gap-2">
-                <i class="ph ph-chart-line text-xl text-hitam"></i>
-                <span class="text-base text-hitam">Dashboard</span>
-            </div>
-            {{-- FRS --}}
-            <div class="flex items-center gap-2">
-                <i class="ph ph-clipboard-text text-xl text-hitam"></i>
-                <div class="flex w-full justify-between items-center">
-                    <span class="text-base text-hitam">FRS</span>
-                    <i class="ph ph-caret-down text-xl text-hitam"></i>
-                </div>
+                <i class="ph ph-house text-xl text-hitam"></i>
+                <span class="text-base text-hitam">Beranda</span>
             </div>
             {{-- Nilai --}}
             <div class="flex items-center gap-2">
                 <i class="ph ph-ranking text-xl text-hitam"></i>
                 <span class="text-base text-hitam">Nilai</span>
+            </div>
+            {{-- Jadwal --}}
+            <div class="flex items-center gap-2">
+                <i class="ph ph-list-dashes text-xl text-hitam"></i>
+                <span class="text-base text-hitam">Jadwal</span>
+            </div>
+            {{-- FRS --}}
+            <div class="flex items-center gap-2">
+                <i class="ph ph-clipboard-text text-xl text-hitam"></i>
+                <span class="text-base text-hitam">FRS</span>
+            </div>
+            {{-- Dosen --}}
+            <div class="flex items-center gap-2">
+                <i class="ph ph-users text-xl text-hitam"></i>
+                <span class="text-base text-hitam">Dosen</span>
             </div>
         </div>
     </div>
