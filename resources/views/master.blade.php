@@ -17,7 +17,7 @@
     @vite('resources/css/app.css')
     <title>@yield('title')</title>
 </head>
-<body class="flex w-screen h-screen bg-putih">
+<body class="flex flex-col w-screen h-screen min-h-screen overflow-x-hidden bg-putih">
     @yield('content')
 </body>
 </html>

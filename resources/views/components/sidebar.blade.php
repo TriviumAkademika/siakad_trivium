@@ -1,5 +1,5 @@
 <aside class="w-[272px] h-full shrink-0">
-    <div class="flex flex-col flex-wrap h-full shadow-abu bg-sidebar">
+    <div class="flex flex-col flex-wrap h-full shadow-abu bg-brand100">
         <div class="p-4 flex flex-col space-y-6">
             {{-- Logo Trivium Akademika --}}
             <div class="flex items-end gap-2">
