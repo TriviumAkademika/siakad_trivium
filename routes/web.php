@@ -26,6 +26,10 @@ Route::get('/login', function () {
     return view('auth.login');
 });
 
+Route::get('/nilai', function () {
+    return view('nilai.nilai');
+});
+
 Route::get('/dashboard', function () {
     return view('pages.dashboard-mahasiswa');
 });
