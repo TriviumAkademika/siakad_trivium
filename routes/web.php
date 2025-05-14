@@ -41,4 +41,5 @@ Route::resource('jadwal', JadwalController::class);
 Route::resource('frs', FrsController::class);
 Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
 Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
-
+Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
+Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');

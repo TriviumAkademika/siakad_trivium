@@ -1,5 +1,6 @@
-<?php 
- namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ class Jadwal extends Model
         'id_kelas',
         'id_matkul',
         'id_dosen',
+        'id_dosen_2',
         'id_waktu',
         'id_ruangan',
     ];
@@ -34,6 +36,12 @@ class Jadwal extends Model
     {
         return $this->belongsTo(Dosen::class, 'id_dosen');
     }
+
+    public function dosen2()
+    {
+        return $this->belongsTo(Dosen::class, 'id_dosen_2');
+    }
+
 
     public function waktu()
     {

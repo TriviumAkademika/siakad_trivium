@@ -42,6 +42,22 @@ class DetailFrsController extends Controller
 
         // Redirect kembali ke halaman detail-frs/{id}
         return redirect()->route('detail-frs.index', $request->id_frs);
+    }
 
+    // Ubah status dari true ke false atau sebaliknya
+    public function updateStatus($id)
+    {
+        $detail = DetailFrs::findOrFail($id);
+        $detail->status = !$detail->status; // toggle status
+        $detail->save();
+
+        return back()->with('success', 'Status berhasil diperbarui.');
+    }
+
+    // Hapus satu baris detail frs
+    public function destroy($id)
+    {
+        DetailFrs::destroy($id);
+        return back()->with('success', 'Jadwal berhasil dihapus dari FRS.');
     }
 }

@@ -21,6 +21,7 @@
         <th class="px-4 py-2 text-sm font-semibold text-left">Kelas</th>
         <th class="px-4 py-2 text-sm font-semibold text-left">Mata Kuliah</th>
         <th class="px-4 py-2 text-sm font-semibold text-left">Dosen</th>
+        <th class="px-4 py-2 text-sm font-semibold text-left">Dosen Pendamping</th>
         <th class="px-4 py-2 text-sm font-semibold text-left">Waktu</th>
         <th class="px-4 py-2 text-sm font-semibold text-left">Ruangan</th>
         <th class="px-4 py-2 text-sm font-semibold text-left">Aksi</th>
@@ -30,9 +31,10 @@
       @foreach ($jadwal as $index => $j)
       <tr>
         <td class="px-4 py-2 text-sm text-gray-700">{{ $index + 1 }}</td>
-        <td class="px-4 py-2 text-sm text-gray-700">{{ $j->kelas->prodi }}{{ $j->kelas->paralel }}</td>
+        <td class="px-4 py-2 text-sm text-gray-700">{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}</td>
         <td class="px-4 py-2 text-sm text-gray-700">{{ $j->matkul->jenis }} - {{ $j->matkul->nama_matkul }}</td>
         <td class="px-4 py-2 text-sm text-gray-700">{{ $j->dosen->nama_dosen }}</td>
+        <td class="px-4 py-2 text-sm text-gray-700">{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}</td>
         <td class="px-4 py-2 text-sm text-gray-700">
             {{ $j->waktu->hari }}, {{ substr($j->waktu->jam_mulai, 0, 5) }} - {{ substr($j->waktu->jam_selesai, 0, 5) }}
         </td>
