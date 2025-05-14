@@ -7,12 +7,12 @@
         {{-- Sidebar --}}
         @include('components.sidebar')
         {{-- Main --}}
-        <div class="flex flex-col w-full bg-amber-200">
+        <div class="flex flex-col w-full bg-putih">
             {{-- Profil User di Header --}}
             @include('components.header')
             {{-- Content --}}
-            <div class="flex flex-row p-6 space-x-6 bg-putih">
-                <div class="flex flex-col w-2/3 space-y-4 bg-pink-300">
+            <div class="flex flex-row px-6 pb-6 space-x-6">
+                <div class="flex flex-col w-2/3 space-y-4">
                     {{-- Card Informasi Mahasiswa --}}
                     <div class="flex flex-row space-x-4">
                         <div class="flex flex-col w-1/3 p-4 bg-brand200 rounded-3xl">
@@ -65,35 +65,12 @@
                     </div>
                 </div>
                 {{-- Section Berita --}}
-                <div class="flex flex-col w-1/3 space-y-2 bg-purple-100">
+                <div class="flex flex-col w-1/3 space-y-2">
                     <h3 class="text-xl text-hitam">Berita</h3>
                     <hr class="border-abu w-full">
                     {{-- Berita 1 --}}
                     <div class="flex flex-col">
                         <h4 class="text-base text-info">Penerbitan Ijazah Periode April 2025</h4>
-                        <p class="text-xs text-hitam">Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque
-                            faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis
-                            convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus
-                            bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper
-                            vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-                        </br>
-                        </br>
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae
-                            pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean
-                            sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa
-                            nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti
-                            sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
-                        </br>
-                        </br>
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae
-                            pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean
-                            sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa
-                            nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti
-                            sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.</p>
-                    </div>
-                    {{-- Berita 2 --}}
-                    <div class="flex flex-col">
-                        <h4 class="text-base text-info">Pengisian Form Rencana Studi (FRS) dan Perwalian Semester Ganjil Tahun Ajaran 2025/2026</h4>
                         <p class="text-xs text-hitam">Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque
                             faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis
                             convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus
