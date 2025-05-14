@@ -23,11 +23,15 @@ Route::get('/app', function () {
 });
 
 Route::get('/login', function () {
-    return view('pages.login');
+    return view('auth.login');
+});
+
+Route::get('/nilai', function () {
+    return view('nilai.nilai');
 });
 
 Route::get('/dashboard', function () {
-    return view('mahasiswa.dashboard');
+    return view('pages.dashboard-mahasiswa');
 });
 
 Route::resource('dosen', DosenController::class);
