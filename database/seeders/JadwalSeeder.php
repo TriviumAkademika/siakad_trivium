@@ -15,16 +15,16 @@ class JadwalSeeder extends Seeder
     public function run(): void
     {
         $jadwals = [
-            ['id_kelas' => 1, 'id_matkul' => 1, 'id_dosen' => 2 , 'id_waktu' => 1,'id_ruangan' => 1,],
-            ['id_kelas' => 1, 'id_matkul' => 2, 'id_dosen' => 2 , 'id_waktu' => 2,'id_ruangan' => 1,],
-            ['id_kelas' => 1, 'id_matkul' => 3, 'id_dosen' => 2 , 'id_waktu' => 3,'id_ruangan' => 1,],
-            ['id_kelas' => 1, 'id_matkul' => 4, 'id_dosen' => 2 , 'id_waktu' => 4,'id_ruangan' => 1,],
-            ['id_kelas' => 1, 'id_matkul' => 5, 'id_dosen' => 2 , 'id_waktu' => 5,'id_ruangan' => 1,],
-            ['id_kelas' => 1, 'id_matkul' => 6, 'id_dosen' => 2 , 'id_waktu' => 6,'id_ruangan' => 1,],
-            ['id_kelas' => 1, 'id_matkul' => 7, 'id_dosen' => 2 , 'id_waktu' => 7,'id_ruangan' => 1,],
-            ['id_kelas' => 1, 'id_matkul' => 8, 'id_dosen' => 2 , 'id_waktu' => 8,'id_ruangan' => 1,],
-            ['id_kelas' => 1, 'id_matkul' => 9, 'id_dosen' => 2 , 'id_waktu' => 9,'id_ruangan' => 1,],
-            ['id_kelas' => 1, 'id_matkul' => 10, 'id_dosen' => 2 , 'id_waktu' => 10,'id_ruangan' => 1,],
+            ['id_kelas' => 1, 'id_matkul' => 1, 'id_dosen' => 5 , 'id_waktu' => 1,'id_ruangan' => 1,],
+            ['id_kelas' => 1, 'id_matkul' => 2, 'id_dosen' => 6 , 'id_dosen_2' => 4, 'id_waktu' => 2,'id_ruangan' => 2,],
+            ['id_kelas' => 1, 'id_matkul' => 3, 'id_dosen' => 7 , 'id_waktu' => 3,'id_ruangan' => 3,],
+            ['id_kelas' => 1, 'id_matkul' => 4, 'id_dosen' => 8 , 'id_waktu' => 4,'id_ruangan' => 4,],
+            ['id_kelas' => 1, 'id_matkul' => 5, 'id_dosen' => 5 , 'id_waktu' => 5,'id_ruangan' => 2,],
+            ['id_kelas' => 1, 'id_matkul' => 6, 'id_dosen' => 9 , 'id_dosen_2' => 10, 'id_waktu' => 6,'id_ruangan' => 5,],
+            ['id_kelas' => 1, 'id_matkul' => 7, 'id_dosen' => 11 , 'id_waktu' => 7,'id_ruangan' => 4,],
+            ['id_kelas' => 1, 'id_matkul' => 8, 'id_dosen' => 12 , 'id_waktu' => 8,'id_ruangan' => 6,],
+            ['id_kelas' => 1, 'id_matkul' => 9, 'id_dosen' => 13 , 'id_waktu' => 9,'id_ruangan' => 1,],
+            ['id_kelas' => 1, 'id_matkul' => 10, 'id_dosen' => 14 , 'id_waktu' => 10,'id_ruangan' => 7,],
         ];
 
         foreach ($jadwals as $jadwal) {

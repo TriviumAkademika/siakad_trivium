@@ -50,43 +50,43 @@ class DosenSeeder extends Seeder
                 'no_hp' => '083112345681',
             ],
             [
-                'nama_dosen' => 'Yanuar Risah Prayogi',
+                'nama_dosen' => 'Yanuar Risah Prayogi', //7
                 'nip' => '198004152005011006',
                 'alamat' => 'Surabaya',
                 'no_hp' => '083112345682',
             ],
             [
-                'nama_dosen' => 'Idris Winarno',
+                'nama_dosen' => 'Idris Winarno', //8
                 'nip' => '198004152005011007',
                 'alamat' => 'Surabaya',
                 'no_hp' => '083112345683',
             ],
             [
-                'nama_dosen' => 'Nur Rosyid Mubtadai',
+                'nama_dosen' => 'Nur Rosyid Mubtadai', //9
                 'nip' => '198004152005011008',
                 'alamat' => 'Surabaya',
                 'no_hp' => '083112345684',
             ],
             [
-                'nama_dosen' => 'Renovita Edelani',
+                'nama_dosen' => 'Renovita Edelani',  //10
                 'nip' => '198004152005011009',
                 'alamat' => 'Surabaya',
                 'no_hp' => '083112345685',
             ],
             [
-                'nama_dosen' => 'Yesta Medya Mahardhika',
+                'nama_dosen' => 'Yesta Medya Mahardhika', //11
                 'nip' => '198004152005011010',
                 'alamat' => 'Surabaya',
                 'no_hp' => '083112345686',
             ],
             [
-                'nama_dosen' => 'Aliridho Barakbah',
+                'nama_dosen' => 'Aliridho Barakbah', //12
                 'nip' => '198004152005011011',
                 'alamat' => 'Surabaya',
                 'no_hp' => '083112345687',
             ],
             [
-                'nama_dosen' => 'Weny Mistarika Rahmawati',
+                'nama_dosen' => 'Weny Mistarika Rahmawati', //13
                 'nip' => '198004152005011012',
                 'alamat' => 'Surabaya',
                 'no_hp' => '083112345688',
