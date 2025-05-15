@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\FrsController;
 use App\Http\Controllers\MahasiswaController;
@@ -30,10 +31,8 @@ Route::get('/nilai', function () {
     return view('nilai.nilai');
 });
 
-Route::get('/dashboard', function () {
-    return view('pages.dashboard-mahasiswa');
-});
-
+Route::get('/dashboard', [DashboardController::class, 'index']);
+Route::get('/dashboard/{id}', [DashboardController::class, 'show']);
 Route::resource('dosen', DosenController::class);
 Route::resource('mahasiswa', MahasiswaController::class);
 Route::resource('kelas', KelasController::class);

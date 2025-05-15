@@ -1,19 +1,8 @@
 @import 'tailwindcss';
 
 /* Konfigurasi Warna Latar Belakang */
-.bg-putih {
-    background-color: #FDFDFD;
-}
-.bg-sidebar {
-    background-color: #DAEBFF;
-}
-.bg-info {
-    background-color: #DEF1FF;
-}
-.bg-biru {
-    background-color: #3584FC;
-}
-
+.bg-putih {background-color: #FDFDFD;}
+.bg-info {background-color: #DEF1FF;}
 /* Konfigurasi Warna Brand */
 .bg-brand50  {background-color: #EEF6FF;}
 .bg-brand100 {background-color: #DAEBFF;}
@@ -28,15 +17,9 @@
 .bg-brand950 {background-color: #152556;}
 
 /* Konfigurasi Warna Teks */
-.text-hitam {
-    color: #464646;
-}
-.text-putih {
-    color: #FDFDFD;
-}
-.text-info {
-    color: #064974;
-}
+.text-hitam {color: #464646;}
+.text-putih {color: #FDFDFD;}
+.text-info {color: #064974;}
 
 /* Konfigurasi Warna Border */
 .border-default {
@@ -45,6 +28,14 @@
 }
 .border-default:focus {
     border-color: #0068AB;
+}
+.border-abu {
+    border-width: 0.5px;
+    border-color: #464646;
+}
+.border-biru {
+    border-left-width: 3px;
+    border-color: #152556;
 }
 
 
