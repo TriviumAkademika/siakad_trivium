@@ -17,11 +17,11 @@
       @method('PUT')
 
       <div class="mb-4">
-        <label for="id_dosen" class="block text-sm font-semibold text-gray-700">Dosen</label>
+        <label for="id_dosen" class="block text-sm font-semibold text-gray-700">Dosen Wali</label>
         <select name="id_dosen" id="id_dosen" class="mt-1 p-2 w-full border rounded">
-          @foreach ($dosens as $dosen)
-            <option value="{{ $dosen->id_dosen }}" {{ $dosen->id_dosen == $kelas->id_dosen ? 'selected' : '' }}>
-              {{ $dosen->nama_dosen }}
+          @foreach ($dosen as $d)
+            <option value="{{ $d->id_dosen }}" {{ $d->id_dosen == $kelas->id_dosen ? 'selected' : '' }}>
+              {{ $d->nama_dosen }}
             </option>
           @endforeach
         </select>

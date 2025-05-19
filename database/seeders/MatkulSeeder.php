@@ -13,30 +13,16 @@ class MatkulSeeder extends Seeder
     public function run(): void
     {
         $matkuls = [
-            [
-                'nama_matkul' => 'Pemrograman Web',
-                'jenis' => 'Teori',
-                'sks' => 3,
-                'kapasitas_kelas' => 40,
-            ],
-            [
-                'nama_matkul' => 'Struktur Data',
-                'jenis' => 'Teori',
-                'sks' => 3,
-                'kapasitas_kelas' => 35,
-            ],
-            [
-                'nama_matkul' => 'Praktikum Basis Data',
-                'jenis' => 'Praktikum',
-                'sks' => 1,
-                'kapasitas_kelas' => 25,
-            ],
-            [
-                'nama_matkul' => 'Kalkulus Dasar',
-                'jenis' => 'Teori',
-                'sks' => 4,
-                'kapasitas_kelas' => 50,
-            ],
+            ['nama_matkul' => 'Workshop Desain Pengalaman Pengguna','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
+            ['nama_matkul' => 'Workshop Pemrograman Perangkat Bergerak ','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
+            ['nama_matkul' => 'Workshop Pemrograman Framework','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
+            ['nama_matkul' => 'Workshop Administrasi Jaringan','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
+            ['nama_matkul' => 'Workshop Pengembangan Perangkat Lunak berbasis Agile','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
+            ['nama_matkul' => 'Praktek Kecerdasan Buatan','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
+            ['nama_matkul' => 'Workshop Aplikasi dan Komputasi Awan','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
+            ['nama_matkul' => 'Kecerdasan Buatan','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
+            ['nama_matkul' => 'Workshop Administrasi Basis Data','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
+            ['nama_matkul' => 'Bahasa Indonesia','jenis' => 'Wajib','sks' => 2,'kapasitas_kelas' => 30,],
         ];
 
         foreach ($matkuls as $matkul) {

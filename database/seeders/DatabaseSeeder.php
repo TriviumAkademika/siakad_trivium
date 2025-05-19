@@ -1,7 +1,8 @@
 <?php
 
-namespace Database\Seeders; 
+namespace Database\Seeders;
 
+use App\Models\DetailFrs;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,7 +29,8 @@ class DatabaseSeeder extends Seeder
             KelasSeeder::class,
             MahasiswaSeeder::class,
             JadwalSeeder::class,
-            FrsSeeder::class,  // Pastikan ini sudah benar
+            FrsSeeder::class,
+            DetailFrs::class,
         ]);
     }
 }

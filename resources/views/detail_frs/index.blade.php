@@ -37,6 +37,7 @@
                         <th class="px-4 py-2 border">Ruangan</th>
                         <th class="px-4 py-2 border">Waktu</th>
                         <th class="px-4 py-2 border">Status</th>
+                        <th class="px-4 py-2 border">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,8 +51,27 @@
                                 ({{ $detail->jadwal->waktu->jam_mulai }} - {{ $detail->jadwal->waktu->jam_selesai }})
                             </td>
                             <td class="px-4 py-2 border">
-                                {{ $detail->status ? 'Aktif' : 'Drop' }}
+                                {{ $detail->status ? 'Diterima' : 'Belum Diterima' }}
+
+                                <form action="{{ route('detail-frs.update-status', $detail->id_detail_frs) }}"
+                                    method="POST" class="inline-block ml-2">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="text-xs text-blue-600 hover:underline">
+                                        {{ $detail->status ? 'Batalkan' : 'Terima' }}
+                                    </button>
+                                </form>
                             </td>
+                            <td class="px-4 py-2 border">
+                                <form action="{{ route('detail-frs.destroy', $detail->id_detail_frs) }}" method="POST"
+                                    onsubmit="return confirm('Hapus jadwal ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="text-xs text-red-600 hover:underline">Hapus</button>
+                                </form>
+                            </td>
+
+
                         </tr>
                     @endforeach
                 </tbody>
