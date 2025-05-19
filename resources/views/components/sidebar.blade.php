@@ -1,5 +1,5 @@
 <aside class="w-[272px] h-full shrink-0">
-    <div class="flex flex-col flex-wrap h-full shadow-abu bg-brand100">
+    <div class="flex flex-col flex-wrap h-full shadow-abu bg-brand-100">
         <div class="p-4 flex flex-col space-y-6">
             {{-- Logo Trivium Akademika --}}
             <div class="flex items-end gap-2">
@@ -9,7 +9,7 @@
             {{-- Search Box --}}
             <div class="flex items-center gap-2 p-2 border-default rounded-lg">
                 <i class="ph ph-magnifying-glass text-xl text-hitam"></i>
-                <input type="text" placeholder="Cari" class="text-base text-hitam focus:outline-none focus:ring-0" />
+                <input type="text" placeholder="Cari" class="w-full bg-transparent text-sm text-hitam outline-none focus:outline-none focus:ring-0" />
             </div>
             {{-- Dashboard --}}
             <div class="flex items-center gap-2">

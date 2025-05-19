@@ -1,3 +1,60 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Konfigurasi Warna Border */
+.border-default {
+    border-width: 1.5px;
+    border-color: #464646;
+}
+.border-default:focus {
+    border-color: #0068AB;
+}
+.border-abu {
+    border-width: 0.5px;
+    border-color: #464646;
+}
+.border-biru {
+    border-left-width: 3px;
+    border-color: #152556;
+}
+
+
+/* Konfigurasi Warna Outline Text Field */
+.ring-biru:focus {
+    --tw-ring-color: #0068AB;
+  }  
+
+/* Konfigurasi Warna Shadow */
+.shadow-abu {
+    box-shadow: 0px 0px 10px rgba(101, 101, 101, 0.4);
+}
+
+/* Konfigurasi Button */
+.button-default {
+    background-color: #3584FC;
+    color: #FDFDFD;
+    border-radius: 12px;
+    padding: 8px;
+    font-size: 16px;
+    font-weight: normal;
+}
+.button-default:hover {
+    background-color: #1F65F1;
+    color: #FDFDFD;
+}
+
+/* Konfigurasi Input Autofill */
+input:-webkit-autofill {
+    background-color: #FDFDFD !important; /* Warna Latar Belakang Input */
+    -webkit-box-shadow: 0 0 0px 1000px #FDFDFD inset !important;
+    -webkit-text-fill-color: #464646 !important; /* Warna Teks Input */
+    color: #464646 !important;
+}
+
+/* Other Stuff */
+@source "../views";
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
