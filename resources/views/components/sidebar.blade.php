@@ -8,14 +8,10 @@
             </div>
 
             {{-- Search Box --}}
-            {{-- <div class="flex items-center gap-2 px-2 border-default rounded-lg"> --}}
-                <label class="flex items-center gap-2 px-2 border-default rounded-lg">
-                    <i class="ph ph-magnifying-glass text-xl text-hitam"></i>
-                    <input type="search" class="w-full bg-transparent text-sm text-hitam outline-none focus:outline-none focus:ring-0 focus:border-none border-none shadow-none appearance-none" placeholder="Cari di sini" />
-                </label>
-                {{-- <i class="ph ph-magnifying-glass text-xl text-hitam"></i>
-                <input type="text" placeholder="Cari" class="w-full bg-transparent text-sm text-hitam outline-none focus:outline-none focus:ring-0" /> --}}
-            {{-- </div> --}}
+            {{-- <label class="flex items-center gap-2 px-2 border-default rounded-lg">
+                <i class="ph ph-magnifying-glass text-xl text-hitam"></i>
+                <input type="search" class="w-full bg-transparent text-sm text-hitam outline-none focus:outline-none focus:ring-0 focus:border-none border-none shadow-none appearance-none" placeholder="Cari di sini" />
+            </label> --}}
             {{-- Dashboard --}}
             <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
                 <i class="ph ph-house text-xl text-hitam"></i>
