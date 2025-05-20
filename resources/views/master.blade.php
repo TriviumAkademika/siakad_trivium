@@ -14,6 +14,9 @@
     />
     {{-- Icon Page --}}
     <link rel="icon" href="{{ asset('assets/icons/logo.svg') }}" type="image/svg+xml">
+    {{-- Modal --}}
+    <!-- Tambahkan Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite('resources/css/app.css')
     <title>@yield('title')</title>
 </head>
