@@ -71,5 +71,12 @@ class UserSeeder extends Seeder
             'role' => 'admin',
             'nama_user' => 'Admin Rahma',
         ]);
+
+        User::create([
+            'email' => 'akaashi@trivium.ac.id',
+            'password' => Hash::make('akaashi'),
+            'role' => 'admin',
+            'nama_user' => 'Admin Akaashi',
+        ]);
     }
 }

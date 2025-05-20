@@ -42,13 +42,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Dosen::class, 'id_dosen', 'id_dosen');
     }
+    // app/Models/User.php
+
     public function getDisplayNameAttribute()
     {
         if ($this->mahasiswa) {
             return $this->mahasiswa->nama;
         } elseif ($this->dosen) {
             return $this->dosen->nama;
+        } else {
+            return $this->nama_user ?? 'User';
         }
-        return $this->name ?? 'User';
     }
 }
