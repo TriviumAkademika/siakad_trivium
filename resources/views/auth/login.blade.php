@@ -83,10 +83,8 @@
 
                 {{-- Info box --}}
                 <div class="flex flex-row p-4 md:p-6 rounded-xl items-start gap-2 bg-blue-100 mt-6">
-                    <span class="material-symbols-outlined text-blue-600">
-                        info
-                    </span>
-                    <p class="text-sm text-blue-600 text-justify">
+                    <i class="ph ph-info text-base text-info"></i>
+                    <p class="text-sm text-info text-justify">
                         Saat Anda melanjutkan, informasi pribadi Anda akan dibagikan ke layanan ini. Dengan masuk, Anda menyetujui pembagian informasi pribadi setiap kali mengakses layanan.
                     </p>
                 </div>
