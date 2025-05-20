@@ -23,7 +23,7 @@
                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">#</th>
                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Email</th>
                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Role</th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama - NRP</th>
+                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama Pengguna</th>
                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Aksi</th>
             </tr>
         </thead>
@@ -36,8 +36,10 @@
                     <td class="px-4 py-2 text-sm text-gray-900">
                         @if ($user->role === 'mahasiswa')
                             {{ $user->mahasiswa->nama ?? '-' }} ({{ $user->mahasiswa->nrp ?? '-' }})
-                        @elseif($user->role === 'dosen')
+                        @elseif ($user->role === 'dosen')
                             {{ $user->dosen->nama_dosen ?? '-' }}
+                        @elseif ($user->role === 'admin')
+                            {{ $user->nama_user ?? '-' }}
                         @else
                             -
                         @endif

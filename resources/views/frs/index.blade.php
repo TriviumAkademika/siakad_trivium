@@ -1,47 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite('resources/css/app.css')
-    <title>Document</title>
-</head>
+@section('title', 'Data FRS')
 
-<body>
-    <h2>Data FRS</h2>
-    <a href="{{ route('frs.create') }}" class="btn btn-primary mb-3">Tambah FRS</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nama Mahasiswa</th>
-                <th>Tahun Ajaran</th>
-                <th>Semester</th>
-                <th>Total SKS</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
+@section('content')
+<div class="flex w-full h-full bg-brand50">
+    @include('components.sidebar')
+
+    <div class="w-full p-4">
+        @include('components.header')
+
+        <h2 class="text-2xl font-semibold mb-4">Data FRS</h2>
+
+        <div class="mb-4">
+            <a href="{{ route('frs.create') }}" class="px-4 py-2 bg-green-500 text-white text-sm rounded hover:bg-green-600">
+                Tambah FRS
+            </a>
+        </div>
+
+        {{-- Header --}}
+        <section class="rounded-lg p-2 grid bg-brand100 mb-4">
+            <div class="grid grid-cols-5 gap-4 text-sm font-semibold">
+                <div class="flex items-center justify-center p-2">Nama Mahasiswa</div>
+                <div class="flex items-center justify-center p-2">Tahun Ajaran</div>
+                <div class="flex items-center justify-center p-2">Semester</div>
+                <div class="flex items-center justify-center p-2">Total SKS</div>
+                <div class="flex items-center justify-center p-2">Action</div>
+            </div>
+        </section>
+
+        {{-- Data Rows --}}
+        <section>
             @foreach ($frs as $item)
-                <tr>
-                    <td>{{ $item->mahasiswa->nama }}</td>
-                    <td>{{ $item->tahun_ajaran }}</td>
-                    <td>{{ $item->semester }}</td>
-                    <td>{{ $item->total_sks }}</td>
-                    <td>
-                        <a href="{{ route('frs.edit', $item->id_frs) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger"
-                                onclick="return confirm('Hapus data ini?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
+            <div 
+              onclick="window.location='{{ route('frs.show', $item->id_frs) }}'" 
+              class="grid grid-cols-5 gap-4 p-4 text-sm items-center border-b border-gray-200 cursor-pointer hover:bg-brand200"
+              title="Klik untuk detail"
+            >
+                <div class="flex items-center justify-center p-2">{{ $item->mahasiswa->nama }}</div>
+                <div class="flex items-center justify-center p-2">{{ $item->tahun_ajaran }}</div>
+                <div class="flex items-center justify-center p-2">{{ $item->semester }}</div>
+                <div class="flex items-center justify-center p-2">{{ $item->total_sks }}</div>
+                <div class="flex items-center justify-center p-2 space-x-2">
+                    <a href="{{ route('frs.edit', $item->id_frs) }}" class="inline-block px-3 py-1 bg-yellow-400 text-white text-xs rounded hover:bg-yellow-500" onclick="event.stopPropagation()">
+                        Edit
+                    </a>
+                    <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus data ini?')" onclick="event.stopPropagation()">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
             @endforeach
-        </tbody>
-    </table>
-
-</body>
-
-</html>
+        </section>
+    </div>
+</div>
+@endsection

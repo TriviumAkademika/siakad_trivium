@@ -25,7 +25,6 @@ class UserController extends Controller
     $dosen = Dosen::doesntHave('user')->get();
     return view('users.create', compact('mahasiswa', 'dosen'));
     dd(Dosen::doesntHave('user')->get());
-
   }
 
   // Simpan user baru
@@ -52,6 +51,23 @@ class UserController extends Controller
       'password' => Hash::make($request->password),
       'role' => $request->role,
     ];
+
+    if ($request->role === 'admin') {
+      $request->validate([
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|confirmed',
+        'role' => 'required|in:admin,mahasiswa,dosen',
+        'nama_user' => 'required|string|max:255',
+      ]);
+
+      User::create([
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role' => 'admin',
+        'nama_user' => $request->nama_user,
+      ]);
+    }
+
 
     if ($request->role === 'mahasiswa') {
       $userData['id_mahasiswa'] = $request->id_mahasiswa;

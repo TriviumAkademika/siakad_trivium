@@ -12,35 +12,64 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $mhs = Mahasiswa::create([
-            'id_kelas' => 1,
-            'nama' => 'Karina Mhs',
-            'nrp' => '20230001',
-            'semester' => '6',
-            'gender' => 'P',
-            'alamat' => 'Bandung',
-            'no_hp' => '08123456789',
+        // ==== MAHASISWA ====
+
+        $mhs1 = Mahasiswa::find(22); // Ganti ID sesuai dengan data Anda
+        if ($mhs1) {
+            User::create([
+                'email' => 'selviea@student.trivium.ac.id',
+                'password' => Hash::make('selviea123'),
+                'role' => 'mahasiswa',
+                'id_mahasiswa' => $mhs1->id_mahasiswa,
+            ]);
+        }
+
+        $mhs2 = Mahasiswa::find(23);
+        if ($mhs2) {
+            User::create([
+                'email' => 'boluea@student.trivium.ac.id',
+                'password' => Hash::make('budi456'),
+                'role' => 'mahasiswa',
+                'id_mahasiswa' => $mhs2->id_mahasiswa,
+            ]);
+        }
+
+        // ==== DOSEN ====
+
+        $dsn1 = Dosen::find(1);
+        if ($dsn1) {
+            User::create([
+                'email' => 'budi@lecture.trivium.ac.id',
+                'password' => Hash::make('budi123'),
+                'role' => 'dosen',
+                'id_dosen' => $dsn1->id_dosen,
+            ]);
+        }
+
+        $dsn2 = Dosen::find(2);
+        if ($dsn2) {
+            User::create([
+                'email' => 'siti@lecture.trivium.ac.id',
+                'password' => Hash::make('siti123'),
+                'role' => 'dosen',
+                'id_dosen' => $dsn2->id_dosen,
+            ]);
+        }
+
+        // ==== ADMIN ====
+
+        User::create([
+            'email' => 'adminnisa@trivium.ac.id',
+            'password' => Hash::make('admin123'),
+            'role' => 'admin',
+            'nama_user' => 'Admin Nisa',
         ]);
 
         User::create([
-            'email' => 'mhs@example.com',
-            'password' => Hash::make('password'),
-            'role' => 'mahasiswa',
-            'id_mahasiswa' => $mhs->id_mahasiswa,
-        ]);
-
-        $dsn = Dosen::create([
-            'nama_dosen' => 'Pak Dosen',
-            'nip' => '197012312021',
-            'alamat' => 'Jakarta',
-            'no_hp' => '08987654321',
-        ]);
-
-        User::create([
-            'email' => 'dosen@example.com',
-            'password' => Hash::make('password'),
-            'role' => 'dosen',
-            'id_dosen' => $dsn->id_dosen,
+            'email' => 'adminrahma@trivium.ac.id',
+            'password' => Hash::make('admin123'),
+            'role' => 'admin',
+            'nama_user' => 'Admin Rahma',
         ]);
     }
 }

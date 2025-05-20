@@ -62,7 +62,6 @@
             <input type="text" class="w-full border p-2 rounded bg-gray-100" value="{{ ucfirst($user->role) }}"
                 readonly>
             <p class="text-xs text-gray-500 mt-1">Role tidak dapat diubah.</p>
-
         </div>
 
         {{-- Field Mahasiswa --}}
@@ -80,6 +79,18 @@
                 <label class="block text-sm">Dosen</label>
                 <input type="text" class="w-full border p-2 rounded bg-gray-100"
                     value="{{ $user->dosen->nama_dosen }} - {{ $user->dosen->nip }}" readonly>
+            </div>
+        @endif
+
+        {{-- Field Admin --}}
+        @if ($user->role === 'admin')
+            <div>
+                <label class="block text-sm">Nama Admin</label>
+                <input type="text" name="nama_user" class="w-full border p-2 rounded"
+                    value="{{ old('nama_user', $user->nama_user) }}">
+                @error('nama_user')
+                    <p class="text-red-500 text-xs">{{ $message }}</p>
+                @enderror
             </div>
         @endif
 
