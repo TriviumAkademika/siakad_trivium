@@ -14,6 +14,8 @@
     />
     {{-- Icon Page --}}
     <link rel="icon" href="{{ asset('assets/icons/logo.svg') }}" type="image/svg+xml">
+    <script src="//unpkg.com/alpinejs" defer></script>
+
     @vite('resources/css/app.css')
     <title>@yield('title')</title>
 </head>
