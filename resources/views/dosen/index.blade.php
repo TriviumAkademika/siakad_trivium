@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="flex w-full h-full bg-brand50">
+    <div class="flex w-full h-full bg-putih">
         @include('components.sidebar')
 
         <div class="w-full p-4">

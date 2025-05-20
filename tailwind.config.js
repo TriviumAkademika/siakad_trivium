@@ -37,6 +37,9 @@ export default {
                     950: '#152556',
                 },
             },
+            boxShadow: {
+                abu: '0px 0px 10px rgba(101, 101, 101, 0.4)', // <- ini custom shadow kamu
+            },
         },
     },
 
