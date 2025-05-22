@@ -12,14 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('nilais', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+        $table->id();
+        $table->unsignedBigInteger('matakuliah_id');
+        $table->unsignedBigInteger('mahasiswa_id');
+        $table->float('nilai')->nullable();
+        $table->timestamps();
+
+        $table->foreign('matakuliah_id')->references('id_matkul')->on('matkuls')->onDelete('cascade');
+        $table->foreign('mahasiswa_id')->references('id_mahasiswa')->on('mahasiswa')->onDelete('cascade');
+    });
     }
 
     /**
      * Reverse the migrations.
      */
+
+
     public function down(): void
     {
         Schema::dropIfExists('nilais');

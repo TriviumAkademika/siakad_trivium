@@ -38,14 +38,19 @@ Route::middleware('auth')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-
-Route::get('/nilai', function () {
-    return view('nilai.nilai');
-});
-
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
+
+Route::get('/nilai-mhs', function () {
+    return view('nilai.nilai-mhs');
+});
+
+// Route::get('/nilai-dosen', function () {
+//     return view('nilai.nilai-dosen');
+// });
+
+Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
 
 
 // Route::get('/dashboard', [DashboardController::class, 'index']);
@@ -64,4 +69,5 @@ Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-
 Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
 Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
 Route::resource('users', UserController::class);
+Route::resource('nilai', NilaiController::class);
 
