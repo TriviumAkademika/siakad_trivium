@@ -6,12 +6,14 @@
                 <img src="{{ asset('assets/icons/logo.svg') }}" class="w-10" alt="Trivium Akademika">
                 <h3 class="text-xl text-hitam font-medium">Trivium Akademika</h3>
             </div>
+            <hr class="border-abu w-full">
 
             {{-- Search Box --}}
             {{-- <label class="flex items-center gap-2 px-2 border-default rounded-lg">
                 <i class="ph ph-magnifying-glass text-xl text-hitam"></i>
                 <input type="search" class="w-full bg-transparent text-sm text-hitam outline-none focus:outline-none focus:ring-0 focus:border-none border-none shadow-none appearance-none" placeholder="Cari di sini" />
             </label> --}}
+            
             {{-- Dashboard --}}
             <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
                 <i class="ph ph-house text-xl text-hitam"></i>
