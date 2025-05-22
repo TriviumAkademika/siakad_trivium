@@ -32,14 +32,16 @@
                 <tr>
                     <td class="px-4 py-2 text-sm text-gray-900">{{ $index + 1 }}</td>
                     <td class="px-4 py-2 text-sm text-gray-900">{{ $user->email }}</td>
-                    <td class="px-4 py-2 text-sm text-gray-900 capitalize">{{ $user->role }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-900 capitalize">
+                        {{ $user->getRoleNames()->first() ?? '-' }}
+                    </td>
                     <td class="px-4 py-2 text-sm text-gray-900">
                         @if ($user->role === 'mahasiswa')
                             {{ $user->mahasiswa->nama ?? '-' }} ({{ $user->mahasiswa->nrp ?? '-' }})
                         @elseif ($user->role === 'dosen')
                             {{ $user->dosen->nama_dosen ?? '-' }}
                         @elseif ($user->role === 'admin')
-                            {{ $user->nama_user ?? '-' }}
+                            {{ $user->name ?? '-' }}
                         @else
                             -
                         @endif

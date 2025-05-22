@@ -15,9 +15,9 @@ use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WaktuController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -33,21 +33,24 @@ Route::middleware('auth')->group(function () {
 //     return view('auth.login');
 // })->name('login');
 
- Route::get('login', [AuthenticatedSessionController::class, 'create'])
+ Route::get('/', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
-
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
-
-
-Route::get('/nilai', function () {
-    return view('nilai.nilai');
-});
+    Route::post('/', [AuthenticatedSessionController::class, 'store']);
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
+
+Route::get('/nilai-mhs', function () {
+    return view('nilai.nilai-mhs');
+});
+
+// Route::get('/nilai-dosen', function () {
+//     return view('nilai.nilai-dosen');
+// });
+
+Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
 
 
 // Route::get('/dashboard', [DashboardController::class, 'index']);
@@ -66,4 +69,5 @@ Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-
 Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
 Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
 Route::resource('users', UserController::class);
+Route::resource('nilai', NilaiController::class);
 
