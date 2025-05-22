@@ -18,7 +18,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
-            $table->enum('role', ['mahasiswa', 'dosen']);
+            $table->enum('role', ['mahasiswa', 'dosen', 'admin']);
+            $table->string('nama_user')->nullable(); // opsional, hanya untuk admin
             $table->unsignedBigInteger('id_mahasiswa')->nullable();
             $table->unsignedBigInteger('id_dosen')->nullable();
 

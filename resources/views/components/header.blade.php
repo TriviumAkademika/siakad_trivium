@@ -8,7 +8,7 @@
             } elseif ($user->dosen) {
                 $nama = $user->dosen->nama;
             } else {
-                $nama = $user->name ?? 'User'; // fallback
+                $nama = $user->nama_user ?? 'User'; // fallback
             }
         @endphp
 

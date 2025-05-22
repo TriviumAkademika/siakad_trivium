@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     protected $primaryKey = 'id_user';
     public $incrementing = true;
@@ -18,7 +19,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
         'id_mahasiswa',
         'id_dosen',
     ];
@@ -42,13 +42,17 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Dosen::class, 'id_dosen', 'id_dosen');
     }
+
     public function getDisplayNameAttribute()
     {
-        if ($this->mahasiswa) {
-            return $this->mahasiswa->nama;
-        } elseif ($this->dosen) {
-            return $this->dosen->nama;
-        }
-        return $this->name ?? 'User';
+        return $this->mahasiswa->nama
+            ?? $this->dosen->nama_dosen
+            ?? $this->name
+            ?? 'User';
+    }
+
+    public function getRoleAttribute()
+    {
+        return $this->getRoleNames()->first();
     }
 }

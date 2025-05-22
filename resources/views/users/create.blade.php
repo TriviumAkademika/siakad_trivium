@@ -58,11 +58,21 @@
                 <option value="">-- Pilih --</option>
                 <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
                 <option value="dosen" {{ old('role') == 'dosen' ? 'selected' : '' }}>Dosen</option>
+                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+
             </select>
             @error('role')
                 <p class="text-red-500 text-xs">{{ $message }}</p>
             @enderror
         </div>
+        <div id="admin-fields" class="{{ old('role') != 'admin' ? 'hidden' : '' }}">
+            <label class="block text-sm">Nama Admin</label>
+            <input type="text" name="nama_user" class="w-full border p-2 rounded" value="{{ old('nama_user') }}">
+            @error('nama_user')
+                <p class="text-red-500 text-xs">{{ $message }}</p>
+            @enderror
+        </div>
+
 
         {{-- Field Mahasiswa --}}
         <div id="mahasiswa-fields" class="{{ old('role') != 'mahasiswa' ? 'hidden' : '' }}">
@@ -99,20 +109,32 @@
         const roleSelect = document.querySelector('select[name="role"]');
         const mahasiswaFields = document.getElementById('mahasiswa-fields');
         const dosenFields = document.getElementById('dosen-fields');
+        const adminFields = document.getElementById('admin-fields');
+
+        function toggleFields(role) {
+            mahasiswaFields.classList.add('hidden');
+            dosenFields.classList.add('hidden');
+            adminFields.classList.add('hidden');
+
+            if (role === 'mahasiswa') {
+                mahasiswaFields.classList.remove('hidden');
+            } else if (role === 'dosen') {
+                dosenFields.classList.remove('hidden');
+            } else if (role === 'admin') {
+                adminFields.classList.remove('hidden');
+            }
+        }
 
         roleSelect.addEventListener('change', function() {
-            if (this.value === 'mahasiswa') {
-                mahasiswaFields.classList.remove('hidden');
-                dosenFields.classList.add('hidden');
-            } else if (this.value === 'dosen') {
-                dosenFields.classList.remove('hidden');
-                mahasiswaFields.classList.add('hidden');
-            } else {
-                mahasiswaFields.classList.add('hidden');
-                dosenFields.classList.add('hidden');
-            }
+            toggleFields(this.value);
+        });
+
+        // Toggle on page load in case of validation error
+        window.addEventListener('DOMContentLoaded', function() {
+            toggleFields(roleSelect.value);
         });
     </script>
+
 
 </body>
 

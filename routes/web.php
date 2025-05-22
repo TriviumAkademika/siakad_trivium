@@ -15,9 +15,9 @@ use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WaktuController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -33,10 +33,10 @@ Route::middleware('auth')->group(function () {
 //     return view('auth.login');
 // })->name('login');
 
- Route::get('login', [AuthenticatedSessionController::class, 'create'])
+ Route::get('/', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('/', [AuthenticatedSessionController::class, 'store']);
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
