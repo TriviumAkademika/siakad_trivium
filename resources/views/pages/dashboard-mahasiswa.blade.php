@@ -13,10 +13,10 @@
             {{-- Content --}}
             <div class="flex flex-row px-6 pb-6 space-x-6">
 
-                {{-- Flash Message (success) --}}
+                {{-- Toast Notification (Login Success) --}}
                 @if (session('status'))
                     <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
-                        class="fixed top-8 right-8 bg-hijau-100 text-success px-6 py-4 rounded shadow z-50">
+                        class="fixed top-8 right-8 flex items-center bg-hijau-100 text-success px-6 py-4 rounded shadow z-50">
                         <i class="ph ph-check-circle text-lg mr-2"></i>
                         <span class="text-sm">Berhasil masuk ke Trivium Akademika!</span>
                     </div>

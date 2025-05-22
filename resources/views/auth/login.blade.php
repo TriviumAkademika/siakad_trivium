@@ -21,7 +21,16 @@
                 </div>
             </div>
 
-            {{-- Error Message (validation errors) --}}
+            {{-- Toast Notification (Logout Success) --}}
+            @if (session('status'))
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
+                    class="fixed top-8 right-8 flex items-center bg-hijau-100 text-success px-6 py-4 rounded shadow z-50">
+                    <i class="ph ph-check-circle text-lg mr-2"></i>
+                    <span class="text-sm">Berhasil keluar dari Trivium Akademika!</span>
+                </div>
+            @endif
+
+            {{-- Error Message (Validation errors) --}}
             @if ($errors->any())
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
                     class="fixed top-8 right-8 flex items-center gap-2 bg-merah-100 text-error px-6 py-4 rounded-lg shadow z-50">
