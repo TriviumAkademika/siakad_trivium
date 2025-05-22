@@ -20,9 +20,24 @@ export default {
             },
             colors: {
                 putih: '#FDFDFD',
-                info: '#064974',
                 hitam: '#464646',
-
+                info: '#064974',
+                error: '#882614',
+                success: '#385611',
+                biru: {
+                    100: '#DEF1FF',
+                    700: '#0068AB',
+                },
+                merah: {
+                    100: '#FFE4DF',
+                    200: '#FFCEC5',
+                    300: '#FFAC9D',
+                },
+                hijau: {
+                    100: '#EEFEC9',
+                    200: '#DDFD99',
+                    300: '#C4F85E',
+                },
                 brand: {
                     50: '#EEF6FF',
                     100: '#DAEBFF',

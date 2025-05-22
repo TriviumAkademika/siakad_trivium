@@ -1,65 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tambah Mahasiswa</title>
-  @vite('resources/css/app.css')
-</head>
-<body class="p-6 bg-gray-50">
+@extends('master')
 
-  <h1 class="text-xl font-bold mb-4">Tambah Mahasiswa</h1>
+@section('title', 'Tambah Mahasiswa')
 
-  <form action="{{ route('mahasiswa.store') }}" method="POST" class="space-y-4">
-    @csrf
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+        <div class="flex flex-col w-full">
+            <h1 class="p-6 text-2xl text-hitam">Tambah Mahasiswa</h1>
+            <div class="flex flex-col px-6 pb-6 space-x-6">
+                <form action="{{ route('mahasiswa.store') }}" method="POST" class="space-y-4">
+                    @csrf
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Nama</label>
-      <input type="text" name="nama" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
+                    {{-- Nama --}}
+                    <label class="block text-sm font-medium text-hitam">
+                      Nama
+                      <input type="text" name="nama" class="w-full p-2 border-default focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal" required>
+                    </label>
+
+                    {{-- NRP --}}
+                    <label class="block text-sm font-medium text-hitam">
+                      NRP
+                      <input type="text" name="nrp" class="w-full p-2 border-default focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal" required>
+                    </label>
+
+                    {{-- Kelas --}}
+                    <label class="block text-sm font-medium text-hitam">Kelas
+                      <select name="id_kelas" class="w-full p-2 border-default focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal" required>
+                        <option value="">-- Pilih Kelas --</option>
+                          @foreach ($kelas as $k)
+                            <option value="{{ $k->id_kelas }}">{{ $k->prodi }} {{ $k->paralel }}</option>
+                          @endforeach
+                      </select>
+                    </label>
+
+                    {{-- Semester --}}
+                    <label class="block text-sm font-medium text-hitam">Semester
+                      <input type="text" name="semester" class="w-full p-2 border-default focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal" required>
+                    </label>
+
+                    {{-- Gender --}}
+                    <label class="block text-sm font-medium text-hitam">Gender
+                      <select name="gender" class="w-full p-2 border-default focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal" required>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
+                      </select>
+                    </label>
+
+                    {{-- Alamat --}}
+                    <label class="block text-sm font-medium text-hitam">Alamat
+                      <textarea name="alamat" class="w-full p-2 border-default focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal" rows="3"></textarea>
+                    </label>
+
+                    {{-- No HP --}}
+                    <label class="block text-sm font-medium text-hitam">No HP
+                      <input type="text" name="no_hp" class="w-full p-2 border-default focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal">
+                    </label>
+
+                    {{-- Button Simpan --}}
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                      Simpan
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">NRP</label>
-      <input type="text" name="nrp" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Kelas</label>
-      <select name="id_kelas" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
-        <option value="">-- Pilih Kelas --</option>
-        @foreach ($kelas as $k)
-          <option value="{{ $k->id_kelas }}">{{ $k->prodi }} {{ $k->paralel }}</option>
-        @endforeach
-      </select>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Semester</label>
-      <input type="text" name="semester" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Gender</label>
-      <select name="gender" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
-        <option value="L">Laki-laki</option>
-        <option value="P">Perempuan</option>
-      </select>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Alamat</label>
-      <textarea name="alamat" class="mt-1 block w-full border border-gray-300 rounded p-2" rows="3"></textarea>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">No HP</label>
-      <input type="text" name="no_hp" class="mt-1 block w-full border border-gray-300 rounded p-2">
-    </div>
-
-    <div>
-      <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
-    </div>
-  </form>
-
-</body>
-</html>
+@endsection

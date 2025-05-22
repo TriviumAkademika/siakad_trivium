@@ -21,62 +21,59 @@
                 </div>
             </div>
 
+            {{-- Error Message (validation errors) --}}
+            @if ($errors->any())
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
+                    class="fixed top-8 right-8 flex items-center gap-2 bg-merah-100 text-error px-6 py-4 rounded-lg shadow z-50">
+                    <i class="ph ph-warning-circle text-lg"></i>
+                    <span class="text-sm">Email atau password salah</span>
+                </div>
+            @endif
+
+
             <div class="flex flex-col w-full px-8 md:px-16 py-8 space-y-4">
                 <h2 class="text-xl text-hitam font-medium">Masuk</h2>
-
-                {{-- Flash Message (success) --}}
-                @if (session('status'))
-                    <div class="text-green-600 text-sm">
-                        {{ session('status') }}
-                    </div>
-                @endif
-
-                {{-- Error Message (validation errors) --}}
-                @if ($errors->any())
-                    <div class="text-red-600 text-sm">
-                        Email atau password salah.
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('login') }}" class="space-y-4">
                     @csrf
 
                     {{-- Email Input --}}
-                    <div>
-                        <label for="email" class="text-base text-hitam font-normal">Email</label>
+                    <label for="email" class="block text-base text-hitam font-normal">
+                        Email
                         <input type="email" id="email" name="email" placeholder="Masukkan email"
                             value="{{ old('email') }}"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-xl text-base text-hitam font-normal focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            class="w-full p-2 border-default focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
                             required autofocus>
                         {{-- @error('email')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror --}}
-                    </div>
+                    </label>
 
                     {{-- Password Input --}}
-                    <div class="mt-4">
-                        <label for="password" class="text-base text-hitam font-normal">Password</label>
+                    <label for="password" class="block text-base text-hitam font-normal">
+                        Password
                         <input type="password" id="password" name="password" placeholder="Masukkan password"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-xl text-base text-hitam font-normal focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            class="w-full p-2 border-default focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
                             required>
-                        @error('password')
+                        {{-- @error('password')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        @enderror --}}
+                    </label>
 
                     {{-- Submit Button --}}
-                    <div class="flex justify-end mt-4">
-                        <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-xl hover:bg-indigo-700 transition w-1/3">
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="btn bg-brand-900 hover:bg-brand-950 text-sm font-normal text-putih rounded-lg focus:outline-none focus:ring-0 transition w-1/3">
                             Masuk
                         </button>
                     </div>
                 </form>
 
                 {{-- Info box --}}
-                <div class="flex flex-row p-4 md:p-6 rounded-xl items-start gap-2 bg-blue-100 mt-6">
-                    <i class="ph ph-info text-base text-info"></i>
+                <div class="flex flex-row p-4 md:p-6 rounded-lg items-start gap-2 bg-biru-100">
+                    <i class="ph ph-info text-lg text-info"></i>
                     <p class="text-sm text-info text-justify">
-                        Saat Anda melanjutkan, informasi pribadi Anda akan dibagikan ke layanan ini. Dengan masuk, Anda menyetujui pembagian informasi pribadi setiap kali mengakses layanan.
+                        Saat Anda melanjutkan, informasi pribadi Anda akan dibagikan ke layanan ini. Dengan masuk, Anda
+                        menyetujui pembagian informasi pribadi setiap kali mengakses layanan.
                     </p>
                 </div>
             </div>

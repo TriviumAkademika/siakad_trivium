@@ -5,7 +5,7 @@
 /* Konfigurasi Warna Border */
 .border-default {
     border-width: 1.5px;
-    border-color: #464646;
+    border-color: #989898;
 }
 .border-default:focus {
     border-color: #0068AB;
@@ -13,6 +13,10 @@
 .border-abu {
     border-width: 0.5px;
     border-color: #464646;
+}
+.border-abu:focus {
+    border-width: 0.5px;
+    border-color: #0068AB;
 }
 .border-biru {
     border-left-width: 3px;

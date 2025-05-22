@@ -23,14 +23,14 @@
                     <table class="min-w-full divide-y divide-gray-200 bg-white shadow rounded-lg">
                         <thead class="bg-brand-100">
                             <tr>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-hitam">#</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-hitam">Nama</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-hitam">NRP</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-hitam">Kelas</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-hitam">Semester</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-hitam">Gender</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-hitam">No HP</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-hitam">Action</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-hitam">#</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Nama</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">NRP</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Kelas</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Semester</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Gender</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">No HP</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Action</th>
                             </tr>
                         </thead>
                         <tbody class="bg-putih divide-y divide-gray-200">
@@ -38,16 +38,16 @@
                                 <tr>
                                     <td class="px-4 py-2 text-sm text-hitam">{{ $index + 1 }}</td>
                                     <td class="px-4 py-2 text-sm text-hitam">{{ $m->nama }}</td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $m->nrp }}</td>
-                                    <td class="px-4 py-2 text-sm text-hitam">
+                                    <td class="px-4 py-2 text-center text-sm text-hitam">{{ $m->nrp }}</td>
+                                    <td class="px-4 py-2 text-center text-sm text-hitam">
                                         {{ $m->kelas ? $m->kelas->prodi . ' ' . $m->kelas->paralel : '-' }}
                                     </td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $m->semester }}</td>
-                                    <td class="px-4 py-2 text-sm text-hitam">
+                                    <td class="px-4 py-2 text-center text-sm text-hitam">{{ $m->semester }}</td>
+                                    <td class="px-4 py-2 text-center text-sm text-hitam">
                                         {{ $m->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}
                                     </td>
                                     <td class="px-4 py-2 text-sm text-hitam">{{ $m->no_hp }}</td>
-                                    <td class="px-2 py-2 text-sm text-hitam space-x-2">
+                                    <td class="px-2 py-2 text-center text-sm text-hitam space-x-2">
                                       {{-- Button Edit --}}
                                       <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}" class="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">
                                         <i class="ph ph-pencil-simple"></i>
