@@ -48,9 +48,9 @@
                             value="{{ old('email') }}"
                             class="w-full px-4 py-2 border border-gray-300 rounded-xl text-base text-hitam font-normal focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             required autofocus>
-                        @error('email')
+                        {{-- @error('email')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        @enderror --}}
                     </div>
 
                     {{-- Password Input --}}
@@ -62,15 +62,6 @@
                         @error('password')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
-                    </div>
-
-                    {{-- Remember Me --}}
-                    <div class="mt-4">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" name="remember"
-                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
-                            <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
-                        </label>
                     </div>
 
                     {{-- Submit Button --}}
