@@ -58,9 +58,10 @@
 
         <div>
             <label class="block text-sm">Role</label>
-            <input type="hidden" name="role" value="{{ $user->role }}">
-            <input type="text" class="w-full border p-2 rounded bg-gray-100" value="{{ ucfirst($user->role) }}"
-                readonly>
+            <input type="hidden" name="user_role" value="{{ $user->getRoleNames()->first() }}">
+            <input type="text" class="..." value="{{ ucfirst($user->getRoleNames()->first()) }}" readonly>
+
+            readonly>
             <p class="text-xs text-gray-500 mt-1">Role tidak dapat diubah.</p>
         </div>
 
