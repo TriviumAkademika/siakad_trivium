@@ -1,75 +1,107 @@
 @extends ('master')
 
-@section('title', 'Daftar Jadwal Kuliah')
+@section('title', 'Jadwal')
 
 @section('content')
-<div class="flex w-full h-full bg-brand50">
-    @include('components.sidebar')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
 
-    <div class="w-full p-4">
-        @include('components.header')
+        <div class="flex flex-col w-full bg-putih">
+            {{-- Profil User di Header --}}
+            @include('components.header')
 
-        {{-- Tombol Tambah --}}
-        <div class="mb-4">
-            <a href="{{ route('jadwal.create') }}" class="px-4 py-2 bg-green-500 text-white text-sm rounded hover:bg-green-600">
-                + Tambah Jadwal
-            </a>
-        </div>
+            {{-- Toast Notification --}}
+            @if (session('message'))
+                @php
+                    $type = session('type') ?? 'info'; // fallback ke 'info' kalau kosong
+                    $colorMap = [
+                        'error' => 'bg-merah-100 text-error',
+                        'info' => 'bg-biru-100 text-info',
+                        'success' => 'bg-hijau-100 text-success',
+                        'warning' => 'bg-kuning-100 text-warning',
+                    ];
+                    $classes = $colorMap[$type] ?? $colorMap['info'];
+                @endphp
 
-        {{-- Header Tabel --}}
-        <section class="rounded-lg p-2 grid bg-brand100 mb-4">
-            <div class="grid grid-cols-8 gap-4 text-sm">
-                <div class="flex items-center justify-center p-2 font-semibold">#</div>
-                <div class="flex items-center justify-center p-2 font-semibold">Kelas</div>
-                <div class="flex items-center justify-center p-2 font-semibold">Mata Kuliah</div>
-                <div class="flex items-center justify-center p-2 font-semibold">Dosen</div>
-                <div class="flex items-center justify-center p-2 font-semibold">Dosen Pendamping</div>
-                <div class="flex items-center justify-center p-2 font-semibold">Waktu</div>
-                <div class="flex items-center justify-center p-2 font-semibold">Ruangan</div>
-                <div class="flex items-center justify-center p-2 font-semibold">Aksi</div>
-            </div>
-        </section>
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
+                    class="fixed top-8 right-8 {{ $classes }} px-6 py-4 rounded shadow z-50">
+                    <span class="text-sm">{{ session('message') }}</span>
+                </div>
+            @endif
 
-        {{-- Isi Tabel --}}
-        <section>
-            @foreach ($jadwal as $index => $j)
-            <div class="grid grid-cols-8 gap-4 p-4 text-sm items-center border-b border-gray-200">
-                <div class="flex items-center justify-center p-2">
-                    {{ $index + 1 }}
-                </div>
-                <div class="flex items-center justify-center p-2">
-                    {{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}
-                </div>
-                <div class="flex items-center justify-center p-2">
-                    {{ $j->matkul->jenis }} - {{ $j->matkul->nama_matkul }}
-                </div>
-                <div class="flex items-center justify-center p-2">
-                    {{ $j->dosen->nama_dosen }}
-                </div>
-                <div class="flex items-center justify-center p-2">
-                    {{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}
-                </div>
-                <div class="flex items-center justify-center p-2">
-                    {{ $j->waktu->hari }}, {{ substr($j->waktu->jam_mulai, 0, 5) }} - {{ substr($j->waktu->jam_selesai, 0, 5) }}
-                </div>
-                <div class="flex items-center justify-center p-2">
-                    {{ $j->ruangan->kode_ruangan }}
-                </div>
-                <div class="flex items-center justify-center p-2 space-x-2">
-                    <a href="{{ route('jadwal.edit', $j->id_jadwal) }}" class="inline-block px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">
-                        Edit
-                    </a>
-                    <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus jadwal ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
-                            Delete
+            {{-- Content --}}
+            <div class="flex flex-row px-6 pb-6 space-x-6">
+                <div class="flex flex-col grow items-end space-y-4">
+                    {{-- Button Tambah Jadwal --}}
+                    <a href="{{ route('jadwal.create') }}">
+                        <button
+                            class="btn bg-brand-900 hover:bg-brand-950 text-sm font-normal text-putih rounded-lg focus:outline-none focus:ring-0">
+                            <i class="ph ph-plus"></i>
+                            Tambah Jadwal
                         </button>
-                    </form>
+                    </a>
+
+                    {{-- Tabel Data Jadwal --}}
+                    <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
+                        <thead class="bg-brand-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-hitam">#</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Kelas</th>
+                                <th class="w-48 px-4 py-3 text-center text-sm font-medium text-hitam">Mata Kuliah</th>
+                                <th class="w-40 px-4 py-3 text-center text-sm font-medium text-hitam">Dosen</th>
+                                <th class="w-40 px-4 py-3 text-center text-sm font-medium text-hitam">Dosen Pendamping</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Ruangan</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Waktu</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-putih divide-y divide-gray-200">
+                            @foreach ($jadwal as $index => $j)
+                                <tr>
+                                    <td class="px-4 py-2 text-sm text-hitam">{{ $index + 1 }}</td>
+                                    <td class="px-4 py-2 text-sm text-hitam">{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}
+                                    </td>
+                                    <td class="px-4 py-2 text-sm text-hitam">{{ $j->matkul->jenis }} -
+                                        {{ $j->matkul->nama_matkul }}</td>
+                                    <td class="px-4 py-2 text-sm text-hitam">{{ $j->dosen->nama_dosen }}</td>
+                                    <td class="px-4 py-2 text-sm text-hitam">{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}
+                                    </td>
+                                    <td class="px-4 py-2 text-center text-sm text-hitam">{{ $j->ruangan->kode_ruangan }}
+                                    </td>
+                                    <td class="flex flex-col px-4 py-2 text-center text-sm text-hitam">
+                                        <p>{{ $j->waktu->hari }}</p>
+                                        <p>{{ substr($j->waktu->jam_mulai, 0, 5) }} -
+                                            {{ substr($j->waktu->jam_selesai, 0, 5) }}</p>
+                                    </td>
+                                    <td class="px-2 py-2 text-center text-sm text-hitam">
+                                        <div class="flex justify-center items-center space-x-1">
+                                            {{-- Button Edit --}}
+                                            <a href="{{ route('jadwal.edit', $j->id_jadwal) }}"
+                                                class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
+                                                <i class="ph ph-pencil-simple"></i>
+                                            </a>
+
+                                            {{-- Button Hapus --}}
+                                            <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST"
+                                                class="inline-block"
+                                                onsubmit="return confirm('Anda yakin ingin menghapus jadwal ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600">
+                                                    <i class="ph ph-trash-simple"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            @endforeach
-        </section>
+        </div>
     </div>
-</div>
 @endsection
