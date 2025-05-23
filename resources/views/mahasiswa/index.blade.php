@@ -60,17 +60,13 @@
                         <tbody class="bg-putih divide-y divide-gray-200">
                             @foreach ($mahasiswa as $index => $m)
                                 <tr>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $index + 1 }}</td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $m->nama }}</td>
-                                    <td class="px-4 py-2 text-center text-sm text-hitam">{{ $m->nrp }}</td>
-                                    <td class="px-4 py-2 text-center text-sm text-hitam">
-                                        {{ $m->kelas ? $m->kelas->prodi . ' ' . $m->kelas->paralel : '-' }}
-                                    </td>
-                                    <td class="px-4 py-2 text-center text-sm text-hitam">{{ $m->semester }}</td>
-                                    <td class="px-4 py-2 text-center text-sm text-hitam">
-                                        {{ $m->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}
-                                    </td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $m->no_hp }}</td>
+                                    <x-table-td>{{ $index + 1 }}</x-table-td>
+                                    <x-table-td>{{ $m->nama }}</x-table-td>
+                                    <x-table-td class="text-center">{{ $m->nrp }}</x-table-td>
+                                    <x-table-td class="text-center">{{ $m->kelas ? $m->kelas->prodi . ' ' . $m->kelas->paralel : '-' }}</x-table-td>
+                                    <x-table-td class="text-center">{{ $m->semester }}</x-table-td>
+                                    <x-table-td class="text-center">{{ $m->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</x-table-td>
+                                    <x-table-td>{{ $m->no_hp }}</x-table-td>
                                     <td class="px-2 py-2 text-sm text-hitam">
                                         <div class="flex justify-center items-center space-x-1">
                                             {{-- Button Edit --}}

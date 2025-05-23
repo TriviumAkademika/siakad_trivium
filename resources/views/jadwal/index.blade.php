@@ -35,11 +35,9 @@
                 <div class="flex flex-col grow items-end space-y-4">
                     {{-- Button Tambah Jadwal --}}
                     <a href="{{ route('jadwal.create') }}">
-                        <button
-                            class="btn bg-brand-900 hover:bg-brand-950 text-sm font-normal text-putih rounded-lg focus:outline-none focus:ring-0">
-                            <i class="ph ph-plus"></i>
+                        <x-button icon="ph ph-plus">
                             Tambah Jadwal
-                        </button>
+                        </x-button>
                     </a>
 
                     {{-- Tabel Data Jadwal --}}
@@ -60,21 +58,17 @@
                         <tbody class="bg-putih divide-y divide-gray-200">
                             @foreach ($jadwal as $index => $j)
                                 <tr>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $index + 1 }}</td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}
-                                    </td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $j->matkul->jenis }} -
-                                        {{ $j->matkul->nama_matkul }}</td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $j->dosen->nama_dosen }}</td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}
-                                    </td>
-                                    <td class="px-4 py-2 text-center text-sm text-hitam">{{ $j->ruangan->kode_ruangan }}
-                                    </td>
-                                    <td class="flex flex-col px-4 py-2 text-center text-sm text-hitam">
+                                    <x-table-td>{{ $index + 1 }}</x-table-td>
+                                    <x-table-td>{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}</x-table-td>
+                                    <x-table-td>{{ $j->matkul->jenis }} - {{ $j->matkul->nama_matkul }}</x-table-td>
+                                    <x-table-td>{{ $j->dosen->nama_dosen }}</x-table-td>
+                                    <x-table-td>{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}</x-table-td>
+                                    <x-table-td class="text-center">{{ $j->ruangan->kode_ruangan }}</x-table-td>
+                                    <x-table-td class="text-center">
                                         <p>{{ $j->waktu->hari }}</p>
                                         <p>{{ substr($j->waktu->jam_mulai, 0, 5) }} -
                                             {{ substr($j->waktu->jam_selesai, 0, 5) }}</p>
-                                    </td>
+                                    </x-table-td>
                                     <td class="px-2 py-2 text-center text-sm text-hitam">
                                         <div class="flex justify-center items-center space-x-1">
                                             {{-- Button Edit --}}
