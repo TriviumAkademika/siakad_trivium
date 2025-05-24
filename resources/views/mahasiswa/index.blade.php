@@ -59,12 +59,6 @@
                                                 <i class="ph ph-pencil-simple"></i>
                                             </a>
 
-                                        {{-- Button Edit --}}
-                                        <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}"
-                                            class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
-                                            <i class="ph ph-pencil-simple"></i>
-                                        </a>
-
                                             {{-- Button Delete --}}
                                             {{-- <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}"
                                                 method="POST" class="inline-block"

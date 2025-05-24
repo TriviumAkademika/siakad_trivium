@@ -60,4 +60,9 @@ class DetailFrsController extends Controller
         DetailFrs::destroy($id);
         return back()->with('success', 'Jadwal berhasil dihapus dari FRS.');
     }
+
+    public function show($id)
+    {
+        //
+    }
 }
