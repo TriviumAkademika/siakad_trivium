@@ -65,7 +65,7 @@
                                             <div class="flex justify-center items-center space-x-1">
                                                 {{-- Button Edit --}}
                                                 <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}"
-                                                    class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-brand-700 hover:bg-brand-800 text-white text-sm rounded">
                                                     <i class="ph ph-pencil-simple"></i>
                                                 </a>
 
