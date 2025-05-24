@@ -40,10 +40,13 @@
                     <x-textarea-field label="Alamat" name="alamat" :value="$mahasiswa->alamat" />
 
                     {{-- Button Perbarui --}}
-                    <div class="flex justify-end">
-                        <x-button icon="ph ph-floppy-disk">
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x">
+                            Batal
+                        </x-button.cancel>
+                        <x-button.submit icon="ph ph-floppy-disk">
                             Perbarui
-                        </x-button>
+                        </x-button.submit>
                     </div>
                 </form>
             </div>

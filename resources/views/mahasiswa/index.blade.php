@@ -12,34 +12,16 @@
             @include('components.header')
 
             {{-- Toast Notification --}}
-            @if (session('message'))
-                @php
-                    $type = session('type') ?? 'info'; // Fallback ke 'info' kalau kosong
-                    $colorMap = [
-                        'error' => 'bg-merah-100 text-error',
-                        'info' => 'bg-biru-100 text-info',
-                        'success' => 'bg-hijau-100 text-success',
-                        'warning' => 'bg-kuning-100 text-warning',
-                    ];
-                    $classes = $colorMap[$type] ?? $colorMap['info'];
-                @endphp
-
-                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
-                    class="fixed top-8 right-8 {{ $classes }} px-6 py-4 rounded shadow z-50">
-                    <span class="text-sm">{{ session('message') }}</span>
-                </div>
-            @endif
+            <x-notification.toast-notification />
 
             {{-- Content --}}
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">
                     {{-- Button Tambah Data Mahasiswa --}}
                     <a href="{{ route('mahasiswa.create') }}">
-                        <button
-                            class="btn bg-brand-900 hover:bg-brand-950 text-sm font-normal text-putih rounded-lg focus:outline-none focus:ring-0">
-                            <i class="ph ph-plus"></i>
+                        <x-button.submit icon="ph ph-plus">
                             Tambah Mahasiswa
-                        </button>
+                        </x-button.submit>
                     </a>
 
                     {{-- Tabel Data Mahasiswa --}}
@@ -60,13 +42,15 @@
                         <tbody class="bg-putih divide-y divide-gray-200">
                             @foreach ($mahasiswa as $index => $m)
                                 <tr>
-                                    <x-table-td>{{ $index + 1 }}</x-table-td>
-                                    <x-table-td>{{ $m->nama }}</x-table-td>
-                                    <x-table-td class="text-center">{{ $m->nrp }}</x-table-td>
-                                    <x-table-td class="text-center">{{ $m->kelas ? $m->kelas->prodi . ' ' . $m->kelas->paralel : '-' }}</x-table-td>
-                                    <x-table-td class="text-center">{{ $m->semester }}</x-table-td>
-                                    <x-table-td class="text-center">{{ $m->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</x-table-td>
-                                    <x-table-td>{{ $m->no_hp }}</x-table-td>
+                                    <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
+                                    <x-table.table-td>{{ $m->nama }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $m->nrp }}</x-table.table-td>
+                                    <x-table.table-td
+                                        class="text-center">{{ $m->kelas ? $m->kelas->prodi . ' ' . $m->kelas->paralel : '-' }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $m->semester }}</x-table.table-td>
+                                    <x-table.table-td
+                                        class="text-center">{{ $m->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</x-table.table-td>
+                                    <x-table.table-td>{{ $m->no_hp }}</x-table.table-td>
                                     <td class="px-2 py-2 text-sm text-hitam">
                                         <div class="flex justify-center items-center space-x-1">
                                             {{-- Button Edit --}}

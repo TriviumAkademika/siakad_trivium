@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Button;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Button extends Component
+class Cancel extends Component
 {
     public $icon;
 
@@ -15,9 +15,8 @@ class Button extends Component
         $this->icon = $icon;
     }
 
-
     public function render(): View|Closure|string
     {
-        return view('components.button');
+        return view('components.button.cancel');
     }
 }

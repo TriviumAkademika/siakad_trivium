@@ -28,7 +28,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false)) ->with('status', 'Berhasil masuk ke Trivium Akademika!');
+        return redirect()->intended(route('dashboard', absolute: false))->with([
+            'message' => 'Berhasil masuk ke Trivium Akademika!',
+            'type' => 'success' // atau 'error', 'warning', 'info'
+        ]);
     }
 
     /**
@@ -42,6 +45,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->intended(route('login', absolute: false)) ->with('status', 'Berhasil keluar dari Trivium Akademika!');
+        return redirect()->intended(route('login', absolute: false))->with([
+            'message' => 'Berhasil keluar dari Trivium Akademika!',
+            'type' => 'success' // atau 'error', 'warning', 'info'
+        ]);
     }
 }

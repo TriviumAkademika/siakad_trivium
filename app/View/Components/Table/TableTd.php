@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Table;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class DropdownField extends Component
+class TableTd extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class DropdownField extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.dropdown-field');
+        return view('components.table.table-td');
     }
 }

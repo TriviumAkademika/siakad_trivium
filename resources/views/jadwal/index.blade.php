@@ -12,32 +12,16 @@
             @include('components.header')
 
             {{-- Toast Notification --}}
-            @if (session('message'))
-                @php
-                    $type = session('type') ?? 'info'; // fallback ke 'info' kalau kosong
-                    $colorMap = [
-                        'error' => 'bg-merah-100 text-error',
-                        'info' => 'bg-biru-100 text-info',
-                        'success' => 'bg-hijau-100 text-success',
-                        'warning' => 'bg-kuning-100 text-warning',
-                    ];
-                    $classes = $colorMap[$type] ?? $colorMap['info'];
-                @endphp
-
-                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
-                    class="fixed top-8 right-8 {{ $classes }} px-6 py-4 rounded shadow z-50">
-                    <span class="text-sm">{{ session('message') }}</span>
-                </div>
-            @endif
+            <x-notification.toast-notification />
 
             {{-- Content --}}
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">
                     {{-- Button Tambah Jadwal --}}
                     <a href="{{ route('jadwal.create') }}">
-                        <x-button icon="ph ph-plus">
+                        <x-button.submit icon="ph ph-plus">
                             Tambah Jadwal
-                        </x-button>
+                        </x-button.submit>
                     </a>
 
                     {{-- Tabel Data Jadwal --}}
@@ -58,17 +42,17 @@
                         <tbody class="bg-putih divide-y divide-gray-200">
                             @foreach ($jadwal as $index => $j)
                                 <tr>
-                                    <x-table-td>{{ $index + 1 }}</x-table-td>
-                                    <x-table-td>{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}</x-table-td>
-                                    <x-table-td>{{ $j->matkul->jenis }} - {{ $j->matkul->nama_matkul }}</x-table-td>
-                                    <x-table-td>{{ $j->dosen->nama_dosen }}</x-table-td>
-                                    <x-table-td>{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}</x-table-td>
-                                    <x-table-td class="text-center">{{ $j->ruangan->kode_ruangan }}</x-table-td>
-                                    <x-table-td class="text-center">
+                                    <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
+                                    <x-table.table-td>{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}</x-table.table-td>
+                                    <x-table.table-td>{{ $j->matkul->jenis }} - {{ $j->matkul->nama_matkul }}</x-table.table-td>
+                                    <x-table.table-td>{{ $j->dosen->nama_dosen }}</x-table.table-td>
+                                    <x-table.table-td>{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $j->ruangan->kode_ruangan }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">
                                         <p>{{ $j->waktu->hari }}</p>
                                         <p>{{ substr($j->waktu->jam_mulai, 0, 5) }} -
                                             {{ substr($j->waktu->jam_selesai, 0, 5) }}</p>
-                                    </x-table-td>
+                                    </x-table.table-td>
                                     <td class="px-2 py-2 text-center text-sm text-hitam">
                                         <div class="flex justify-center items-center space-x-1">
                                             {{-- Button Edit --}}
