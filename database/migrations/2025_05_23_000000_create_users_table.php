@@ -12,14 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
+            $table->id('id_user'); // ubah dari default 'id' menjadi 'id_user' agar konsisten
+            $table->string('name')->nullable(); // opsional karena name bisa didapat dari mahasiswa/dosen
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            $table->enum('role', ['mahasiswa', 'dosen', 'admin']);
+            $table->string('nama_user')->nullable(); // opsional, hanya untuk admin
+            $table->unsignedBigInteger('id_mahasiswa')->nullable();
+            $table->unsignedBigInteger('id_dosen')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa')->onDelete('set null');
+            $table->foreign('id_dosen')->references('id_dosen')->on('dosen')->onDelete('set null');
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

@@ -26,4 +26,14 @@ class Mahasiswa extends Model
     {
         return $this->belongsTo(Kelas::class, 'id_kelas', 'id_kelas');
     }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id_mahasiswa', 'id_mahasiswa');
+    }
+
+    public function frs()
+    {
+        return $this->hasMany(\App\Models\Frs::class, 'id_mahasiswa');
+    }
 }

@@ -1,30 +1,11 @@
-@import 'tailwindcss';
-
-/* Konfigurasi Warna Latar Belakang */
-.bg-putih {background-color: #FDFDFD;}
-.bg-info {background-color: #DEF1FF;}
-/* Konfigurasi Warna Brand */
-.bg-brand50  {background-color: #EEF6FF;}
-.bg-brand100 {background-color: #DAEBFF;}
-.bg-brand200 {background-color: #BDDCFF;}
-.bg-brand300 {background-color: #90C7FF;}
-.bg-brand400 {background-color: #51A2FF;}
-.bg-brand500 {background-color: #3584FC;}
-.bg-brand600 {background-color: #1F65F1;}
-.bg-brand700 {background-color: #174EDE;}
-.bg-brand800 {background-color: #1941B4;}
-.bg-brand900 {background-color: #1A3A8E;}
-.bg-brand950 {background-color: #152556;}
-
-/* Konfigurasi Warna Teks */
-.text-hitam {color: #464646;}
-.text-putih {color: #FDFDFD;}
-.text-info {color: #064974;}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Konfigurasi Warna Border */
 .border-default {
     border-width: 1.5px;
-    border-color: #464646;
+    border-color: #989898;
 }
 .border-default:focus {
     border-color: #0068AB;
@@ -32,6 +13,10 @@
 .border-abu {
     border-width: 0.5px;
     border-color: #464646;
+}
+.border-abu:focus {
+    border-width: 0.5px;
+    border-color: #0068AB;
 }
 .border-biru {
     border-left-width: 3px;
@@ -72,10 +57,8 @@ input:-webkit-autofill {
 }
 
 /* Other Stuff */
-@plugin "daisyui";
 @source "../views";
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
-

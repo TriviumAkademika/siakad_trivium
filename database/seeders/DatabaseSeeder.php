@@ -30,7 +30,10 @@ class DatabaseSeeder extends Seeder
             MahasiswaSeeder::class,
             JadwalSeeder::class,
             FrsSeeder::class,
-            DetailFrs::class,
+            DetailFrsSeeder::class,
+            RolePermissionSeeder::class,
+            UserSeeder::class,
+
         ]);
     }
 }

@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Dosen;
 use Illuminate\Http\Request;
+use App\http\Resources\DosenResource;
 
 class DosenController extends Controller
 {
+    // public function index()
+    // {
+    //     $dosen = Dosen::all();
+    //     return DosenResource::collection($dosen);
+    // }
     public function index()
     {
         $dosen = Dosen::all();

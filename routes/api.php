@@ -13,7 +13,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('mahasiswa', MahasiswaApiController::class);
-Route::apiResource('dosen', DosenApiController::class);
+// Route::apiResource('dosen', DosenApiController::class);
 Route::apiResource('frs', FrsApiController::class);
 Route::apiResource('jadwal', JadwalApiController::class);
 Route::apiResource('detail-frs', DetailFrsApiController::class);

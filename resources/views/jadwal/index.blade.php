@@ -1,56 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  @vite('resources/css/app.css')
-  <title>Jadwal Kuliah</title>
-</head>
-<body class="p-6 bg-gray-50">
+@extends ('master')
 
-  <div class="mb-4">
-    <a href="{{ route('jadwal.create') }}" class="px-4 py-2 bg-green-500 text-white text-sm rounded hover:bg-green-600">
-      + Tambah Jadwal
-    </a>
-  </div>
+@section('title', 'Jadwal')
 
-  <table class="min-w-full divide-y divide-gray-200 bg-white shadow rounded">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="px-4 py-2 text-sm font-semibold text-left">#</th>
-        <th class="px-4 py-2 text-sm font-semibold text-left">Kelas</th>
-        <th class="px-4 py-2 text-sm font-semibold text-left">Mata Kuliah</th>
-        <th class="px-4 py-2 text-sm font-semibold text-left">Dosen</th>
-        <th class="px-4 py-2 text-sm font-semibold text-left">Dosen Pendamping</th>
-        <th class="px-4 py-2 text-sm font-semibold text-left">Waktu</th>
-        <th class="px-4 py-2 text-sm font-semibold text-left">Ruangan</th>
-        <th class="px-4 py-2 text-sm font-semibold text-left">Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($jadwal as $index => $j)
-      <tr>
-        <td class="px-4 py-2 text-sm text-gray-700">{{ $index + 1 }}</td>
-        <td class="px-4 py-2 text-sm text-gray-700">{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}</td>
-        <td class="px-4 py-2 text-sm text-gray-700">{{ $j->matkul->jenis }} - {{ $j->matkul->nama_matkul }}</td>
-        <td class="px-4 py-2 text-sm text-gray-700">{{ $j->dosen->nama_dosen }}</td>
-        <td class="px-4 py-2 text-sm text-gray-700">{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}</td>
-        <td class="px-4 py-2 text-sm text-gray-700">
-            {{ $j->waktu->hari }}, {{ substr($j->waktu->jam_mulai, 0, 5) }} - {{ substr($j->waktu->jam_selesai, 0, 5) }}
-        </td>
-        <td class="px-4 py-2 text-sm text-gray-700">{{ $j->ruangan->kode_ruangan }}</td>
-        <td class="px-4 py-2 text-sm text-gray-700 space-x-2">
-          <a href="{{ route('jadwal.edit', $j->id_jadwal) }}" class="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">Edit</a>
-          <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus jadwal ini?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">Delete</button>
-          </form>
-        </td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
 
-</body>
-</html>
+        <div class="flex flex-col w-full bg-putih">
+            {{-- Profil User di Header --}}
+            @include('components.header')
+
+            {{-- Toast Notification --}}
+            <x-notification.toast-notification />
+
+            {{-- Content --}}
+            <div class="flex flex-row px-6 pb-6 space-x-6">
+                <div class="flex flex-col grow items-end space-y-4">
+                    {{-- PERMISSION UNTUK ADMIN --}}
+                    {{-- Button Tambah Jadwal --}}
+                    @if (auth()->user()->role === 'admin')
+                        <a href="{{ route('jadwal.create') }}">
+                            <x-button.submit icon="ph ph-plus">
+                                Tambah Jadwal
+                            </x-button.submit>
+                        </a>
+                    @endif
+
+                    {{-- Tabel Data Jadwal --}}
+                    <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
+                        <thead class="bg-brand-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-hitam">#</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Kelas</th>
+                                <th class="w-48 px-4 py-3 text-center text-sm font-medium text-hitam">Mata Kuliah</th>
+                                <th class="w-40 px-4 py-3 text-center text-sm font-medium text-hitam">Dosen</th>
+                                <th class="w-40 px-4 py-3 text-center text-sm font-medium text-hitam">Dosen Pendamping</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Ruangan</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Waktu</th>
+                                {{-- PERMISSION UNTUK ADMIN --}}
+                                {{-- Kolom Aksi --}}
+                                @if (auth()->user()->role === 'admin')
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                                @endif
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-putih divide-y divide-gray-200">
+                            @foreach ($jadwal as $index => $j)
+                                <tr>
+                                    <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
+                                    <x-table.table-td>{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}</x-table.table-td>
+                                    <x-table.table-td>{{ $j->matkul->jenis }} -
+                                        {{ $j->matkul->nama_matkul }}</x-table.table-td>
+                                    <x-table.table-td>{{ $j->dosen->nama_dosen }}</x-table.table-td>
+                                    <x-table.table-td>{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $j->ruangan->kode_ruangan }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">
+                                        <p>{{ $j->waktu->hari }}</p>
+                                        <p>{{ substr($j->waktu->jam_mulai, 0, 5) }} -
+                                            {{ substr($j->waktu->jam_selesai, 0, 5) }}</p>
+                                    </x-table.table-td>
+                                    {{-- PERMISSION UNTUK ADMIN --}}
+                                    @if (auth()->user()->role === 'admin')
+                                        <td class="px-2 py-2 text-center text-sm text-hitam">
+                                            <div class="flex justify-center items-center space-x-1">
+                                                {{-- Button Edit --}}
+                                                <a href="{{ route('jadwal.edit', $j->id_jadwal) }}"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-brand-700 hover:bg-brand-800 text-white text-sm rounded">
+                                                    <i class="ph ph-pencil-simple"></i>
+                                                </a>
+
+                                            {{-- Button Hapus --}}
+                                            {{-- <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST"
+                                                class="inline-block"
+                                                onsubmit="return confirm('Anda yakin ingin menghapus jadwal ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600">
+                                                    <i class="ph ph-trash-simple"></i>
+                                                </button>
+                                            </form> --}}
+<<<<<<< HEAD
+                                        </div>
+                                    </td>
+=======
+                                            </div>
+                                        </td>
+                                    @endif
+>>>>>>> 846b54d06b5c7050174689be992570bc2de85f1a
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

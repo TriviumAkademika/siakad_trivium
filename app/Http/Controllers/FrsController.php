@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Frs;
 use App\Models\Mahasiswa;
+use App\Models\Jadwal;
 use Illuminate\Http\Request;
+
 
 class FrsController extends Controller
 {
@@ -44,5 +46,13 @@ class FrsController extends Controller
     {
         Frs::destroy($id);
         return redirect()->route('frs.index')->with('success', 'FRS deleted.');
+    }
+
+    public function show($id)
+    {
+        $frs = Frs::with('mahasiswa', 'detailFrs.jadwal.matkul', 'detailFrs.jadwal.dosen', 'detailFrs.jadwal.ruangan', 'detailFrs.jadwal.waktu')->findOrFail($id);
+        $jadwals = Jadwal::with('matkul', 'dosen', 'ruangan', 'waktu')->get();
+
+        return view('detail_frs.index', compact('frs', 'jadwals'));
     }
 }

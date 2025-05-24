@@ -34,7 +34,10 @@ class MahasiswaController extends Controller
 
         Mahasiswa::create($request->all());
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan!');
+        return redirect()->route('mahasiswa.index')->with([
+            'message' => 'Data mahasiswa berhasil ditambahkan!',
+            'type' => 'success' // atau 'error', 'warning', 'info'
+        ]);
     }
 
     public function show(Mahasiswa $mahasiswa)
@@ -65,7 +68,10 @@ class MahasiswaController extends Controller
 
         $mahasiswa->update($request->all());
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil diperbarui!');
+        return redirect()->route('mahasiswa.index')->with([
+            'message' => 'Data mahasiswa berhasil diperbarui!',
+            'type' => 'success' // atau 'error', 'warning', 'info'
+        ]);
     }
 
     public function destroy($id)
@@ -73,6 +79,9 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::findOrFail($id);
         $mahasiswa->delete();
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus!');
+        return redirect()->route('mahasiswa.index')->with([
+            'message' => 'Data mahasiswa berhasil dihapus!',
+            'type' => 'warning' // atau 'error', 'warning', 'info'
+        ]);
     }
 }

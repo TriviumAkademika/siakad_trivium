@@ -1,33 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Waktu</title>
-  @vite('resources/css/app.css')
-</head>
-<body class="p-6 bg-gray-50">
+@extends('master')
 
-  <form action="{{ route('waktu.update', $waktu->id_waktu) }}" method="POST" class="max-w-md mx-auto bg-white p-6 rounded shadow">
-    @csrf
-    @method('PUT')
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Hari</label>
-      <input type="text" name="hari" value="{{ $waktu->hari }}" class="w-full border px-3 py-2 rounded" required>
-    </div>
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Jam Mulai</label>
-      <input type="time" name="jam_mulai" value="{{ $waktu->jam_mulai }}" class="w-full border px-3 py-2 rounded" required>
-    </div>
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Jam Selesai</label>
-      <input type="time" name="jam_selesai" value="{{ $waktu->jam_selesai }}" class="w-full border px-3 py-2 rounded" required>
-    </div>
-    <div class="flex justify-end space-x-2">
-      <a href="{{ route('waktu.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded">Batal</a>
-      <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Update</button>
-    </div>
-  </form>
+@section('title', 'Edit Waktu')
 
-</body>
-</html>
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Edit Waktu</h2>
+            {{-- Content --}}
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('waktu.update', $waktu->id_waktu) }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
+                    @method('PUT')
+
+                    {{-- Hari --}}
+                    <x-form.text-field label="Hari" name="hari" :value="$waktu->hari" />
+
+                    {{-- Jam Mulai --}}
+                    <x-form.text-time label="Jam Mulai" name="jam_mulai" :value="$waktu->jam_mulai" />
+
+                    {{-- Jam Selesai --}}
+                    <x-form.text-time label="Jam Selesai" name="jam_selesai" :value="$waktu->jam_selesai" />
+
+                    {{-- Button Perbarui --}}
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x">
+                            Batal
+                        </x-button.cancel>
+                        <x-button.submit icon="ph ph-floppy-disk">
+                            Perbarui
+                        </x-button.submit>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection
