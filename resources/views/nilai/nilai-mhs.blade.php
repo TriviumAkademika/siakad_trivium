@@ -11,10 +11,10 @@
       @include('components.header')
 
       {{-- Informasi Mahasiswa --}}
-      <section class="rounded-lg p-2 grid grid-cols-1 sm:grid-cols-3 bg-brand100 mb-4">
+      <section class="rounded-lg p-2 grid grid-cols-1 sm:grid-cols-3 bg-brand-100 mb-4">
         <div class="flex flex-col w-full p-4 gap-2">
           <label for="">Nama</label>
-          <input id="" type="text" value="Salsabila Nurhalimah" class="w-full border-2 border-neutral-500 rounded-lg p-2" readonly>
+          <input id="" type="text" value="{{ $mahasiswa->nama ?? '-' }}" class="w-full border-2 border-neutral-500 rounded-lg p-2" readonly>
         </div>
         <div class="relative w-full p-4">
           <label for="semester" class="block mb-2">Semester</label>
@@ -40,7 +40,7 @@
       </section>
 
       {{-- Tabel Nilai --}}
-      <section class="rounded-lg p-2 grid bg-brand100 mb-4">
+      <section class="rounded-lg p-2 grid bg-brand-100 mb-4">
         <div class="flex gap-4">
           <div class="flex items-center justify-center flex-none w-32 h-6 p-2">
             Kode MK
@@ -69,25 +69,24 @@
 
       {{-- isi tabel --}}
       <section>
+        @foreach($nilaiList as $nilai)
         <div class="flex gap-4 border-b-1 p-4">
-          <!-- Kode MK -->
           <div class="flex items-center justify-center flex-none w-32 h-6 p-2">
-            1234501
+            {{ $nilai->matkul->id_matkul ?? '-' }}
           </div>
-          <!-- Matakuliah -->
           <div class="flex items-center justify-center flex-grow h-6 p-2">
-            Workshop Desain Pengalaman Pengguna
+            {{ $nilai->matkul->nama_matkul ?? '-' }}
           </div>
-          <!-- Nilai -->
           <div class="flex w-60 h-6">
             <div class="flex items-center justify-center w-1/2">
-              A
+              {{ $nilai->nilai }}
             </div>
             <div class="flex items-center justify-center w-1/2">
-              100
+              {{-- Mapping nilai huruf ke numerik jika ingin --}}
             </div>
           </div>
         </div>
+        @endforeach
       </section>
       
       </div>

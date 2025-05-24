@@ -36,6 +36,28 @@ class UserSeeder extends Seeder
             $user->assignRole('mahasiswa');
         }
 
+        $mhs3 = Mahasiswa::find(1);
+        if ($mhs3) {
+            $user = User::create([
+                'email' => 'alfian@student.trivium.ac.id',
+                'password' => Hash::make('alfian'),
+                'role' => 'mahasiswa',
+                'id_mahasiswa' => $mhs3->id_mahasiswa,
+            ]);
+            $user->assignRole('mahasiswa');
+        }
+
+        $mhs4 = Mahasiswa::find(2);
+        if ($mhs4) {
+            $user = User::create([
+                'email' => 'renata@student.trivium.ac.id',
+                'password' => Hash::make('renata'),
+                'role' => 'mahasiswa',
+                'id_mahasiswa' => $mhs4->id_mahasiswa,
+            ]);
+            $user->assignRole('mahasiswa');
+        }
+
         // ==== DOSEN ====
 
         $dsn1 = Dosen::find(1);

@@ -42,9 +42,10 @@
 
                     {{-- Button Perbarui --}}
                     <div class="flex justify-end gap-x-1">
-                        <x-button.cancel icon="ph ph-x">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/jadwal';">
                             Batal
                         </x-button.cancel>
+
                         <x-button.submit icon="ph ph-floppy-disk">
                             Perbarui
                         </x-button.submit>
