@@ -17,12 +17,16 @@
             {{-- Content --}}
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">
+                    {{-- PERMISSION UNTUK ADMIN --}}
                     {{-- Button Tambah Data Mahasiswa --}}
-                    <a href="{{ route('mahasiswa.create') }}">
-                        <x-button.submit icon="ph ph-plus">
-                            Tambah Mahasiswa
-                        </x-button.submit>
-                    </a>
+                    @if (auth()->user()->role === 'admin')
+                        <a href="{{ route('mahasiswa.create') }}">
+                            <x-button.submit icon="ph ph-plus">
+                                Tambah Mahasiswa
+                            </x-button.submit>
+                        </a>
+                    @endif
+
 
                     {{-- Tabel Data Mahasiswa --}}
                     <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
@@ -35,7 +39,11 @@
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Semester</th>
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Gender</th>
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">No HP</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                                {{-- PERMISSION UNTUK ADMIN --}}
+                                {{-- Kolom Aksi --}}
+                                @if (auth()->user()->role === 'admin')
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
 
@@ -51,16 +59,18 @@
                                     <x-table.table-td
                                         class="text-center">{{ $m->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</x-table.table-td>
                                     <x-table.table-td>{{ $m->no_hp }}</x-table.table-td>
-                                    <td class="px-2 py-2 text-sm text-hitam">
-                                        <div class="flex justify-center items-center space-x-1">
-                                            {{-- Button Edit --}}
-                                            <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}"
-                                                class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
-                                                <i class="ph ph-pencil-simple"></i>
-                                            </a>
+                                    {{-- PERMISSION UNTUK ADMIN --}}
+                                    @if (auth()->user()->role === 'admin')
+                                        <td class="px-2 py-2 text-sm text-hitam">
+                                            <div class="flex justify-center items-center space-x-1">
+                                                {{-- Button Edit --}}
+                                                <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
+                                                    <i class="ph ph-pencil-simple"></i>
+                                                </a>
 
-                                            {{-- Button Delete --}}
-                                            {{-- <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}"
+                                                {{-- Button Delete --}}
+                                                {{-- <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}"
                                                 method="POST" class="inline-block"
                                                 onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
                                                 @csrf
@@ -70,8 +80,9 @@
                                                     <i class="ph ph-trash-simple"></i>
                                                 </button>
                                             </form> --}}
-                                        </div>
-                                    </td>
+                                            </div>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

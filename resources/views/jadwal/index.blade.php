@@ -17,6 +17,7 @@
             {{-- Content --}}
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">
+                    {{-- PERMISSION UNTUK ADMIN --}}
                     {{-- Button Tambah Jadwal --}}
                     @if (auth()->user()->role === 'admin')
                         <a href="{{ route('jadwal.create') }}">
@@ -37,6 +38,8 @@
                                 <th class="w-40 px-4 py-3 text-center text-sm font-medium text-hitam">Dosen Pendamping</th>
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Ruangan</th>
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Waktu</th>
+                                {{-- PERMISSION UNTUK ADMIN --}}
+                                {{-- Kolom Aksi --}}
                                 @if (auth()->user()->role === 'admin')
                                     <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
                                 @endif
@@ -58,6 +61,7 @@
                                         <p>{{ substr($j->waktu->jam_mulai, 0, 5) }} -
                                             {{ substr($j->waktu->jam_selesai, 0, 5) }}</p>
                                     </x-table.table-td>
+                                    {{-- PERMISSION UNTUK ADMIN --}}
                                     @if (auth()->user()->role === 'admin')
                                         <td class="px-2 py-2 text-center text-sm text-hitam">
                                             <div class="flex justify-center items-center space-x-1">

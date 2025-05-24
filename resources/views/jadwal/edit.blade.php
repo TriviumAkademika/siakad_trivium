@@ -16,8 +16,8 @@
                     @method('PUT')
 
                     {{-- Kelas --}}
-                    <x-form.dropdown-field label="Kelas" name="id_kelas" :options="$kelas" :selected="$jadwal->id_kelas" valueField="id_kelas"
-                        :labelFields="['prodi', 'paralel']" />
+                    <x-form.dropdown-field label="Kelas" name="id_kelas" :options="$kelas" :selected="$jadwal->id_kelas"
+                        valueField="id_kelas" :labelFields="['prodi', 'paralel']" />
 
                     {{-- Mata Kuliah --}}
                     <x-form.dropdown-field label="Mata Kuliah" name="id_matkul" :options="$matkul" :selected="$jadwal->id_matkul"
@@ -41,9 +41,10 @@
 
                     {{-- Button Perbarui --}}
                     <div class="flex justify-end gap-x-1">
-                        <x-button.cancel icon="ph ph-x">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/jadwal';">
                             Batal
                         </x-button.cancel>
+
                         <x-button.submit icon="ph ph-floppy-disk">
                             Perbarui
                         </x-button.submit>
