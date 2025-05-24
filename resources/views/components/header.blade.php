@@ -27,12 +27,12 @@
                 </label>
                 <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
                     <li><a class="text-base">Lihat Profil</a></li>
-                    <li>
+                    {{-- <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="text-base w-full text-left">Logout</button>
                         </form>
-                    </li>
+                    </li> --}}
                 </ul>
             </div>
         </div>

@@ -42,9 +42,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
 
-Route::get('/nilai-mhs', function () {
-    return view('nilai.nilai-mhs');
-});
+Route::get('/nilai-mhs', [App\Http\Controllers\NilaiController::class, 'nilaiMhs'])->name('nilai-mhs');
 
 // Route::get('/nilai-dosen', function () {
 //     return view('nilai.nilai-dosen');
@@ -70,4 +68,6 @@ Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'upd
 Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
 Route::resource('users', UserController::class);
 Route::resource('nilai', NilaiController::class);
+Route::get('/nilai/update-nilai/{id_mahasiswa}/{id_matkul}', [App\Http\Controllers\NilaiController::class, 'updateNilaiForm'])->name('nilai.updateNilaiForm');
+Route::post('/nilai/update-nilai', [App\Http\Controllers\NilaiController::class, 'updateNilai'])->name('nilai.updateNilai');
 

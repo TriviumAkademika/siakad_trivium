@@ -15,7 +15,8 @@ return new class extends Migration
         $table->id();
         $table->unsignedBigInteger('matakuliah_id');
         $table->unsignedBigInteger('mahasiswa_id');
-        $table->float('nilai')->nullable();
+        $table->string('nilai', 2)->nullable();
+        $table->string('jenis_nilai', 10)->default('UTS');
         $table->timestamps();
 
         $table->foreign('matakuliah_id')->references('id_matkul')->on('matkuls')->onDelete('cascade');

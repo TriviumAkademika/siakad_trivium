@@ -19,7 +19,7 @@ class MahasiswaSeeder extends Seeder
             ['3123500036', 'Muhammad Fikri Abiyyu', 'L'],
             ['3123500037', 'Aldo Marsendo', 'L'],
             ['3123500038', 'Adrian Sondang Irawan', 'L'],
-            ['3123500039', 'Rasydatur Rahma', 'P'],
+            ['3123500039', 'Rasyidatur Rahma', 'P'],
             ['3123500040', 'Yildisray Rafi Putra', 'L'],
             ['3123500041', 'Muhammad Bagas Prayogi', 'L'],
             ['3123500042', 'Rasyid Ridho', 'L'],
