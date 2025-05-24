@@ -80,7 +80,7 @@
                                         </a>
 
                                         {{-- Button Delete --}}
-                                        <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST"
+                                        {{-- <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST"
                                             class="inline-block"
                                             onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
                                             @csrf
@@ -89,7 +89,7 @@
                                                 class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600">
                                                 <i class="ph ph-trash-simple"></i>
                                             </button>
-                                        </form>
+                                        </form> --}}
                                     </td>
                                 </tr>
                             @endforeach

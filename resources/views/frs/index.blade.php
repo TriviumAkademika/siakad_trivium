@@ -44,13 +44,13 @@
                     <a href="{{ route('frs.edit', $item->id_frs) }}" class="inline-block px-3 py-1 bg-yellow-400 text-white text-xs rounded hover:bg-yellow-500" onclick="event.stopPropagation()">
                         Edit
                     </a>
-                    <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus data ini?')" onclick="event.stopPropagation()">
+                    {{-- <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus data ini?')" onclick="event.stopPropagation()">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
                             Delete
                         </button>
-                    </form>
+                    </form> --}}
                 </div>
             </div>
             @endforeach

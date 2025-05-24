@@ -42,13 +42,21 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen|mahasiswa'])->group(fun
 });
 
 
+/// PERMISSION ROLE ADMIN, DOSEN
+Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
+    Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
+    Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
+});
 
+/// PERMISSION ROLE DOSEN, MAHASISWA
+Route::middleware(['auth', 'verified', 'role:dosen|mahasiswa'])->group(function () {});
 
+/// PERMISSION ROLE ADMIN, MAHASISWA
+Route::middleware(['auth', 'verified', 'role:admin|mahasiswa'])->group(function () {});
 
 /// PERMISSIONS ROLE ADMIN
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     // Tabel Mahasiswa CRU
-    Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
     Route::get('/mahasiswa/create', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
     Route::get('/mahasiswa/{id}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
@@ -65,28 +73,28 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/dosen/{id}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
     Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');
 
-    // Tabel Waktu CRUD
+    // Tabel Waktu CRU
     Route::get('/waktu', [WaktuController::class, 'index'])->name('waktu.index');
     Route::get('/waktu/create', [WaktuController::class, 'create'])->name('waktu.create');
     Route::post('/waktu', [WaktuController::class, 'store'])->name('waktu.store');
     Route::get('/waktu/{id}/edit', [WaktuController::class, 'edit'])->name('waktu.edit');
     Route::put('/waktu/{id}', [WaktuController::class, 'update'])->name('waktu.update');
-    Route::delete('/waktu/{id}', [WaktuController::class, 'destroy'])->name('waktu.destroy');
+    // Route::delete('/waktu/{id}', [WaktuController::class, 'destroy'])->name('waktu.destroy');
 
-    // tabel Ruangan CRUD
+    // tabel Ruangan CRU
     Route::get('/ruangan', [RuanganController::class, 'index'])->name('ruangan.index');
     Route::get('/ruangan/create', [RuanganController::class, 'create'])->name('ruangan.create');
     Route::post('/ruangan', [RuanganController::class, 'store'])->name('ruangan.store');
     Route::get('/ruangan/{id}/edit', [RuanganController::class, 'edit'])->name('ruangan.edit');
     Route::put('/ruangan/{id}', [RuanganController::class, 'update'])->name('ruangan.update');
-    Route::delete('/ruangan/{id}', [RuanganController::class, 'destroy'])->name('ruangan.destroy');
+    // Route::delete('/ruangan/{id}', [RuanganController::class, 'destroy'])->name('ruangan.destroy');
 
-    // tabel Mata Kuliah CRUD
+    // tabel Mata Kuliah CRU
     Route::get('/matkul/create', [MatkulController::class, 'create'])->name('matkul.create');
     Route::post('/matkul', [MatkulController::class, 'store'])->name('matkul.store');
     Route::get('/matkul/{id}/edit', [MatkulController::class, 'edit'])->name('matkul.edit');
     Route::put('/matkul/{id}', [MatkulController::class, 'update'])->name('matkul.update');
-    Route::delete('/matkul/{id}', [MatkulController::class, 'destroy'])->name('matkul.destroy');
+    // Route::delete('/matkul/{id}', [MatkulController::class, 'destroy'])->name('matkul.destroy');
 
     // tabel Kelas CRU
     Route::get('/kelas', [KelasController::class, 'index'])->name('kelas.index');
@@ -94,41 +102,41 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::post('/kelas', [KelasController::class, 'store'])->name('kelas.store');
     Route::get('/kelas/{id}/edit', [KelasController::class, 'edit'])->name('kelas.edit');
     Route::put('/kelas/{id}', [KelasController::class, 'update'])->name('kelas.update');
-    Route::delete('/kelas/{id}', [KelasController::class, 'destroy'])->name('kelas.destroy');
+    // Route::delete('/kelas/{id}', [KelasController::class, 'destroy'])->name('kelas.destroy');
 
-    //tabel Jadwal CRUD
+    //tabel Jadwal CRU
     Route::get('/jadwal/create', [JadwalController::class, 'create'])->name('jadwal.create');
     Route::post('/jadwal', [JadwalController::class, 'store'])->name('jadwal.store');
     Route::get('/jadwal/{id}/edit', [JadwalController::class, 'edit'])->name('jadwal.edit');
     Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
-    Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
+    // Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
 
-    // Template
-    // Route::get('/table', [tabelController::class, 'index'])->name('mahasswa.index');
-    // Route::get('/table/create', [tabelController::class, 'create'])->name('mahasswa.create');
-    // Route::post('/table', [tabelController::class, 'store'])->name('mahasswa.store');
-    // Route::get('/table/{id}/edit', [tabelController::class, 'edit'])->name('mahasswa.edit');
-    // Route::put('/table/{id}', [tabelController::class, 'update'])->name('mahasswa.update');
-    // Route::delete('/table/{id}', [tabelController::class, 'destroy'])->name('mahasswa.destroy');
+    // tabel frs CRU
+    Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
+    Route::post('/frs', [FrsController::class, 'store'])->name('frs.store');
+    Route::get('/frs/{id}/edit', [FrsController::class, 'edit'])->name('frs.edit');
+    Route::put('/frs/{id}', [FrsController::class, 'update'])->name('frs.update');
+    // Route::delete('/frs/{id}', [FrsController::class, 'destroy'])->name('frs.destroy');
 });
 
 
+/// PERMISSION ROLE DOSEN
+Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
+
+});
 
 
-// routes/web.php
+/// PERMISSION ROLE MAHASISWA
+Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
+    
+});
 
-// // Admin & Dosen akses lihat mahasiswa
-// Route::get('/mahasiswa', [MahasiswaController::class, 'index'])
-//     ->middleware(['auth', 'permission:read-mahasiswa'])
-//     ->name('mahasiswa.index');
+
 
 Route::get('/nilai-mhs', function () {
     return view('nilai.nilai-mhs');
 });
 
-// Route::get('/nilai-dosen', function () {
-//     return view('nilai.nilai-dosen');
-// });
 
 Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
 
@@ -136,24 +144,8 @@ Route::get('/nilai-mhs', function () {
     return view('nilai.nilai-mhs');
 });
 
-// Route::get('/nilai-dosen', function () {
-//     return view('nilai.nilai-dosen');
-// });
-
 Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
 
-
-// Route::get('/dashboard', [DashboardController::class, 'index']);
-// Route::get('/dashboard/{id}', [DashboardController::class, 'show']);
-// Route::resource('dosen', DosenController::class);
-// Route::resource('mahasiswa', MahasiswaController::class);
-// Route::resource('kelas', KelasController::class);
-// Route::resource('user', UserController::class);
-// Route::resource('matkul', MatkulController::class);
-// Route::resource('waktu', WaktuController::class);
-// Route::resource('ruangan', RuanganController::class);
-// Route::resource('jadwal', JadwalController::class);
-Route::resource('frs', FrsController::class);
 Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
 Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
 Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
@@ -161,8 +153,5 @@ Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy']
 // Route::resource('users', UserController::class);
 Route::resource('nilai', NilaiController::class);
 
-// Route::get('ruangan', [RuanganController::class] function(){
-//     return view('pengunjung');
-// })->middleware(['auth', 'verified', 'role_or_permission:admin|dosen|lihat-dosen']);
 
 require __DIR__ . '/auth.php';
