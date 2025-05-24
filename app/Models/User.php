@@ -33,26 +33,43 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    // Relasi dengan Mahasiswa
     public function mahasiswa()
     {
         return $this->belongsTo(Mahasiswa::class, 'id_mahasiswa', 'id_mahasiswa');
     }
 
+    // Relasi dengan Dosen
     public function dosen()
     {
         return $this->belongsTo(Dosen::class, 'id_dosen', 'id_dosen');
     }
 
+    // Accessor untuk mendapatkan nama display
     public function getDisplayNameAttribute()
     {
-        return $this->mahasiswa->nama
-            ?? $this->dosen->nama_dosen
-            ?? $this->name
-            ?? 'User';
+        if ($this->hasRole('mahasiswa') && $this->mahasiswa) {
+            return $this->mahasiswa->nama;
+        } elseif ($this->hasRole('dosen') && $this->dosen) {
+            return $this->dosen->nama_dosen;
+        } elseif ($this->hasRole('admin')) {
+            return $this->name;
+        }
+        
+        return $this->email; // fallback
     }
 
+    // Accessor untuk mendapatkan role dari Spatie Permission
     public function getRoleAttribute()
     {
         return $this->getRoleNames()->first();
+    }
+
+    // Method helper untuk mengecek apakah user sudah memiliki akun
+    public function scopeWithoutRole($query, $role)
+    {
+        return $query->whereDoesntHave('roles', function ($q) use ($role) {
+            $q->where('name', $role);
+        });
     }
 }
