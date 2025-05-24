@@ -17,99 +17,36 @@
                     @method('PUT')
 
                     {{-- Nama --}}
-                    <div class="flex w-full">
-                        <label for="nama" class="flex items-center w-1/4 text-base font-medium text-hitam">
-                            Nama
-                            <span class="pl-1 text-error">*</span>
-                        </label>
-                        <input type="text" name="nama" id="nama" value="{{ $mahasiswa->nama }}"
-                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
-                            required>
-                    </div>
+                    <x-text-field label="Nama" name="nama" :value="$mahasiswa->nama" />
 
                     {{-- NRP --}}
-                    <div class="flex w-full">
-                        <label for="nrp" class="flex items-center w-1/4 text-base font-medium text-hitam">
-                            NRP
-                            <span class="pl-1 text-error">*</span>
-                        </label>
-                        <input type="text" name="nrp" id="nrp" value="{{ $mahasiswa->nrp }}"
-                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
-                            required>
-                    </div>
+                    <x-text-field label="NRP" name="nrp" :value="$mahasiswa->nrp" />
 
                     {{-- Kelas --}}
-                    <div class="flex w-full">
-                        <label for="id_kelas" class="flex items-center w-1/4 text-base font-medium text-hitam">
-                            Kelas
-                            <span class="pl-1 text-error">*</span>
-                        </label>
-                        <select name="id_kelas" id="id_kelas"
-                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
-                            required>
-                            @foreach ($kelas as $k)
-                                <option value="{{ $k->id_kelas }}"
-                                    {{ $mahasiswa->id_kelas == $k->id_kelas ? 'selected' : '' }}>
-                                    {{ $k->prodi }} {{ $k->paralel }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <x-dropdown-field label="Kelas" name="id_kelas" :options="$kelas" :selected="$mahasiswa->id_kelas"
+                        valueField="id_kelas" :labelFields="['prodi', 'paralel']" />
 
                     {{-- Semester --}}
-                    <div class="flex w-full">
-                        <label for="semester" class="flex items-center w-1/4 text-base font-medium text-hitam">
-                            Semester
-                            <span class="pl-1 text-error">*</span>
-                        </label>
-                        <input type="text" name="semester" id="semester" value="{{ $mahasiswa->semester }}"
-                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
-                            required>
-                    </div>
+                    <x-text-field label="Semester" name="semester" :value="$mahasiswa->semester" />
 
                     {{-- Gender --}}
-                    <div class="flex w-full">
-                        <label for="gender" class="flex items-center w-1/4 text-base font-medium text-hitam">
-                            Gender
-                            <span class="pl-1 text-error">*</span>
-                        </label>
-                        <select name="gender" id="gender"
-                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
-                            required>
-                            <option value="L" {{ $mahasiswa->gender == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="P" {{ $mahasiswa->gender == 'P' ? 'selected' : '' }}>Perempuan</option>
-                        </select>
-                    </div>
+                    <x-dropdown-field label="Gender" name="gender" :options="[['value' => 'L', 'label' => 'Laki-laki'], ['value' => 'P', 'label' => 'Perempuan']]" :selected="$mahasiswa->gender" valueField="value"
+                        labelFields="label" />
 
                     {{-- No HP --}}
-                    <div class="flex w-full">
-                        <label for="no_hp" class="flex items-center w-1/4 text-base font-medium text-hitam">
-                            No HP
-                            <span class="pl-1 text-error">*</span>
-                        </label>
-                        <input type="text" name="no_hp" id="no_hp" value="{{ $mahasiswa->no_hp }}"
-                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
-                            required>
-                    </div>
+                    <x-text-field label="No HP" name="no_hp" :value="$mahasiswa->no_hp" />
 
                     {{-- Alamat --}}
-                    <div class="flex w-full">
-                        <label for="alamat" class="flex items-center w-1/4 text-base font-medium text-hitam">
-                            Alamat
-                            <span class="pl-1 text-error">*</span>
-                        </label>
-                        <textarea name="alamat" id="alamat" rows="3"
-                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
-                            required>{{ $mahasiswa->alamat }}</textarea>
-                    </div>
+                    <x-textarea-field label="Alamat" name="alamat" :value="$mahasiswa->alamat" />
 
                     {{-- Button Perbarui --}}
-                    <div class="flex justify-end">
-                        <button type="submit"
-                            class="btn bg-brand-900 hover:bg-brand-950 text-sm font-normal text-putih rounded-lg focus:outline-none focus:ring-0 transition">
-                            <i class="ph ph-floppy-disk"></i>
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x">
+                            Batal
+                        </x-button.cancel>
+                        <x-button.submit icon="ph ph-floppy-disk">
                             Perbarui
-                        </button>
+                        </x-button.submit>
                     </div>
                 </form>
             </div>

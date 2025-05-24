@@ -81,7 +81,7 @@ class MahasiswaController extends Controller
 
         return redirect()->route('mahasiswa.index')->with([
             'message' => 'Data mahasiswa berhasil dihapus!',
-            'type' => 'error' // atau 'error', 'warning', 'info'
+            'type' => 'warning' // atau 'error', 'warning', 'info'
         ]);
     }
 }

@@ -6,40 +6,22 @@
     <div class="flex w-full grow">
         {{-- Sidebar --}}
         @include('components.sidebar')
+
         <div class="flex flex-col w-full bg-putih">
             {{-- Profil User di Header --}}
             @include('components.header')
+
+            {{-- Toast Notification --}}
+            <x-notification.toast-notification />
+
             {{-- Content --}}
             <div class="flex flex-row px-6 pb-6 space-x-6">
-
-                {{-- Toast Notification --}}
-                @if (session('message'))
-                    @php
-                        $type = session('type') ?? 'info'; // fallback ke 'info' kalau kosong
-                        $colorMap = [
-                            'error' => 'bg-merah-100 text-error',
-                            'info' => 'bg-biru-100 text-info',
-                            'success' => 'bg-hijau-100 text-success',
-                            'warning' => 'bg-kuning-100 text-warning',
-                        ];
-                        $classes = $colorMap[$type] ?? $colorMap['info'];
-                    @endphp
-
-                    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" x-transition
-                        class="fixed top-8 right-8 {{ $classes }} px-6 py-4 rounded shadow z-50">
-                        <span class="text-sm">{{ session('message') }}</span>
-                    </div>
-                @endif
-
-                <div class="flex flex-col grow space-y-4">
-                    
+                <div class="flex flex-col grow items-end space-y-4">
                     {{-- Button Tambah Data Mahasiswa --}}
                     <a href="{{ route('mahasiswa.create') }}">
-                        <button
-                            class="btn bg-brand-900 hover:bg-brand-950 text-sm font-normal text-putih rounded-lg focus:outline-none focus:ring-0">
-                            <i class="ph ph-plus"></i>
+                        <x-button.submit icon="ph ph-plus">
                             Tambah Mahasiswa
-                        </button>
+                        </x-button.submit>
                     </a>
 
                     {{-- Tabel Data Mahasiswa --}}
@@ -53,25 +35,29 @@
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Semester</th>
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Gender</th>
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">No HP</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Action</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
                             </tr>
                         </thead>
 
                         <tbody class="bg-putih divide-y divide-gray-200">
                             @foreach ($mahasiswa as $index => $m)
                                 <tr>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $index + 1 }}</td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $m->nama }}</td>
-                                    <td class="px-4 py-2 text-center text-sm text-hitam">{{ $m->nrp }}</td>
-                                    <td class="px-4 py-2 text-center text-sm text-hitam">
-                                        {{ $m->kelas ? $m->kelas->prodi . ' ' . $m->kelas->paralel : '-' }}
-                                    </td>
-                                    <td class="px-4 py-2 text-center text-sm text-hitam">{{ $m->semester }}</td>
-                                    <td class="px-4 py-2 text-center text-sm text-hitam">
-                                        {{ $m->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}
-                                    </td>
-                                    <td class="px-4 py-2 text-sm text-hitam">{{ $m->no_hp }}</td>
-                                    <td class="px-2 py-2 text-center text-sm text-hitam space-x-1">
+                                    <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
+                                    <x-table.table-td>{{ $m->nama }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $m->nrp }}</x-table.table-td>
+                                    <x-table.table-td
+                                        class="text-center">{{ $m->kelas ? $m->kelas->prodi . ' ' . $m->kelas->paralel : '-' }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $m->semester }}</x-table.table-td>
+                                    <x-table.table-td
+                                        class="text-center">{{ $m->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</x-table.table-td>
+                                    <x-table.table-td>{{ $m->no_hp }}</x-table.table-td>
+                                    <td class="px-2 py-2 text-sm text-hitam">
+                                        <div class="flex justify-center items-center space-x-1">
+                                            {{-- Button Edit --}}
+                                            <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}"
+                                                class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
+                                                <i class="ph ph-pencil-simple"></i>
+                                            </a>
 
                                         {{-- Button Edit --}}
                                         <a href="{{ route('mahasiswa.edit', $m->id_mahasiswa) }}"
@@ -79,17 +65,18 @@
                                             <i class="ph ph-pencil-simple"></i>
                                         </a>
 
-                                        {{-- Button Delete --}}
-                                        {{-- <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST"
-                                            class="inline-block"
-                                            onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600">
-                                                <i class="ph ph-trash-simple"></i>
-                                            </button>
-                                        </form> --}}
+                                            {{-- Button Delete --}}
+                                            {{-- <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}"
+                                                method="POST" class="inline-block"
+                                                onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600">
+                                                    <i class="ph ph-trash-simple"></i>
+                                                </button>
+                                            </form> --}}
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

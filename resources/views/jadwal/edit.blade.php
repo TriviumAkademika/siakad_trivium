@@ -1,89 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('master')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Jadwal</title>
-    @vite('resources/css/app.css')
-</head>
+@section('title', 'Edit Jadwal')
 
-<body class="p-6 bg-gray-50">
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Edit Jadwal</h2>
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('jadwal.update', $jadwal->id_jadwal) }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
+                    @method('PUT')
 
-    <form action="{{ route('jadwal.update', $jadwal->id_jadwal) }}" method="POST"
-        class="bg-white p-6 rounded shadow-md space-y-4">
-        @csrf
-        @method('PUT')
+                    {{-- Kelas --}}
+                    <x-dropdown-field label="Kelas" name="id_kelas" :options="$kelas" :selected="$jadwal->id_kelas" valueField="id_kelas"
+                        :labelFields="['prodi', 'paralel']" />
 
-        <div>
-            <label class="block text-sm font-medium">Kelas</label>
-            <select name="id_kelas" class="w-full border rounded px-3 py-2">
-                @foreach ($kelas as $k)
-                    <option value="{{ $k->id_kelas }}" @selected($jadwal->id_kelas == $k->id_kelas)>
-                        {{ $k->prodi }} - {{ $k->paralel }}
-                    </option>
-                @endforeach
-            </select>
+
+                    {{-- Mata Kuliah --}}
+                    <x-dropdown-field label="Mata Kuliah" name="id_matkul" :options="$matkul" :selected="$jadwal->id_matkul"
+                        valueField="id_matkul" :labelFields="['jenis', 'nama_matkul']" />
+
+                    {{-- Dosen --}}
+                    <x-dropdown-field label="Dosen" name="id_dosen" :options="$dosen" :selected="$jadwal->id_dosen"
+                        valueField="id_dosen" labelFields="nama_dosen" />
+
+                    {{-- Dosen Pendamping (Opsional) --}}
+                    <x-dropdown-field label="Dosen Pendamping" name="id_dosen_2" :options="$dosen" :selected="$jadwal->id_dosen_2"
+                        valueField="id_dosen" labelFields="nama_dosen" :optionalOption="['value' => '', 'label' => 'Tidak Ada']" :required="false" />
+
+                    {{-- Ruangan --}}
+                    <x-dropdown-field label="Ruangan" name="id_ruangan" :options="$ruangan" :selected="$jadwal->id_ruangan"
+                        valueField="id_ruangan" labelFields="kode_ruangan" />
+
+                    {{-- Waktu --}}
+                    <x-dropdown-field label="Waktu" name="id_waktu" :options="$waktu" :selected="$jadwal->id_waktu"
+                        valueField="id_waktu" :labelFields="['hari', 'jam_mulai', 'jam_selesai']" />
+
+                    {{-- Button Perbarui --}}
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x">
+                            Batal
+                        </x-button.cancel>
+                        <x-button.submit icon="ph ph-floppy-disk">
+                            Perbarui
+                        </x-button.submit>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div>
-            <label class="block text-sm font-medium">Mata Kuliah</label>
-            <select name="id_matkul" class="w-full border rounded px-3 py-2">
-                @foreach ($matkul as $m)
-                    <option value="{{ $m->id_matkul }}" @selected($jadwal->id_matkul == $m->id_matkul)>
-                        {{ $m->jenis }} - {{ $m->nama_matkul }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium">Dosen</label>
-            <select name="id_dosen" class="w-full border rounded px-3 py-2">
-                @foreach ($dosen as $d)
-                    <option value="{{ $d->id_dosen }}" @selected($jadwal->id_dosen == $d->id_dosen)>
-                        {{ $d->nama_dosen }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
-            <label for="id_dosen_2">Dosen Pendamping (Opsional)</label>
-            <select name="id_dosen_2">
-                <option value="">Tidak Ada</option>
-                @foreach ($dosen as $d)
-                    <option value="{{ $d->id_dosen }}">{{ $d->nama_dosen }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium">Waktu</label>
-            <select name="id_waktu" class="w-full border rounded px-3 py-2">
-                @foreach ($waktu as $w)
-                    <option value="{{ $w->id_waktu }}" @selected($jadwal->id_waktu == $w->id_waktu)>
-                        {{ $w->hari }} ({{ $w->jam_mulai }} - {{ $w->jam_selesai }})
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium">Ruangan</label>
-            <select name="id_ruangan" class="w-full border rounded px-3 py-2">
-                @foreach ($ruangan as $r)
-                    <option value="{{ $r->id_ruangan }}" @selected($jadwal->id_ruangan == $r->id_ruangan)>
-                        {{ $r->kode_ruangan }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Update</button>
-        </div>
-    </form>
-
-</body>
-
-</html>
+    </div>
+@endsection
