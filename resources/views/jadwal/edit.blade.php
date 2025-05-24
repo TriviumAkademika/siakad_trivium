@@ -16,28 +16,27 @@
                     @method('PUT')
 
                     {{-- Kelas --}}
-                    <x-dropdown-field label="Kelas" name="id_kelas" :options="$kelas" :selected="$jadwal->id_kelas" valueField="id_kelas"
+                    <x-form.dropdown-field label="Kelas" name="id_kelas" :options="$kelas" :selected="$jadwal->id_kelas" valueField="id_kelas"
                         :labelFields="['prodi', 'paralel']" />
 
-
                     {{-- Mata Kuliah --}}
-                    <x-dropdown-field label="Mata Kuliah" name="id_matkul" :options="$matkul" :selected="$jadwal->id_matkul"
+                    <x-form.dropdown-field label="Mata Kuliah" name="id_matkul" :options="$matkul" :selected="$jadwal->id_matkul"
                         valueField="id_matkul" :labelFields="['jenis', 'nama_matkul']" />
 
                     {{-- Dosen --}}
-                    <x-dropdown-field label="Dosen" name="id_dosen" :options="$dosen" :selected="$jadwal->id_dosen"
+                    <x-form.dropdown-field label="Dosen" name="id_dosen" :options="$dosen" :selected="$jadwal->id_dosen"
                         valueField="id_dosen" labelFields="nama_dosen" />
 
                     {{-- Dosen Pendamping (Opsional) --}}
-                    <x-dropdown-field label="Dosen Pendamping" name="id_dosen_2" :options="$dosen" :selected="$jadwal->id_dosen_2"
+                    <x-form.dropdown-field label="Dosen Pendamping" name="id_dosen_2" :options="$dosen" :selected="$jadwal->id_dosen_2"
                         valueField="id_dosen" labelFields="nama_dosen" :optionalOption="['value' => '', 'label' => 'Tidak Ada']" :required="false" />
 
                     {{-- Ruangan --}}
-                    <x-dropdown-field label="Ruangan" name="id_ruangan" :options="$ruangan" :selected="$jadwal->id_ruangan"
+                    <x-form.dropdown-field label="Ruangan" name="id_ruangan" :options="$ruangan" :selected="$jadwal->id_ruangan"
                         valueField="id_ruangan" labelFields="kode_ruangan" />
 
                     {{-- Waktu --}}
-                    <x-dropdown-field label="Waktu" name="id_waktu" :options="$waktu" :selected="$jadwal->id_waktu"
+                    <x-form.dropdown-field label="Waktu" name="id_waktu" :options="$waktu" :selected="$jadwal->id_waktu"
                         valueField="id_waktu" :labelFields="['hari', 'jam_mulai', 'jam_selesai']" />
 
                     {{-- Button Perbarui --}}
