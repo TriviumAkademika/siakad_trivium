@@ -18,11 +18,13 @@
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">
                     {{-- Button Tambah Jadwal --}}
-                    <a href="{{ route('jadwal.create') }}">
-                        <x-button.submit icon="ph ph-plus">
-                            Tambah Jadwal
-                        </x-button.submit>
-                    </a>
+                    @if (auth()->user()->role === 'admin')
+                        <a href="{{ route('jadwal.create') }}">
+                            <x-button.submit icon="ph ph-plus">
+                                Tambah Jadwal
+                            </x-button.submit>
+                        </a>
+                    @endif
 
                     {{-- Tabel Data Jadwal --}}
                     <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
@@ -35,7 +37,9 @@
                                 <th class="w-40 px-4 py-3 text-center text-sm font-medium text-hitam">Dosen Pendamping</th>
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Ruangan</th>
                                 <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Waktu</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                                @if (auth()->user()->role === 'admin')
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
 
@@ -44,7 +48,8 @@
                                 <tr>
                                     <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
                                     <x-table.table-td>{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}</x-table.table-td>
-                                    <x-table.table-td>{{ $j->matkul->jenis }} - {{ $j->matkul->nama_matkul }}</x-table.table-td>
+                                    <x-table.table-td>{{ $j->matkul->jenis }} -
+                                        {{ $j->matkul->nama_matkul }}</x-table.table-td>
                                     <x-table.table-td>{{ $j->dosen->nama_dosen }}</x-table.table-td>
                                     <x-table.table-td>{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}</x-table.table-td>
                                     <x-table.table-td class="text-center">{{ $j->ruangan->kode_ruangan }}</x-table.table-td>
@@ -53,16 +58,17 @@
                                         <p>{{ substr($j->waktu->jam_mulai, 0, 5) }} -
                                             {{ substr($j->waktu->jam_selesai, 0, 5) }}</p>
                                     </x-table.table-td>
-                                    <td class="px-2 py-2 text-center text-sm text-hitam">
-                                        <div class="flex justify-center items-center space-x-1">
-                                            {{-- Button Edit --}}
-                                            <a href="{{ route('jadwal.edit', $j->id_jadwal) }}"
-                                                class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
-                                                <i class="ph ph-pencil-simple"></i>
-                                            </a>
+                                    @if (auth()->user()->role === 'admin')
+                                        <td class="px-2 py-2 text-center text-sm text-hitam">
+                                            <div class="flex justify-center items-center space-x-1">
+                                                {{-- Button Edit --}}
+                                                <a href="{{ route('jadwal.edit', $j->id_jadwal) }}"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
+                                                    <i class="ph ph-pencil-simple"></i>
+                                                </a>
 
-                                            {{-- Button Hapus --}}
-                                            {{-- <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST"
+                                                {{-- Button Hapus --}}
+                                                {{-- <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST"
                                                 class="inline-block"
                                                 onsubmit="return confirm('Anda yakin ingin menghapus jadwal ini?');">
                                                 @csrf
@@ -72,8 +78,9 @@
                                                     <i class="ph ph-trash-simple"></i>
                                                 </button>
                                             </form> --}}
-                                        </div>
-                                    </td>
+                                            </div>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

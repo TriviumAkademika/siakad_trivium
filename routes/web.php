@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
 
 /// PERMISSION ROLE ADMIN, DOSEN, MAHASISWA 
 /// PERMISSION ALL ROLE
-/// lihat tabel dosen, matkul, jadwal
+/// lihat tabel dosen, matkul, jadwal, detail frs
 Route::middleware(['auth', 'verified', 'role:admin|dosen|mahasiswa'])->group(function () {
     Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index');
     Route::get('/matkul', [MatkulController::class, 'index'])->name('matkul.index');
