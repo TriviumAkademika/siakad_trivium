@@ -1,65 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tambah Mahasiswa</title>
-  @vite('resources/css/app.css')
-</head>
-<body class="p-6 bg-gray-50">
+@extends('master')
 
-  <h1 class="text-xl font-bold mb-4">Tambah Mahasiswa</h1>
+@section('title', 'Tambah Mahasiswa')
 
-  <form action="{{ route('mahasiswa.store') }}" method="POST" class="space-y-4">
-    @csrf
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Tambah Mahasiswa</h2>
+            {{-- Content --}}
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('mahasiswa.store') }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Nama</label>
-      <input type="text" name="nama" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
+                    {{-- Nama --}}
+                    <div class="flex w-full">
+                        <label for="nama" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            Nama
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <input type="text" name="nama" id="nama"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required>
+                    </div>
+
+                    {{-- NRP --}}
+                    <div class="flex w-full">
+                        <label for="nrp" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            NRP
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <input type="text" name="nrp" id="nrp"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required>
+                    </div>
+
+                    {{-- Kelas --}}
+                    <div class="flex w-full">
+                        <label for="id_kelas" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            Kelas
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <select name="id_kelas" id="id_kelas"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required>
+                            <option value="">-- Pilih Kelas --</option>
+                            @foreach ($kelas as $k)
+                                <option value="{{ $k->id_kelas }}">{{ $k->prodi }} {{ $k->paralel }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Semester --}}
+                    <div class="flex w-full">
+                        <label for="semester" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            Semester
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <input type="text" name="semester" id="semester"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required>
+                    </div>
+
+                    {{-- Gender --}}
+                    <div class="flex w-full">
+                        <label for="gender" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            Gender
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <select name="gender" id="gender"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required>
+                            <option value="L">Laki-laki</option>
+                            <option value="P">Perempuan</option>
+                        </select>
+                    </div>
+
+                    {{-- No HP --}}
+                    <div class="flex w-full">
+                        <label for="no_hp" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            No HP
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <input type="text" name="no_hp" id="no_hp"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required>
+                    </div>
+
+                    {{-- Alamat --}}
+                    <div class="flex w-full">
+                        <label for="alamat" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            Alamat
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <textarea name="alamat" id="alamat" rows="3"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required></textarea>
+                    </div>
+
+                    {{-- Button Simpan --}}
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="btn bg-brand-900 hover:bg-brand-950 text-sm font-normal text-putih rounded-lg focus:outline-none focus:ring-0 transition">
+                            <i class="ph ph-floppy-disk"></i>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">NRP</label>
-      <input type="text" name="nrp" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Kelas</label>
-      <select name="id_kelas" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
-        <option value="">-- Pilih Kelas --</option>
-        @foreach ($kelas as $k)
-          <option value="{{ $k->id_kelas }}">{{ $k->prodi }} {{ $k->paralel }}</option>
-        @endforeach
-      </select>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Semester</label>
-      <input type="text" name="semester" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Gender</label>
-      <select name="gender" class="mt-1 block w-full border border-gray-300 rounded p-2" required>
-        <option value="L">Laki-laki</option>
-        <option value="P">Perempuan</option>
-      </select>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Alamat</label>
-      <textarea name="alamat" class="mt-1 block w-full border border-gray-300 rounded p-2" rows="3"></textarea>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">No HP</label>
-      <input type="text" name="no_hp" class="mt-1 block w-full border border-gray-300 rounded p-2">
-    </div>
-
-    <div>
-      <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
-    </div>
-  </form>
-
-</body>
-</html>
+@endsection
