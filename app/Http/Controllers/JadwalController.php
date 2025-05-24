@@ -44,7 +44,10 @@ class JadwalController extends Controller
 
         Jadwal::create($request->all());
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
+        return redirect()->route('jadwal.index')->with([
+            'message' => 'Jadwal berhasil ditambahkan!',
+            'type' => 'success' // atau 'error', 'warning', 'info'
+        ]);
     }
 
     public function edit($id)
@@ -75,7 +78,10 @@ class JadwalController extends Controller
 
         $jadwal->update($request->all());
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diperbarui!');
+        return redirect()->route('jadwal.index')->with([
+            'message' => 'Jadwal berhasil dipebarui!',
+            'type' => 'success' // atau 'error', 'warning', 'info'
+        ]);
     }
 
     public function destroy($id)
@@ -83,6 +89,9 @@ class JadwalController extends Controller
         $jadwal = Jadwal::findOrFail($id);
         $jadwal->delete();
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
+        return redirect()->route('jadwal.index')->with([
+            'message' => 'Jadwal berhasil dihapus!',
+            'type' => 'warning' // atau 'error', 'warning', 'info'
+        ]);
     }
 }

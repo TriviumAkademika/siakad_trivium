@@ -102,11 +102,9 @@
 
                     {{-- Button Simpan --}}
                     <div class="flex justify-end">
-                        <button type="submit"
-                            class="btn bg-brand-900 hover:bg-brand-950 text-sm font-normal text-putih rounded-lg focus:outline-none focus:ring-0 transition">
-                            <i class="ph ph-floppy-disk"></i>
+                        <x-button.submit icon="ph ph-floppy-disk">
                             Simpan
-                        </button>
+                        </x-button.submit>
                     </div>
                 </form>
             </div>
