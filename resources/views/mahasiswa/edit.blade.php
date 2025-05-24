@@ -17,27 +17,27 @@
                     @method('PUT')
 
                     {{-- Nama --}}
-                    <x-text-field label="Nama" name="nama" :value="$mahasiswa->nama" />
+                    <x-form.text-field label="Nama" name="nama" :value="$mahasiswa->nama" />
 
                     {{-- NRP --}}
-                    <x-text-field label="NRP" name="nrp" :value="$mahasiswa->nrp" />
+                    <x-form.text-field label="NRP" name="nrp" :value="$mahasiswa->nrp" />
 
                     {{-- Kelas --}}
-                    <x-dropdown-field label="Kelas" name="id_kelas" :options="$kelas" :selected="$mahasiswa->id_kelas"
+                    <x-form.dropdown-field label="Kelas" name="id_kelas" :options="$kelas" :selected="$mahasiswa->id_kelas"
                         valueField="id_kelas" :labelFields="['prodi', 'paralel']" />
 
                     {{-- Semester --}}
-                    <x-text-field label="Semester" name="semester" :value="$mahasiswa->semester" />
+                    <x-form.text-field label="Semester" name="semester" :value="$mahasiswa->semester" />
 
                     {{-- Gender --}}
-                    <x-dropdown-field label="Gender" name="gender" :options="[['value' => 'L', 'label' => 'Laki-laki'], ['value' => 'P', 'label' => 'Perempuan']]" :selected="$mahasiswa->gender" valueField="value"
+                    <x-form.dropdown-field label="Gender" name="gender" :options="[['value' => 'L', 'label' => 'Laki-laki'], ['value' => 'P', 'label' => 'Perempuan']]" :selected="$mahasiswa->gender" valueField="value"
                         labelFields="label" />
 
                     {{-- No HP --}}
-                    <x-text-field label="No HP" name="no_hp" :value="$mahasiswa->no_hp" />
+                    <x-form.text-field label="No HP" name="no_hp" :value="$mahasiswa->no_hp" />
 
                     {{-- Alamat --}}
-                    <x-textarea-field label="Alamat" name="alamat" :value="$mahasiswa->alamat" />
+                    <x-form.textarea-field label="Alamat" name="alamat" :value="$mahasiswa->alamat" />
 
                     {{-- Button Perbarui --}}
                     <div class="flex justify-end gap-x-1">

@@ -8,16 +8,16 @@ use App\http\Resources\DosenResource;
 
 class DosenController extends Controller
 {
-    public function index()
-    {
-        $dosen = Dosen::all();
-        return DosenResource::collection($dosen);
-    }
     // public function index()
     // {
     //     $dosen = Dosen::all();
-    //     return view('dosen.index', compact('dosen'));
+    //     return DosenResource::collection($dosen);
     // }
+    public function index()
+    {
+        $dosen = Dosen::all();
+        return view('dosen.index', compact('dosen'));
+    }
 
     public function create()
     {

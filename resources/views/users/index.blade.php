@@ -24,7 +24,7 @@
                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Email</th>
                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Role</th>
                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama Pengguna</th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Aksi</th>
+                {{-- <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Aksi</th> --}}
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -47,17 +47,17 @@
                         @endif
                     </td>
 
-                    <td class="px-4 py-2 text-sm text-gray-900 space-x-2">
+                    {{-- <td class="px-4 py-2 text-sm text-gray-900 space-x-2">
                         <a href="{{ route('users.edit', $user->id_user) }}"
                             class="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">Edit</a>
-                        {{-- <form action="{{ route('users.destroy', $user->id_user) }}" method="POST" class="inline-block"
+                        <form action="{{ route('users.destroy', $user->id_user) }}" method="POST" class="inline-block"
                             onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit"
                                 class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">Delete</button>
-                        </form> --}}
-                    </td>
+                        </form>
+                    </td> --}}
                 </tr>
             @endforeach
         </tbody>
