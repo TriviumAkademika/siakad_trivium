@@ -32,11 +32,11 @@
           <td class="px-4 py-2 text-sm text-gray-900">{{ $r->kode_ruangan }}</td>
           <td class="px-4 py-2 space-x-2">
             <a href="{{ route('ruangan.edit', $r->id_ruangan) }}" class="inline-block px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">Edit</a>
-            <form action="{{ route('ruangan.destroy', $r->id_ruangan) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
+            {{-- <form action="{{ route('ruangan.destroy', $r->id_ruangan) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
               @csrf
               @method('DELETE')
               <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">Delete</button>
-            </form>
+            </form> --}}
           </td>
         </tr>
       @endforeach
