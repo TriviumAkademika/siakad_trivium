@@ -138,10 +138,8 @@ Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
 });
 
 
-/// Belum Rapi
-Route::get('/nilai-mhs', function () {
-    return view('nilai.nilai-mhs');
-});
+
+Route::get('/nilai-mhs', [App\Http\Controllers\NilaiController::class, 'nilaiMhs'])->name('nilai-mhs');
 
 Route::get('/nilai-mhs', function () {
     return view('nilai.nilai-mhs');
@@ -151,5 +149,7 @@ Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen
 Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
 Route::resource('nilai', NilaiController::class);
 // Route::resource('users', UserController::class);
+Route::get('/nilai/update-nilai/{id_mahasiswa}/{id_matkul}', [App\Http\Controllers\NilaiController::class, 'updateNilaiForm'])->name('nilai.updateNilaiForm');
+Route::post('/nilai/update-nilai', [App\Http\Controllers\NilaiController::class, 'updateNilai'])->name('nilai.updateNilai');
 
 require __DIR__ . '/auth.php';

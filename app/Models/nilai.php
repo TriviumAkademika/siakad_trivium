@@ -6,20 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class nilai extends Model
 {
-    protected $fillable = ['id_jadwal', 'id_mahasiswa', 'nilai'];
+    protected $fillable = ['matakuliah_id', 'mahasiswa_id', 'nilai'];
 
     public function mahasiswa()
     {
-        return $this->belongsTo(\App\Models\Mahasiswa::class, 'id_mahasiswa', 'id_mahasiswa');
-    }
-
-    public function jadwal()
-    {
-        return $this->belongsTo(\App\Models\Jadwal::class, 'id_jadwal', 'id_jadwal');
+        return $this->belongsTo(\App\Models\Mahasiswa::class, 'mahasiswa_id', 'id_mahasiswa');
     }
 
     public function matkul()
     {
-        return view('nilai.nilai-dosen', ['matkuls' => $matkuls]);
+        return $this->belongsTo(\App\Models\Matkul::class, 'matakuliah_id', 'id_matkul');
     }
 }
