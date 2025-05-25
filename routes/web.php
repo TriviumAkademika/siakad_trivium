@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen|mahasiswa'])->group(fun
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
     Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
     Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
+    Route::get('/kelas/create', [KelasController::class, 'create'])->name('kelas.create');
 });
 
 
@@ -78,6 +79,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    // Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
     // Tabel Dosen CU SHOW
     Route::get('/dosen/create', [DosenController::class, 'create'])->name('dosen.create');
@@ -134,15 +136,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 
 
 /// PERMISSION ROLE DOSEN
-Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
-
-});
+Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {});
 
 
 /// PERMISSION ROLE MAHASISWA
-Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
-    
-});
+Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {});
 
 
 

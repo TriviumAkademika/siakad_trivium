@@ -12,10 +12,35 @@ class KelasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kelas = Kelas::with('dosen')->get(); // Mengambil semua kelas beserta dosen yang terkait
-        return view('kelas.index', compact('kelas')); // Kirim data kelas ke view
+        $query = Kelas::with('dosen');
+
+        // Handle search
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('tahun_masuk', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('prodi', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('paralel', 'LIKE', "%{$searchTerm}%")
+                  ->orWhereHas('dosen', function($dosenQuery) use ($searchTerm) {
+                      $dosenQuery->where('nama_dosen', 'LIKE', "%{$searchTerm}%");
+                  });
+            });
+        }
+
+        // Handle status filter
+        if ($request->filled('status')) {
+            $statusFilters = $request->status;
+            if (is_array($statusFilters) && count($statusFilters) > 0) {
+                $query->whereIn('status', $statusFilters);
+            }
+        }
+
+        // Paginate with 10 items per page and preserve query parameters
+        $kelas = $query->paginate(10)->appends($request->query());
+
+        return view('kelas.index', compact('kelas'));
     }
 
     /**

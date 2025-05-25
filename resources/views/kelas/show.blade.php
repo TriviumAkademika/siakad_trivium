@@ -185,7 +185,7 @@
                                 <input type="text" 
                                        id="searchMahasiswa"
                                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-biru-500 focus:border-biru-500 text-sm" 
-                                       placeholder="Cari nama, NRP, atau no HP...">
+                                       placeholder="Cari... ">
                             </div>
                         </div>
                     </div>
