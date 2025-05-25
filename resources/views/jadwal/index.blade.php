@@ -31,17 +31,17 @@
                     <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
                         <thead class="bg-brand-100">
                             <tr>
-                                <th class="px-4 py-3 text-left text-sm font-medium text-hitam">#</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Kelas</th>
-                                <th class="w-48 px-4 py-3 text-center text-sm font-medium text-hitam">Mata Kuliah</th>
-                                <th class="w-40 px-4 py-3 text-center text-sm font-medium text-hitam">Dosen</th>
-                                <th class="w-40 px-4 py-3 text-center text-sm font-medium text-hitam">Dosen Pendamping</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Ruangan</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Waktu</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-hitam">#</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Kelas</th>
+                                <th class="w-48 px-4 py-3 text-center text-sm font-semibold text-hitam">Mata Kuliah</th>
+                                <th class="w-40 px-4 py-3 text-center text-sm font-semibold text-hitam">Dosen</th>
+                                <th class="w-40 px-4 py-3 text-center text-sm font-semibold text-hitam">Dosen Pendamping</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Ruangan</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Waktu</th>
                                 {{-- PERMISSION UNTUK ADMIN --}}
                                 {{-- Kolom Aksi --}}
                                 @if (auth()->user()->role === 'admin')
-                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                                    <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Aksi</th>
                                 @endif
                             </tr>
                         </thead>

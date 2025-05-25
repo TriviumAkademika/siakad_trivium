@@ -117,7 +117,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
     // Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
 
-    // tabel frs CRU
+    // tabel FRS CRU
     Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
     Route::post('/frs', [FrsController::class, 'store'])->name('frs.store');
     Route::get('/frs/{id}/edit', [FrsController::class, 'edit'])->name('frs.edit');

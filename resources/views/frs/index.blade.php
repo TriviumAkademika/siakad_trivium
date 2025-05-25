@@ -1,60 +1,86 @@
 @extends('master')
 
-@section('title', 'Data FRS')
+@section('title', 'FRS')
 
 @section('content')
-<div class="flex w-full h-full bg-brand50">
-    @include('components.sidebar')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
 
-    <div class="w-full p-4">
-        @include('components.header')
+        <div class="flex flex-col w-full bg-putih">
+            {{-- Profil User di Header --}}
+            @include('components.header')
 
-        <h2 class="text-2xl font-semibold mb-4">Data FRS</h2>
+            {{-- Toast Notification --}}
+            <x-notification.toast-notification />
 
-        <div class="mb-4">
-            <a href="{{ route('frs.create') }}" class="px-4 py-2 bg-green-500 text-white text-sm rounded hover:bg-green-600">
-                Tambah FRS
-            </a>
-        </div>
+            {{-- Content --}}
+            <div class="flex flex-row px-6 pb-6 space-x-6">
+                <div class="flex flex-col grow items-end space-y-4">
+                    {{-- PERMISSION UNTUK ADMIN --}}
+                    {{-- Button Tambah FRS --}}
+                    @if (auth()->user()->role === 'admin')
+                        <a href="{{ route('frs.create') }}">
+                            <x-button.submit icon="ph ph-plus">
+                                Tambah FRS
+                            </x-button.submit>
+                        </a>
+                    @endif
 
-        {{-- Header --}}
-        <section class="rounded-lg p-2 grid bg-brand100 mb-4">
-            <div class="grid grid-cols-5 gap-4 text-sm font-semibold">
-                <div class="flex items-center justify-center p-2">Nama Mahasiswa</div>
-                <div class="flex items-center justify-center p-2">Tahun Ajaran</div>
-                <div class="flex items-center justify-center p-2">Semester</div>
-                <div class="flex items-center justify-center p-2">Total SKS</div>
-                <div class="flex items-center justify-center p-2">Action</div>
-            </div>
-        </section>
+                    {{-- Tabel Data FRS --}}
+                    <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
+                        <thead class="bg-brand-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-hitam">#</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Nama Mahasiswa</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Tahun Ajaran</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Semester</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Total SKS</th>
+                                {{-- PERMISSION UNTUK ADMIN --}}
+                                {{-- Kolom Aksi --}}
+                                @if (auth()->user()->role === 'admin')
+                                    <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Aksi</th>
+                                @endif
+                            </tr>
+                        </thead>
 
-        {{-- Data Rows --}}
-        <section>
-            @foreach ($frs as $item)
-            <div 
-              onclick="window.location='{{ route('frs.show', $item->id_frs) }}'" 
-              class="grid grid-cols-5 gap-4 p-4 text-sm items-center border-b border-gray-200 cursor-pointer hover:bg-brand200"
-              title="Klik untuk detail"
-            >
-                <div class="flex items-center justify-center p-2">{{ $item->mahasiswa->nama }}</div>
-                <div class="flex items-center justify-center p-2">{{ $item->tahun_ajaran }}</div>
-                <div class="flex items-center justify-center p-2">{{ $item->semester }}</div>
-                <div class="flex items-center justify-center p-2">{{ $item->total_sks }}</div>
-                <div class="flex items-center justify-center p-2 space-x-2">
-                    <a href="{{ route('frs.edit', $item->id_frs) }}" class="inline-block px-3 py-1 bg-yellow-400 text-white text-xs rounded hover:bg-yellow-500" onclick="event.stopPropagation()">
-                        Edit
-                    </a>
-                    {{-- <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus data ini?')" onclick="event.stopPropagation()">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
-                            Delete
-                        </button>
-                    </form> --}}
+                        <tbody class="bg-putih divide-y divide-gray-100">
+                            @foreach ($frs as $index => $item)
+                                <tr onclick="window.location='{{ route('frs.show', $item->id_frs) }}'"
+                                    class="cursor-pointer hover:bg-brand200">
+                                    <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
+                                    <x-table.table-td>{{ $item->mahasiswa->nama }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $item->tahun_ajaran }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $item->semester }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $item->total_sks }}</x-table.table-td>
+                                    {{-- PERMISSION UNTUK ADMIN --}}
+                                    @if (auth()->user()->role === 'admin')
+                                        <td class="px-4 py-2 text-sm text-center text-hitam">
+                                            <div class="flex justify-center items-center space-x-2"
+                                                onclick="event.stopPropagation()">
+                                                {{-- Button Edit --}}
+                                                <a href="{{ route('frs.edit', $item->id_frs) }}"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-brand-700 hover:bg-brand-800 text-white text-sm rounded">
+                                                    <i class="ph ph-pencil-simple"></i>
+                                                </a>
+
+                                                {{-- Button Delete --}}
+                                                {{-- <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus data ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
+                                                    Delete
+                                                </button>
+                                            </form> --}}
+                                            </div>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            @endforeach
-        </section>
+        </div>
     </div>
-</div>
 @endsection

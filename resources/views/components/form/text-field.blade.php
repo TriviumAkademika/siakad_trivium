@@ -4,10 +4,12 @@
     'value' => '',
     'type' => 'text',
     'required' => true,
+    'readonly' => false,
 ])
 
 @php
     $isRequired = $required ? 'required' : '';
+    $isReadonly = $readonly ? 'readonly' : '';
 @endphp
 
 <div class="flex w-full">
@@ -19,5 +21,5 @@
     </label>
     <input type="{{ $type }}" name="{{ $name }}" id="{{ $name }}" value="{{ old($name, $value) }}"
         class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
-        {{ $isRequired }}>
+        {{ $isRequired }} {{ $isReadonly }}>
 </div>
