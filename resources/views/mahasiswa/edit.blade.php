@@ -10,6 +10,62 @@
             <h2 class="p-6 text-2xl text-hitam">Edit Mahasiswa</h2>
             {{-- Content --}}
             <div class="flex flex-col px-6 pb-6">
+                {{-- Error Messages --}}
+                @if ($errors->any())
+                    <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <i class="ph ph-warning-circle text-red-400 text-xl"></i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">
+                                    Gagal mengupdate mahasiswa karena:
+                                </h3>
+                                <div class="mt-2 text-sm text-red-700">
+                                    <ul class="list-disc list-inside space-y-1">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Success Message --}}
+                @if (session('success'))
+                    <div class="mb-4 bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <i class="ph ph-check-circle text-green-400 text-xl"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-green-800">
+                                    {{ session('success') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Warning untuk data yang sedang diedit --}}
+                <div class="mb-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="ph ph-info text-yellow-400 text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-yellow-800">
+                                Sedang mengedit data mahasiswa: {{ $mahasiswa->nama }} ({{ $mahasiswa->nrp }})
+                            </h3>
+                            <p class="mt-1 text-xs text-yellow-700">
+                                Pastikan data yang Anda ubah sudah benar sebelum menyimpan.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Form --}}
                 <form action="{{ route('mahasiswa.update', $mahasiswa->id_mahasiswa) }}" method="POST"
                     class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
@@ -17,39 +73,93 @@
                     @method('PUT')
 
                     {{-- Nama --}}
-                    <x-form.text-field label="Nama" name="nama" :value="$mahasiswa->nama" />
+                    <div>
+                        <x-form.text-field label="Nama" name="nama" value="{{ old('nama', $mahasiswa->nama) }}" />
+                        @error('nama')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     {{-- NRP --}}
-                    <x-form.text-number label="NRP" name="nrp" :value="$mahasiswa->nrp" />
+                    <div>
+                        <x-form.text-number label="NRP" name="nrp" value="{{ old('nrp', $mahasiswa->nrp) }}" />
+                        @error('nrp')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                        @if (old('nrp') != $mahasiswa->nrp && old('nrp'))
+                            <p class="mt-1 text-xs text-blue-600">
+                                <i class="ph ph-info mr-1"></i>NRP akan diubah dari "{{ $mahasiswa->nrp }}" menjadi "{{ old('nrp') }}"
+                            </p>
+                        @endif
+                    </div>
 
                     {{-- Kelas --}}
-                    <x-form.dropdown-field label="Kelas" name="id_kelas" :options="$kelas" :selected="$mahasiswa->id_kelas"
-                        valueField="id_kelas" :labelFields="['prodi', 'paralel']" />
+                    <div>
+                        <x-form.dropdown-field label="Kelas" name="id_kelas" :options="$kelas" valueField="id_kelas"
+                            :labelFields="['prodi', 'paralel']" selected="{{ old('id_kelas', $mahasiswa->id_kelas) }}" />
+                        @error('id_kelas')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     {{-- Semester --}}
-                    <x-form.text-field label="Semester" name="semester" type="number" :value="$mahasiswa->semester" />
+                    <div>
+                        <x-form.text-number label="Semester" name="semester" value="{{ old('semester', $mahasiswa->semester) }}" />
+                        @error('semester')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     {{-- Gender --}}
-                    <x-form.dropdown-field label="Gender" name="gender" :options="[['value' => 'L', 'label' => 'Laki-laki'], ['value' => 'P', 'label' => 'Perempuan']]" :selected="$mahasiswa->gender" valueField="value"
-                        labelFields="label" />
+                    <div>
+                        <x-form.dropdown-field label="Gender" name="gender" :options="[['value' => 'L', 'label' => 'Laki-laki'], ['value' => 'P', 'label' => 'Perempuan']]" valueField="value"
+                            labelFields="label" selected="{{ old('gender', $mahasiswa->gender) }}" />
+                        @error('gender')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     {{-- No HP --}}
-                    <x-form.text-number label="No HP" name="no_hp" :value="$mahasiswa->no_hp" />
+                    <div>
+                        <x-form.text-number label="No HP" name="no_hp" value="{{ old('no_hp', $mahasiswa->no_hp) }}" />
+                        @error('no_hp')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
                     {{-- Alamat --}}
-                    <x-form.textarea-field label="Alamat" name="alamat" :value="$mahasiswa->alamat" />
+                    <div>
+                        <x-form.textarea-field label="Alamat" name="alamat" value="{{ old('alamat', $mahasiswa->alamat) }}" />
+                        @error('alamat')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                    {{-- Button Perbarui --}}
+                    {{-- Status --}}
+                    <div>
+                        <x-form.dropdown-field label="Status" name="status" :options="[
+                            ['value' => 'AKTIF', 'label' => 'Aktif'], 
+                            ['value' => 'CUTI', 'label' => 'Cuti'], 
+                            ['value' => 'LULUS', 'label' => 'Lulus'], 
+                            ['value' => 'NONAKTIF', 'label' => 'Non Aktif']
+                        ]" valueField="value"
+                            labelFields="label" selected="{{ old('status', $mahasiswa->status) }}" />
+                        @error('status')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Button Simpan --}}
                     <div class="flex justify-end gap-x-1">
                         <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/mahasiswa';">
                             Batal
                         </x-button.cancel>
                         <x-button.submit icon="ph ph-floppy-disk">
-                            Perbarui
+                            Update
                         </x-button.submit>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-@endsection
+@endsection 

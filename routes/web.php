@@ -48,6 +48,7 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen|mahasiswa'])->group(fun
     Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
     Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
     Route::get('/kelas/create', [KelasController::class, 'create'])->name('kelas.create');
+    Route::get('/mahasiswa/create', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
 });
 
 
@@ -58,6 +59,7 @@ Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
     Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
     Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
     Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
+    Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
 });
 
 /// PERMISSION ROLE DOSEN, MAHASISWA
@@ -71,7 +73,6 @@ Route::middleware(['auth', 'verified', 'role:admin|mahasiswa'])->group(function 
 /// PERMISSIONS ROLE ADMIN
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     // Tabel Mahasiswa CRU
-    Route::get('/mahasiswa/create', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
     Route::get('/mahasiswa/{id}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
     Route::put('/mahasiswa/{id}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');

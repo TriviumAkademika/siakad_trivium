@@ -41,7 +41,19 @@ class MahasiswaSeeder extends Seeder
             ['3123500060', 'Rizal Risqi Ahmad Dinata', 'L'],
         ];
 
-        foreach ($data as [$nrp, $nama, $gender]) {
+        $statuses = ['aktif', 'non-aktif', 'cuti', 'lulus'];
+
+        foreach ($data as $index => [$nrp, $nama, $gender]) {
+            // Distribusi status secara acak dengan bobot
+            $statusWeights = [
+                'aktif' => 60,      // 60% kemungkinan
+                'non-aktif' => 15,  // 15% kemungkinan
+                'cuti' => 15,       // 15% kemungkinan
+                'lulus' => 10       // 10% kemungkinan
+            ];
+            
+            $status = $this->getRandomWeightedStatus($statusWeights);
+
             Mahasiswa::create([
                 'id_kelas' => 1,
                 'nama' => $nama,
@@ -50,9 +62,27 @@ class MahasiswaSeeder extends Seeder
                 'gender' => $gender,
                 'alamat' => fake()->address(),
                 'no_hp' => $this->generateIndoPhone(),
+                'status' => $status,
             ]);
         }
     }
+
+    private function getRandomWeightedStatus(array $weights): string
+    {
+        $totalWeight = array_sum($weights);
+        $randomNumber = rand(1, $totalWeight);
+        
+        $currentWeight = 0;
+        foreach ($weights as $status => $weight) {
+            $currentWeight += $weight;
+            if ($randomNumber <= $currentWeight) {
+                return $status;
+            }
+        }
+        
+        return 'aktif'; // fallback
+    }
+
     private function generateIndoPhone(): string
     {
         $prefixes = ['08', '+628'];
