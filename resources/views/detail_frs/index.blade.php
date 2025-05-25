@@ -9,8 +9,6 @@
         <div class="w-full p-4 bg-putih">
             @include('components.header')
 
-            <h2 class="text-2xl font-semibold mb-6">Detail FRS Mahasiswa</h2>
-
             {{-- Informasi Mahasiswa --}}
             <section class="rounded-lg p-2 grid grid-cols-1 sm:grid-cols-3 bg-brand100 mb-6 gap-4">
                 <div class="flex flex-col w-full p-4 gap-2 bg-brand-50 rounded-lg shadow">
