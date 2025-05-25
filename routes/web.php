@@ -125,10 +125,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
     // Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
 
-    // Tabel FRS CRU
+    // Tabel FRS CR
     Route::post('/frs', [FrsController::class, 'store'])->name('frs.store');
-    Route::get('/frs/{id}/edit', [FrsController::class, 'edit'])->name('frs.edit');
-    Route::put('/frs/{id}', [FrsController::class, 'update'])->name('frs.update');
+    // Route::get('/frs/{id}/edit', [FrsController::class, 'edit'])->name('frs.edit');
+    // Route::put('/frs/{id}', [FrsController::class, 'update'])->name('frs.update');
     // Route::delete('/frs/{id}', [FrsController::class, 'destroy'])->name('frs.destroy');
 
     // Tabel Detail FRS CRUD

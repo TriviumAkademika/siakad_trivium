@@ -22,19 +22,21 @@
                         labelFields="nama" />
 
                     {{-- Tahun Ajaran --}}
-                    <x-form.text-field label="Tahun Ajaran" name="tahun_ajaran" />
+                    <x-form.dropdown-field label="Tahun Ajaran" name="tahun_ajaran" :options="$tahunAjaranList" :selected="old('tahun_ajaran', '2024/2025')" />
 
                     {{-- Semester --}}
-                    <x-form.text-field label="Semester" name="semester"  type="number" min="0" />
+                    {{-- <x-form.text-field label="Semester" name="semester" :value="old('semester')" readonly /> --}}
 
                     {{-- Total SKS --}}
-                    <x-form.text-field label="Total SKS" name="total_sks" type="number" min="0" />
+                    {{-- <x-form.text-field label="Total SKS" name="total_sks" type="number" min="0" /> --}}
 
                     {{-- IPS --}}
-                    <x-form.text-field label="IPS" name="ips" type="number" min="0" max="4" step="0.01" />
+                    {{-- <x-form.text-field label="IPS" name="ips" type="number" min="0" max="4"
+                        step="0.01" /> --}}
 
                     {{-- IPK --}}
-                    <x-form.text-field label="IPK" name="ipk" type="number" min="0" max="4" step="0.01" />
+                    {{-- <x-form.text-field label="IPK" name="ipk" type="number" min="0" max="4"
+                        step="0.01" /> --}}
 
                     {{-- Button Simpan --}}
                     <div class="flex justify-end gap-x-1">

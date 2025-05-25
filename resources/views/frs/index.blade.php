@@ -38,7 +38,7 @@
                                 <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Total SKS</th>
                                 {{-- PERMISSION UNTUK ADMIN --}}
                                 {{-- Kolom Aksi --}}
-                               {{--  @if (auth()->user()->role === 'admin')
+                                {{-- @if (auth()->user()->role === 'admin')
                                     <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Aksi</th>
                                 @endif --}}
                             </tr>
@@ -65,13 +65,16 @@
                                                 </a>
 
                                                 Button Delete
-                                                <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus data ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
-                                                    Delete
-                                                </button>
-                                            </form>
+                                                <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST"
+                                                    class="inline-block"
+                                                    onsubmit="return confirm('Anda yakin ingin menghapus jadwal ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600">
+                                                        <i class="ph ph-trash-simple"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     @endif --}}
