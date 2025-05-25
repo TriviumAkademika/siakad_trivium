@@ -4,18 +4,40 @@ namespace App\Http\Controllers;
 
 use App\Models\Dosen;
 use Illuminate\Http\Request;
-use App\http\Resources\DosenResource;
+use App\Http\Resources\DosenResource;
 
 class DosenController extends Controller
 {
-    // public function index()
-    // {
-    //     $dosen = Dosen::all();
-    //     return DosenResource::collection($dosen);
-    // }
-    public function index()
+    public function index(Request $request)
     {
-        $dosen = Dosen::all();
+        $query = Dosen::query();
+
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nama_dosen', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('nip', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('alamat', 'LIKE', '%' . $searchTerm . '%')
+                  ->orWhere('no_hp', 'LIKE', '%' . $searchTerm . '%');
+            });
+        }
+
+        // Status filter functionality
+        if ($request->has('status') && !empty($request->status)) {
+            $statusFilters = is_array($request->status) ? $request->status : [$request->status];
+            $query->whereIn('status', $statusFilters);
+        }
+
+        // Order by nama_dosen
+        $query->orderBy('nama_dosen', 'asc');
+
+        // Paginate with 10 items per page
+        $dosen = $query->paginate(10);
+
+        // Append query parameters to pagination links
+        $dosen->appends($request->query());
+
         return view('dosen.index', compact('dosen'));
     }
 
@@ -39,9 +61,6 @@ class DosenController extends Controller
         return redirect()->route('dosen.index')->with('success', 'Data dosen berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         $dosen = Dosen::findOrFail($id);

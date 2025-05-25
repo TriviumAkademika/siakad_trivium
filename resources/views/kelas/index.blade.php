@@ -20,18 +20,26 @@
 
                     {{-- Search, Filter, dan Tombol Tambah kelas --}}
                     <div class="flex justify-between items-center w-full gap-4">
-                        <div class="flex items-center gap-4 flex-1">
+                        <form method="GET" action="{{ route('kelas.index') }}" class="flex items-center gap-4 flex-1" id="searchForm">
                             {{-- Search Box --}}
                             <div class="relative flex-1 max-w-md">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="ph ph-magnifying-glass text-gray-400"></i>
                                 </div>
                                 <input type="text" 
+                                       name="search"
                                        id="searchInput"
                                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-biru-500 focus:border-biru-500 text-sm" 
                                        placeholder="Cari nama dosen, tahun masuk, prodi, atau paralel..."
                                        value="{{ request('search') }}">
                             </div>
+
+                            {{-- Hidden inputs for status filters --}}
+                            @if(request('status'))
+                                @foreach(request('status') as $status)
+                                    <input type="hidden" name="status[]" value="{{ $status }}">
+                                @endforeach
+                            @endif
 
                             {{-- Filter Status --}}
                             <div class="relative">
@@ -86,7 +94,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
 
                         {{-- Tombol Tambah Kelas --}}
                         <a href="{{ route('kelas.create') }}">
@@ -97,75 +105,84 @@
                     </div>
 
                     {{-- Tabel Data Kelas --}}
-                    <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
-                        <thead class="bg-brand-100">
-                            <tr>
-                                <th class="px-4 py-3 text-left text-sm font-medium text-hitam">#</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Nama Dosen</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Tahun Masuk</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Prodi</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Paralel</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Status</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody class="bg-putih divide-y divide-gray-200" id="kelasTableBody">
-                            @foreach ($kelas as $index => $k)
-                                <tr class="kelas-row" 
-                                    data-search="{{ strtolower(($k->dosen->nama_dosen ?? '') . ' ' . $k->tahun_masuk . ' ' . $k->prodi . ' ' . $k->paralel) }}"
-                                    data-status="{{ $k->status }}">
-                                    <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
-                                    <x-table.table-td>{{ $k->dosen->nama_dosen ?? 'N/A' }}</x-table.table-td>
-                                    <x-table.table-td class="text-center">{{ $k->tahun_masuk }}</x-table.table-td>
-                                    <x-table.table-td class="text-center">{{ $k->prodi }}</x-table.table-td>
-                                    <x-table.table-td class="text-center">{{ $k->paralel }}</x-table.table-td>
-                                    <x-table.table-td class="text-center">
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full
-                                            @if($k->status == 'AKTIF') bg-green-100 text-green-800
-                                            @else bg-blue-100 text-blue-800
-                                            @endif">
-                                            {{ $k->status }}
-                                        </span>
-                                    </x-table.table-td>
-                                    <td class="px-2 py-2 text-sm text-hitam">
-                                        <div class="flex justify-center items-center space-x-1">
-                                            {{-- Button Show --}}
-                                            <a href="{{ route('kelas.show', $k->id_kelas) }}"
-                                                class="inline-flex items-center justify-center w-8 h-8 bg-green-600 text-white text-sm rounded hover:bg-green-700"
-                                                title="Lihat Detail">
-                                                <i class="ph ph-eye"></i>
-                                            </a>
-                                            {{-- Button Edit --}}
-                                            <a href="{{ route('kelas.edit', $k->id_kelas) }}"
-                                                class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700"
-                                                title="Edit">
-                                                <i class="ph ph-pencil-simple"></i>
-                                            </a>
-                                            {{-- Button Delete --}}
-                                            {{-- <form action="{{ route('kelas.destroy', $k->id_kelas) }}" method="POST"
-                                                class="inline-block"
-                                                onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600"
-                                                    title="Hapus">
-                                                    <i class="ph ph-trash-simple"></i>
-                                                </button>
-                                            </form> --}}
-                                        </div>
-                                    </td>
+                    @if($kelas->count() > 0)
+                        <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
+                            <thead class="bg-brand-100">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-hitam">#</th>
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Nama Dosen</th>
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Tahun Masuk</th>
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Prodi</th>
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Paralel</th>
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Status</th>
+                                    @if (auth()->user()->role === 'admin')
+                                        <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Action</th>
+                                    @endif
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
 
-                    {{-- No Results Message --}}
-                    <div id="noResults" class="hidden w-full text-center py-8 text-gray-500">
-                        <i class="ph ph-magnifying-glass text-4xl mb-2"></i>
-                        <p>Tidak ada data kelas yang sesuai dengan pencarian atau filter.</p>
-                    </div>
+                            <tbody class="bg-putih divide-y divide-gray-200">
+                                @foreach ($kelas as $index => $k)
+                                    <tr>
+                                        <x-table.table-td>{{ ($kelas->currentPage() - 1) * $kelas->perPage() + $index + 1 }}</x-table.table-td>
+                                        <x-table.table-td>{{ $k->dosen->nama_dosen ?? 'N/A' }}</x-table.table-td>
+                                        <x-table.table-td class="text-center">{{ $k->tahun_masuk }}</x-table.table-td>
+                                        <x-table.table-td class="text-center">{{ $k->prodi }}</x-table.table-td>
+                                        <x-table.table-td class="text-center">{{ $k->paralel }}</x-table.table-td>
+                                        <x-table.table-td class="text-center">
+                                            <span class="px-2 py-1 text-xs font-medium rounded-full
+                                                @if($k->status == 'AKTIF') bg-green-100 text-green-800
+                                                @else bg-blue-100 text-blue-800
+                                                @endif">
+                                                {{ $k->status }}
+                                            </span>
+                                        </x-table.table-td>
+                                        @if (auth()->user()->role === 'admin')
+                                            <td class="px-2 py-2 text-sm text-hitam">
+                                            <div class="flex justify-center items-center space-x-1">
+                                                {{-- Button Show --}}
+                                                <a href="{{ route('kelas.show', $k->id_kelas) }}"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                                                    title="Lihat Detail">
+                                                    <i class="ph ph-eye"></i>
+                                                </a>
+                                                {{-- Button Edit --}}
+                                                <a href="{{ route('kelas.edit', $k->id_kelas) }}"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-white text-sm rounded hover:bg-biru-700"
+                                                    title="Edit">
+                                                    <i class="ph ph-pencil-simple"></i>
+                                                </a>
+                                                {{-- Button Delete --}}
+                                                {{-- <form action="{{ route('kelas.destroy', $k->id_kelas) }}" method="POST"
+                                                    class="inline-block"
+                                                    onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600"
+                                                        title="Hapus">
+                                                        <i class="ph ph-trash-simple"></i>
+                                                    </button>
+                                                </form> --}}
+                                            </div>
+                                        </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        {{-- Pagination Links --}}
+                        <div class="w-full">
+                            {{ $kelas->links() }}
+                        </div>
+                    @else
+                        {{-- No Results Message --}}
+                        <div class="w-full text-center py-8 text-gray-500">
+                            <i class="ph ph-magnifying-glass text-4xl mb-2"></i>
+                            <p>Tidak ada data kelas yang sesuai dengan pencarian atau filter.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -181,11 +198,9 @@
             const statusFilters = document.querySelectorAll('.status-filter');
             const clearFilter = document.getElementById('clearFilter');
             const applyFilter = document.getElementById('applyFilter');
-            const kelasRows = document.querySelectorAll('.kelas-row');
-            const noResults = document.getElementById('noResults');
-            const tableBody = document.getElementById('kelasTableBody');
+            const searchForm = document.getElementById('searchForm');
 
-            let activeStatusFilters = [];
+            let searchTimeout;
 
             // Toggle dropdown filter
             filterButton.addEventListener('click', function(e) {
@@ -200,9 +215,12 @@
                 }
             });
 
-            // Search functionality
+            // Search functionality with debounce
             searchInput.addEventListener('input', function() {
-                filterAndSearch();
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    searchForm.submit();
+                }, 500); // Submit after 500ms of no typing
             });
 
             // Status filter functionality
@@ -218,16 +236,32 @@
                     filter.checked = false;
                 });
                 updateFilterCount();
+                
+                // Clear status filters from form and submit
+                const statusInputs = searchForm.querySelectorAll('input[name="status[]"]');
+                statusInputs.forEach(input => input.remove());
+                searchForm.submit();
             });
 
             // Apply filters
             applyFilter.addEventListener('click', function() {
-                activeStatusFilters = Array.from(statusFilters)
-                    .filter(filter => filter.checked)
-                    .map(filter => filter.value);
+                // Remove existing status inputs
+                const existingStatusInputs = searchForm.querySelectorAll('input[name="status[]"]');
+                existingStatusInputs.forEach(input => input.remove());
+                
+                // Add new status filter inputs
+                statusFilters.forEach(filter => {
+                    if (filter.checked) {
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = 'status[]';
+                        hiddenInput.value = filter.value;
+                        searchForm.appendChild(hiddenInput);
+                    }
+                });
                 
                 filterDropdown.classList.add('hidden');
-                filterAndSearch();
+                searchForm.submit();
             });
 
             function updateFilterCount() {
@@ -240,59 +274,8 @@
                 }
             }
 
-            function filterAndSearch() {
-                const searchTerm = searchInput.value.toLowerCase();
-                let visibleCount = 0;
-
-                kelasRows.forEach((row, index) => {
-                    const searchData = row.getAttribute('data-search');
-                    const statusData = row.getAttribute('data-status');
-                    
-                    // Check search criteria (all columns except status)
-                    const matchesSearch = searchTerm === '' || searchData.includes(searchTerm);
-                    
-                    // Check status filter
-                    const matchesStatus = activeStatusFilters.length === 0 || activeStatusFilters.includes(statusData);
-                    
-                    if (matchesSearch && matchesStatus) {
-                        row.style.display = '';
-                        // Update row number
-                        const numberCell = row.querySelector('td:first-child');
-                        if (numberCell) {
-                            numberCell.textContent = visibleCount + 1;
-                        }
-                        visibleCount++;
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-
-                // Show/hide no results message
-                if (visibleCount === 0) {
-                    noResults.classList.remove('hidden');
-                    tableBody.parentElement.classList.add('hidden');
-                } else {
-                    noResults.classList.add('hidden');
-                    tableBody.parentElement.classList.remove('hidden');
-                }
-            }
-
             // Initialize filter count on page load
             updateFilterCount();
-            
-            // Set active filters from URL parameters if any
-            const urlParams = new URLSearchParams(window.location.search);
-            const statusParams = urlParams.getAll('status[]');
-            if (statusParams.length > 0) {
-                activeStatusFilters = statusParams;
-                statusFilters.forEach(filter => {
-                    if (statusParams.includes(filter.value)) {
-                        filter.checked = true;
-                    }
-                });
-                updateFilterCount();
-                filterAndSearch();
-            }
         });
     </script>
 @endsection

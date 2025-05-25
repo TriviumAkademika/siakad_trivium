@@ -11,10 +11,46 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     // Tampilkan semua user
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['mahasiswa', 'dosen', 'roles'])->get();
+        $query = User::with(['mahasiswa', 'dosen']); // Eager loading
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('email', 'LIKE', "%{$search}%")
+                  ->orWhere('name', 'LIKE', "%{$search}%")
+                  ->orWhereHas('mahasiswa', function ($subQuery) use ($search) {
+                      $subQuery->where('nama', 'LIKE', "%{$search}%")
+                               ->orWhere('nrp', 'LIKE', "%{$search}%");
+                  })
+                  ->orWhereHas('dosen', function ($subQuery) use ($search) {
+                      $subQuery->where('nama_dosen', 'LIKE', "%{$search}%")
+                               ->orWhere('nip', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+
+        // Role filter functionality
+        if ($request->filled('roles')) {
+            $roles = $request->roles;
+            $query->whereHas('roles', function ($q) use ($roles) {
+                $q->whereIn('name', $roles);
+            });
+        }
+
+        $users = $query->paginate(10);
+
         return view('users.index', compact('users'));
+    }
+
+    public function show(User $user)
+    {
+        // Load relasi berdasarkan role
+        $user->load(['mahasiswa.kelas', 'dosen']);
+        
+        return view('users.show', compact('user'));
     }
 
     // Form tambah user
