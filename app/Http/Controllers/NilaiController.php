@@ -26,8 +26,7 @@ class NilaiController extends Controller
                 $q->where('id_matkul', $id_matkul);
             })->with(['nilai' => function($query) use ($id_matkul) {
                 // Load nilai hanya untuk matkul yang sedang dipilih
-                $query->where('matakuliah_id', $id_matkul)
-                      ->select('id', 'mahasiswa_id', 'matakuliah_id', 'jenis_nilai', 'nilai');
+                $query->where('matakuliah_id', $id_matkul);
             }])->get();
             
             // Debug: Tampilkan data yang diambil
@@ -121,41 +120,67 @@ class NilaiController extends Controller
             'nilai_uas' => 'nullable|in:A,B,C,D,E',
         ]);
 
-        // Update atau buat nilai UTS jika diisi
+        // Debug log before update
+        \Log::info('Update request received:', [
+            'mahasiswa_id' => $id_mahasiswa,
+            'matakuliah_id' => $request->matakuliah_id,
+            'nilai_uts' => $request->nilai_uts,
+            'nilai_uas' => $request->nilai_uas,
+        ]);
+
+        // Process UTS grade
         if ($request->filled('nilai_uts')) {
-            Nilai::updateOrCreate(
+            $uts = Nilai::updateOrCreate(
                 [
                     'mahasiswa_id' => $id_mahasiswa,
                     'matakuliah_id' => $request->matakuliah_id,
                     'jenis_nilai' => 'UTS',
                 ],
-                ['nilai' => $request->nilai_uts]
+                [
+                    'nilai' => $request->nilai_uts,
+                    'updated_at' => now()
+                ]
             );
+            \Log::info('UTS grade updated:', $uts->toArray());
         } else {
-            // Hapus nilai UTS jika dikosongkan
-            Nilai::where('mahasiswa_id', $id_mahasiswa)
+            $deleted = Nilai::where('mahasiswa_id', $id_mahasiswa)
                 ->where('matakuliah_id', $request->matakuliah_id)
                 ->where('jenis_nilai', 'UTS')
                 ->delete();
+            \Log::info('UTS grade deleted:', ['deleted' => $deleted]);
         }
 
-        // Update atau buat nilai UAS jika diisi
+        // Process UAS grade
         if ($request->filled('nilai_uas')) {
-            Nilai::updateOrCreate(
+            $uas = Nilai::updateOrCreate(
                 [
                     'mahasiswa_id' => $id_mahasiswa,
                     'matakuliah_id' => $request->matakuliah_id,
                     'jenis_nilai' => 'UAS',
                 ],
-                ['nilai' => $request->nilai_uas]
+                [
+                    'nilai' => $request->nilai_uas,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]
             );
+            \Log::info('UAS grade updated:', $uas->toArray());
         } else {
-            // Hapus nilai UAS jika dikosongkan
-            Nilai::where('mahasiswa_id', $id_mahasiswa)
+            $deleted = Nilai::where('mahasiswa_id', $id_mahasiswa)
                 ->where('matakuliah_id', $request->matakuliah_id)
                 ->where('jenis_nilai', 'UAS')
                 ->delete();
+            \Log::info('UAS grade deleted:', ['deleted' => $deleted]);
         }
+        
+        // Log the update for debugging
+        \Log::info('Nilai updated:', [
+            'mahasiswa_id' => $id_mahasiswa,
+            'matakuliah_id' => $request->matakuliah_id,
+            'nilai_uts' => $request->nilai_uts,
+            'nilai_uas' => $request->nilai_uas,
+            'time' => now()
+        ]);
 
         return redirect()->route('nilai-dosen', ['id_matkul' => $request->matakuliah_id])
             ->with('success', 'Nilai berhasil diperbarui');

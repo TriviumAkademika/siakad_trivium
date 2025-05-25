@@ -53,34 +53,29 @@
                     </thead>
                     <tbody class="bg-putih divide-y divide-gray-200">
                         @foreach ($mahasiswa as $mhs)
-                            {{-- DEBUG: Tampilkan data nilai untuk setiap mahasiswa --}}
                             @php
-                                // dd($mhs->nilai);
-                                // Uncomment baris di atas untuk melihat koleksi nilai
-                                // untuk mahasiswa ini. Cari item dengan jenis_nilai 'UAS'.
-                                // Pastikan array collection tidak kosong dan ada item UAS.
+                                // Get the current course ID from the request
+                                $currentMatkulId = request('id_matkul');
+                                
+                                // Find UTS grade for the current course
+                                $nilaiUTS = $mhs->nilai->first(function($nilai) use ($currentMatkulId) {
+                                    return $nilai->jenis_nilai === 'UTS' && $nilai->matakuliah_id == $currentMatkulId;
+                                });
+                                
+                                // Find UAS grade for the current course
+                                $nilaiUAS = $mhs->nilai->first(function($nilai) use ($currentMatkulId) {
+                                    return $nilai->jenis_nilai === 'UAS' && $nilai->matakuliah_id == $currentMatkulId;
+                                });
                             @endphp
                             <tr>
                                 <td class="px-4 py-2 text-center text-sm text-hitam">{{ $mhs->nrp }}</td>
                                 <td class="px-4 py-2 text-center text-sm text-hitam">{{ $mhs->nama }}</td>
                                 {{-- Tampilkan nilai UTS --}}
                                 <td class="px-4 py-2 text-center text-sm text-hitam">
-                                    @php
-                                        $nilaiUTS = $mhs->nilai->where('matakuliah_id', request('id_matkul'))->where('jenis_nilai', 'UTS')->first();
-                                    @endphp
                                     {{ $nilaiUTS->nilai ?? '-' }}
                                 </td>
                                 {{-- Tampilkan nilai UAS --}}
                                 <td class="px-4 py-2 text-center text-sm text-hitam">
-                                    @php
-                                        $nilaiUAS = $mhs->nilai->where('matakuliah_id', request('id_matkul'))->where('jenis_nilai', 'UAS')->first();
-                                        \Log::info('Menampilkan nilai UAS', [
-                                            'mahasiswa_id' => $mhs->id_mahasiswa,
-                                            'matakuliah_id' => request('id_matkul'),
-                                            'nilai' => $nilaiUAS ? $nilaiUAS->toArray() : null,
-                                            'semua_nilai' => $mhs->nilai->toArray()
-                                        ]);
-                                    @endphp
                                     {{ $nilaiUAS->nilai ?? '-' }}
                                 </td>
                                 <td class="px-4 py-2 text-center text-sm text-hitam">

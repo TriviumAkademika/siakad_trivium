@@ -20,44 +20,46 @@
                 @method('PUT')
 
                 {{-- Mahasiswa --}}
-                <x-form.text-field label="Nama Mahasiswa" name="nama_mahasiswa" :value="$mahasiswa->nama" :attributes="['readonly' => true]" />
-                <input type="hidden" name="mahasiswa_id" value="{{ $mahasiswa->id_mahasiswa }}">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Mahasiswa</label>
+                    <input type="text" name="nama_mahasiswa" value="{{ $mahasiswa->nama }}" readonly 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100">
+                    <input type="hidden" name="mahasiswa_id" value="{{ $mahasiswa->id_mahasiswa }}">
+                </div>
 
                 {{-- Matakuliah --}}
-                <x-form.text-field label="Matakuliah" name="matakuliah_id" :value="$matkul->nama_matkul" :attributes="['readonly' => true]" />
-                <input type="hidden" name="matakuliah_id" value="{{ $matkul->id_matkul }}">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Matakuliah</label>
+                    <input type="text" name="matakuliah_display" value="{{ $matkul->nama_matkul }}" readonly 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100">
+                    <input type="hidden" name="matakuliah_id" value="{{ $matkul->id_matkul }}">
+                </div>
 
                 {{-- Field Nilai UTS --}}
-                <x-form.dropdown-field
-                    label="Nilai UTS"
-                    name="nilai_uts"
-                    :options="[
-                        ['id' => '', 'name' => 'Pilih Nilai UTS'],
-                        ['id' => 'A', 'name' => 'A'],
-                        ['id' => 'B', 'name' => 'B'],
-                        ['id' => 'C', 'name' => 'C'],
-                        ['id' => 'D', 'name' => 'D'],
-                        ['id' => 'E', 'name' => 'E']
-                    ]"
-                    :selected="$nilaiUTS->nilai ?? ''"
-                    :required="false"
-                />
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nilai UTS</label>
+                    <select name="nilai_uts" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Pilih Nilai UTS</option>
+                        <option value="A" {{ ($nilaiUTS->nilai ?? '') == 'A' ? 'selected' : '' }}>A</option>
+                        <option value="B" {{ ($nilaiUTS->nilai ?? '') == 'B' ? 'selected' : '' }}>B</option>
+                        <option value="C" {{ ($nilaiUTS->nilai ?? '') == 'C' ? 'selected' : '' }}>C</option>
+                        <option value="D" {{ ($nilaiUTS->nilai ?? '') == 'D' ? 'selected' : '' }}>D</option>
+                        <option value="E" {{ ($nilaiUTS->nilai ?? '') == 'E' ? 'selected' : '' }}>E</option>
+                    </select>
+                </div>
 
                 {{-- Field Nilai UAS --}}
-                <x-form.dropdown-field
-                    label="Nilai UAS"
-                    name="nilai_uas"
-                    :options="[
-                         ['id' => '', 'name' => 'Pilih Nilai UAS'],
-                        ['id' => 'A', 'name' => 'A'],
-                        ['id' => 'B', 'name' => 'B'],
-                        ['id' => 'C', 'name' => 'C'],
-                        ['id' => 'D', 'name' => 'D'],
-                        ['id' => 'E', 'name' => 'E']
-                    ]"
-                    :selected="$nilaiUAS->nilai ?? ''"
-                    :required="false"
-                />
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nilai UAS</label>
+                    <select name="nilai_uas" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Pilih Nilai UAS</option>
+                        <option value="A" {{ ($nilaiUAS->nilai ?? '') == 'A' ? 'selected' : '' }}>A</option>
+                        <option value="B" {{ ($nilaiUAS->nilai ?? '') == 'B' ? 'selected' : '' }}>B</option>
+                        <option value="C" {{ ($nilaiUAS->nilai ?? '') == 'C' ? 'selected' : '' }}>C</option>
+                        <option value="D" {{ ($nilaiUAS->nilai ?? '') == 'D' ? 'selected' : '' }}>D</option>
+                        <option value="E" {{ ($nilaiUAS->nilai ?? '') == 'E' ? 'selected' : '' }}>E</option>
+                    </select>
+                </div>
 
                 {{-- Button Perbarui --}}
                     <div class="flex justify-end gap-x-1">

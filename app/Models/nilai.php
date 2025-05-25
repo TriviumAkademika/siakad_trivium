@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class nilai extends Model
 {
-    protected $fillable = ['matakuliah_id', 'mahasiswa_id', 'nilai'];
+    protected $table = 'nilais';
+    protected $fillable = ['matakuliah_id', 'mahasiswa_id', 'nilai', 'jenis_nilai'];
 
     public function mahasiswa()
     {
@@ -18,8 +19,5 @@ class nilai extends Model
         return $this->belongsTo(\App\Models\Matkul::class, 'matakuliah_id', 'id_matkul');
     }
 
-    public function matkuls()
-    {
-        return $this->belongsToMany(Matkul::class, 'nama_tabel_pivot', 'id_mahasiswa', 'id_matkul');
-    }
+    // Removed matkuls() relationship as it's not needed and was causing issues
 }

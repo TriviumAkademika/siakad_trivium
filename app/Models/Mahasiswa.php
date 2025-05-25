@@ -37,6 +37,11 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(\App\Models\Frs::class, 'id_mahasiswa');
     }
+    
+    public function nilai()
+    {
+        return $this->hasMany(\App\Models\nilai::class, 'mahasiswa_id', 'id_mahasiswa');
+    }
 
     // Helper method untuk mendapatkan status dengan format yang lebih baik
     public function getStatusFormattedAttribute()
