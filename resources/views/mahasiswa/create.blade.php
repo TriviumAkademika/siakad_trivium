@@ -49,14 +49,30 @@
                     </div>
                 @endif
 
+                {{-- Error Message --}}
+                @if (session('error'))
+                    <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <i class="ph ph-warning-circle text-red-400 text-xl"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-red-800">
+                                    {{ session('error') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 {{-- Form --}}
                 <form action="{{ route('mahasiswa.store') }}" method="POST"
                     class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
                     @csrf
 
-                    {{-- Nama --}}
+                    {{-- Nama Mahasiswa --}}
                     <div>
-                        <x-form.text-field label="Nama" name="nama" value="{{ old('nama') }}" />
+                        <x-form.text-field label="Nama Mahasiswa" name="nama" value="{{ old('nama') }}" placeholder="Masukkan nama lengkap mahasiswa" />
                         @error('nama')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -64,7 +80,7 @@
 
                     {{-- NRP --}}
                     <div>
-                        <x-form.text-number label="NRP" name="nrp" value="{{ old('nrp') }}" />
+                        <x-form.text-number label="NRP" name="nrp" value="{{ old('nrp') }}" placeholder="Contoh: 5025221234" />
                         @error('nrp')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -81,16 +97,22 @@
 
                     {{-- Semester --}}
                     <div>
-                        <x-form.text-number label="Semester" name="semester" value="{{ old('semester') }}" />
+                        <x-form.text-number label="Semester" name="semester" value="{{ old('semester') }}" placeholder="Contoh: 1" />
                         @error('semester')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Gender --}}
+                    {{-- Jenis Kelamin --}}
                     <div>
-                        <x-form.dropdown-field label="Gender" name="gender" :options="[['value' => 'L', 'label' => 'Laki-laki'], ['value' => 'P', 'label' => 'Perempuan']]" valueField="value"
-                            labelFields="label" selected="{{ old('gender') }}" />
+                        <x-form.dropdown-field label="Jenis Kelamin" name="gender" 
+                            :options="[
+                                ['value' => 'L', 'label' => 'Laki-laki'],
+                                ['value' => 'P', 'label' => 'Perempuan']
+                            ]" 
+                            valueField="value" 
+                            labelFields="label" 
+                            selected="{{ old('gender') }}" />
                         @error('gender')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -98,7 +120,7 @@
 
                     {{-- No HP --}}
                     <div>
-                        <x-form.text-number label="No HP" name="no_hp" value="{{ old('no_hp') }}" />
+                        <x-form.text-number label="No HP" name="no_hp" value="{{ old('no_hp') }}" placeholder="Contoh: 081234567890" />
                         @error('no_hp')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -106,8 +128,25 @@
 
                     {{-- Alamat --}}
                     <div>
-                        <x-form.textarea-field label="Alamat" name="alamat" value="{{ old('alamat') }}" />
+                        <x-form.textarea-field label="Alamat" name="alamat" value="{{ old('alamat') }}" placeholder="Masukkan alamat lengkap" />
                         @error('alamat')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Status --}}
+                    <div>
+                        <x-form.dropdown-field label="Status" name="status" 
+                            :options="[
+                                ['value' => 'AKTIF', 'label' => 'Aktif'],
+                                ['value' => 'CUTI', 'label' => 'Cuti'],
+                                ['value' => 'LULUS', 'label' => 'Lulus'],
+                                ['value' => 'NONAKTIF', 'label' => 'Non Aktif']
+                            ]" 
+                            valueField="value" 
+                            labelFields="label" 
+                            selected="{{ old('status') }}" />
+                        @error('status')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

@@ -49,22 +49,21 @@
                     </div>
                 @endif
 
-                {{-- Warning untuk data yang sedang diedit --}}
-                <div class="mb-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <i class="ph ph-info text-yellow-400 text-xl"></i>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-sm font-medium text-yellow-800">
-                                Sedang mengedit data mahasiswa: {{ $mahasiswa->nama }} ({{ $mahasiswa->nrp }})
-                            </h3>
-                            <p class="mt-1 text-xs text-yellow-700">
-                                Pastikan data yang Anda ubah sudah benar sebelum menyimpan.
-                            </p>
+                {{-- Error Message --}}
+                @if (session('error'))
+                    <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <i class="ph ph-warning-circle text-red-400 text-xl"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-red-800">
+                                    {{ session('error') }}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
 
                 {{-- Form --}}
                 <form action="{{ route('mahasiswa.update', $mahasiswa->id_mahasiswa) }}" method="POST"
@@ -72,9 +71,9 @@
                     @csrf
                     @method('PUT')
 
-                    {{-- Nama --}}
+                    {{-- Nama Mahasiswa --}}
                     <div>
-                        <x-form.text-field label="Nama" name="nama" value="{{ old('nama', $mahasiswa->nama) }}" />
+                        <x-form.text-field label="Nama Mahasiswa" name="nama" value="{{ old('nama', $mahasiswa->nama) }}" placeholder="Masukkan nama lengkap mahasiswa" />
                         @error('nama')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -82,15 +81,10 @@
 
                     {{-- NRP --}}
                     <div>
-                        <x-form.text-number label="NRP" name="nrp" value="{{ old('nrp', $mahasiswa->nrp) }}" />
+                        <x-form.text-number label="NRP" name="nrp" value="{{ old('nrp', $mahasiswa->nrp) }}" placeholder="Contoh: 5025221234" />
                         @error('nrp')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
-                        @if (old('nrp') != $mahasiswa->nrp && old('nrp'))
-                            <p class="mt-1 text-xs text-blue-600">
-                                <i class="ph ph-info mr-1"></i>NRP akan diubah dari "{{ $mahasiswa->nrp }}" menjadi "{{ old('nrp') }}"
-                            </p>
-                        @endif
                     </div>
 
                     {{-- Kelas --}}
@@ -104,16 +98,22 @@
 
                     {{-- Semester --}}
                     <div>
-                        <x-form.text-number label="Semester" name="semester" value="{{ old('semester', $mahasiswa->semester) }}" />
+                        <x-form.text-number label="Semester" name="semester" value="{{ old('semester', $mahasiswa->semester) }}" placeholder="Contoh: 1" />
                         @error('semester')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Gender --}}
+                    {{-- Jenis Kelamin --}}
                     <div>
-                        <x-form.dropdown-field label="Gender" name="gender" :options="[['value' => 'L', 'label' => 'Laki-laki'], ['value' => 'P', 'label' => 'Perempuan']]" valueField="value"
-                            labelFields="label" selected="{{ old('gender', $mahasiswa->gender) }}" />
+                        <x-form.dropdown-field label="Jenis Kelamin" name="gender" 
+                            :options="[
+                                ['value' => 'L', 'label' => 'Laki-laki'],
+                                ['value' => 'P', 'label' => 'Perempuan']
+                            ]" 
+                            valueField="value" 
+                            labelFields="label" 
+                            selected="{{ old('gender', $mahasiswa->gender) }}" />
                         @error('gender')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -121,7 +121,7 @@
 
                     {{-- No HP --}}
                     <div>
-                        <x-form.text-number label="No HP" name="no_hp" value="{{ old('no_hp', $mahasiswa->no_hp) }}" />
+                        <x-form.text-number label="No HP" name="no_hp" value="{{ old('no_hp', $mahasiswa->no_hp) }}" placeholder="Contoh: 081234567890" />
                         @error('no_hp')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -129,7 +129,7 @@
 
                     {{-- Alamat --}}
                     <div>
-                        <x-form.textarea-field label="Alamat" name="alamat" value="{{ old('alamat', $mahasiswa->alamat) }}" />
+                        <x-form.textarea-field label="Alamat" name="alamat" value="{{ old('alamat', $mahasiswa->alamat) }}" placeholder="Masukkan alamat lengkap" />
                         @error('alamat')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -137,19 +137,22 @@
 
                     {{-- Status --}}
                     <div>
-                        <x-form.dropdown-field label="Status" name="status" :options="[
-                            ['value' => 'AKTIF', 'label' => 'Aktif'], 
-                            ['value' => 'CUTI', 'label' => 'Cuti'], 
-                            ['value' => 'LULUS', 'label' => 'Lulus'], 
-                            ['value' => 'NONAKTIF', 'label' => 'Non Aktif']
-                        ]" valueField="value"
-                            labelFields="label" selected="{{ old('status', $mahasiswa->status) }}" />
+                        <x-form.dropdown-field label="Status" name="status" 
+                            :options="[
+                                ['value' => 'AKTIF', 'label' => 'Aktif'],
+                                ['value' => 'CUTI', 'label' => 'Cuti'],
+                                ['value' => 'LULUS', 'label' => 'Lulus'],
+                                ['value' => 'NONAKTIF', 'label' => 'Non Aktif']
+                            ]" 
+                            valueField="value" 
+                            labelFields="label" 
+                            selected="{{ old('status', $mahasiswa->status) }}" />
                         @error('status')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Button Simpan --}}
+                    {{-- Button Update --}}
                     <div class="flex justify-end gap-x-1">
                         <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/mahasiswa';">
                             Batal
@@ -162,4 +165,4 @@
             </div>
         </div>
     </div>
-@endsection 
+@endsection

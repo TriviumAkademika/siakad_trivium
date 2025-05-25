@@ -56,6 +56,41 @@ class MahasiswaController extends Controller
     }
 
     /**
+     * Validate phone number format
+     */
+    private function validatePhoneNumber($phoneNumber)
+    {
+        // Remove all spaces, dashes, and plus signs for validation
+        $cleanPhone = preg_replace('/[\s\-+]/', '', $phoneNumber);
+        
+        // Check if it's all numeric after cleaning
+        if (!preg_match('/^[0-9]+$/', $cleanPhone)) {
+            return false;
+        }
+        
+        // Check length (8-15 digits after cleaning)
+        $length = strlen($cleanPhone);
+        if ($length < 8 || $length > 15) {
+            return false;
+        }
+        
+        // Indonesian phone number patterns
+        $patterns = [
+            '/^08[0-9]{8,11}$/',     // Mobile: 08xx-xxxx-xxxx (10-13 digits)
+            '/^62[0-9]{8,12}$/',     // International format: 62xxx
+            '/^0[2-9][0-9]{7,10}$/', // Landline: 0xx-xxxx-xxx (9-12 digits)
+        ];
+        
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $cleanPhone)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -66,7 +101,7 @@ class MahasiswaController extends Controller
                     'required',
                     'string',
                     'max:100',
-                    'regex:/^[a-zA-Z\s\.]+$/',
+                    'regex:/^[a-zA-Z\s\.\']+$/',
                 ],
                 'nrp' => [
                     'required',
@@ -92,21 +127,28 @@ class MahasiswaController extends Controller
                 'no_hp' => [
                     'required',
                     'string',
-                    'max:15',
-                    'regex:/^[0-9+\-\s]+$/',
-                    'unique:mahasiswa,no_hp'
+                    'min:10',
+                    'max:18',
+                    'regex:/^[\+]?[0-9\s\-]{8,18}$/',
+                    'unique:mahasiswa,no_hp',
+                    function ($attribute, $value, $fail) {
+                        if (!$this->validatePhoneNumber($value)) {
+                            $fail('Format nomor HP tidak valid. Gunakan format Indonesia (08xx-xxxx-xxxx) atau internasional (+62xxx).');
+                        }
+                    },
                 ],
                 'alamat' => [
                     'required',
                     'string',
-                    'max:500'
+                    'max:500',
+                    'min:10'
                 ],
             ], [
                 // Custom error messages
                 'nama.required' => 'Nama mahasiswa wajib diisi.',
                 'nama.string' => 'Nama harus berupa teks.',
                 'nama.max' => 'Nama tidak boleh lebih dari 100 karakter.',
-                'nama.regex' => 'Nama hanya boleh berisi huruf, spasi, dan titik.',
+                'nama.regex' => 'Nama hanya boleh berisi huruf, spasi, titik, dan tanda petik.',
                 
                 'nrp.required' => 'NRP wajib diisi.',
                 'nrp.size' => 'NRP harus tepat 10 digit.',
@@ -125,15 +167,20 @@ class MahasiswaController extends Controller
                 'gender.in' => 'Jenis kelamin harus Laki-laki atau Perempuan.',
                 
                 'no_hp.required' => 'Nomor HP wajib diisi.',
-                'no_hp.max' => 'Nomor HP tidak boleh lebih dari 15 karakter.',
-                'no_hp.regex' => 'Nomor HP hanya boleh berisi angka, +, -, dan spasi.',
+                'no_hp.min' => 'Nomor HP minimal 10 karakter.',
+                'no_hp.max' => 'Nomor HP tidak boleh lebih dari 18 karakter.',
+                'no_hp.regex' => 'Format nomor HP tidak valid. Contoh: 08123456789, +6281234567890.',
                 'no_hp.unique' => 'Nomor HP sudah terdaftar, gunakan nomor lain.',
                 
                 'alamat.required' => 'Alamat wajib diisi.',
                 'alamat.string' => 'Alamat harus berupa teks.',
+                'alamat.min' => 'Alamat minimal 10 karakter.',
                 'alamat.max' => 'Alamat tidak boleh lebih dari 500 karakter.',
             ]);
 
+            // Clean and format phone number before saving
+            $validatedData['no_hp'] = $this->formatPhoneNumber($validatedData['no_hp']);
+            
             // Set default status
             $validatedData['status'] = 'AKTIF';
             
@@ -152,6 +199,33 @@ class MahasiswaController extends Controller
                 ->withInput()
                 ->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Format phone number for consistent storage
+     */
+    private function formatPhoneNumber($phoneNumber)
+    {
+        // Remove all spaces and dashes
+        $clean = preg_replace('/[\s\-]/', '', $phoneNumber);
+        
+        // If starts with +62, keep it
+        if (strpos($clean, '+62') === 0) {
+            return $clean;
+        }
+        
+        // If starts with 62 (without +), add +
+        if (strpos($clean, '62') === 0 && strlen($clean) > 10) {
+            return '+' . $clean;
+        }
+        
+        // If starts with 08, convert to +62
+        if (strpos($clean, '08') === 0) {
+            return '+62' . substr($clean, 1);
+        }
+        
+        // Return as is for other formats
+        return $clean;
     }
 
     /**
@@ -186,7 +260,7 @@ class MahasiswaController extends Controller
                     'required',
                     'string',
                     'max:100',
-                    'regex:/^[a-zA-Z\s\.]+$/',
+                    'regex:/^[a-zA-Z\s\.\']+$/',
                 ],
                 'nrp' => [
                     'required',
@@ -212,14 +286,21 @@ class MahasiswaController extends Controller
                 'no_hp' => [
                     'required',
                     'string',
-                    'max:15',
-                    'regex:/^[0-9+\-\s]+$/',
+                    'min:10',
+                    'max:18',
+                    'regex:/^[\+]?[0-9\s\-]{8,18}$/',
                     Rule::unique('mahasiswa', 'no_hp')->ignore($mahasiswa->id_mahasiswa, 'id_mahasiswa'),
+                    function ($attribute, $value, $fail) {
+                        if (!$this->validatePhoneNumber($value)) {
+                            $fail('Format nomor HP tidak valid. Gunakan format Indonesia (08xx-xxxx-xxxx) atau internasional (+62xxx).');
+                        }
+                    },
                 ],
                 'alamat' => [
                     'required',
                     'string',
-                    'max:500'
+                    'max:500',
+                    'min:10'
                 ],
                 'status' => [
                     'required',
@@ -230,7 +311,7 @@ class MahasiswaController extends Controller
                 'nama.required' => 'Nama mahasiswa wajib diisi.',
                 'nama.string' => 'Nama harus berupa teks.',
                 'nama.max' => 'Nama tidak boleh lebih dari 100 karakter.',
-                'nama.regex' => 'Nama hanya boleh berisi huruf, spasi, dan titik.',
+                'nama.regex' => 'Nama hanya boleh berisi huruf, spasi, titik, dan tanda petik.',
                 
                 'nrp.required' => 'NRP wajib diisi.',
                 'nrp.size' => 'NRP harus tepat 10 digit.',
@@ -249,17 +330,22 @@ class MahasiswaController extends Controller
                 'gender.in' => 'Jenis kelamin harus Laki-laki atau Perempuan.',
                 
                 'no_hp.required' => 'Nomor HP wajib diisi.',
-                'no_hp.max' => 'Nomor HP tidak boleh lebih dari 15 karakter.',
-                'no_hp.regex' => 'Nomor HP hanya boleh berisi angka, +, -, dan spasi.',
+                'no_hp.min' => 'Nomor HP minimal 10 karakter.',
+                'no_hp.max' => 'Nomor HP tidak boleh lebih dari 18 karakter.',
+                'no_hp.regex' => 'Format nomor HP tidak valid. Contoh: 08123456789, +6281234567890.',
                 'no_hp.unique' => 'Nomor HP sudah digunakan mahasiswa lain.',
                 
                 'alamat.required' => 'Alamat wajib diisi.',
                 'alamat.string' => 'Alamat harus berupa teks.',
+                'alamat.min' => 'Alamat minimal 10 karakter.',
                 'alamat.max' => 'Alamat tidak boleh lebih dari 500 karakter.',
                 
                 'status.required' => 'Status wajib dipilih.',
                 'status.in' => 'Status harus salah satu dari: Aktif, Cuti, Lulus, atau Non Aktif.',
             ]);
+
+            // Clean and format phone number before saving
+            $validatedData['no_hp'] = $this->formatPhoneNumber($validatedData['no_hp']);
 
             $mahasiswa->update($validatedData);
 
