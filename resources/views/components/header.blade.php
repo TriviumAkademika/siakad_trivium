@@ -44,19 +44,50 @@
             </div>
             <h3 class="text-base">{{ Auth::user()->display_name }}</h3>
             <div class="dropdown dropdown-end">
-                <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <i class="ph ph-caret-down text-lg text-hitam"></i>
-                </label>
-                <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                    <li><a class="text-base">Lihat Profil</a></li>
-                    <li>
-                        {{-- <form method="POST" action="{{ route('logout') }}">
+                </div>
+                <ul tabindex="0" class="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow pt-3">
+                    {{-- <li>
+                        <form method="GET" action="{{ route('profile.edit') }}" id="profile-form">
                             @csrf
-                            <button type="submit" class="text-base w-full text-left">Logout</button>
-                        </form> --}}
+                            <button type="submit" class="w-full text-left text-base text-hitam flex items-center gap-2 px-4 py-2">
+                                <i class="ph ph-user text-lg"></i>
+                                Lihat Profil
+                            </button>
+                        </form>
+                    </li> --}}
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                            @csrf
+                            <button type="submit" class="w-full text-left text-base text-red-600 flex items-center gap-2">
+                                <i class="ph ph-sign-out text-lg"></i>
+                                Logout
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
+
+    <!-- Script untuk memastikan dropdown bekerja -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutForm = document.getElementById('logout-form');
+            const profileForm = document.getElementById('profile-form');
+            
+            if (logoutForm) {
+                logoutForm.addEventListener('submit', function(e) {
+                    console.log('Logout form submitted');
+                });
+            }
+            
+            if (profileForm) {
+                profileForm.addEventListener('submit', function(e) {
+                    console.log('Profile form submitted');
+                });
+            }
+        });
+    </script>
 </header>

@@ -1,46 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daftar Ruangan</title>
-  @vite('resources/css/app.css')
-</head>
-<body class="p-6 bg-gray-50">
-  <div class="mb-4">
-    <a href="{{ route('ruangan.create') }}" class="px-4 py-2 bg-green-500 text-white text-sm rounded hover:bg-green-600">
-      + Tambah Ruangan
-    </a>
-  </div>
+@extends('master')
 
-  <table class="min-w-full divide-y divide-gray-200 bg-white shadow rounded">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">#</th>
-        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama Ruangan</th>
-        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Nama Gedung</th>
-        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Kode Ruangan</th>
-        <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
-      </tr>
-    </thead>
-    <tbody class="bg-white divide-y divide-gray-200">
-      @foreach ($ruangan as $index => $r)
-        <tr>
-          <td class="px-4 py-2 text-sm text-gray-900">{{ $index + 1 }}</td>
-          <td class="px-4 py-2 text-sm text-gray-900">{{ $r->nama_ruangan }}</td>
-          <td class="px-4 py-2 text-sm text-gray-900">{{ $r->nama_gedung }}</td>
-          <td class="px-4 py-2 text-sm text-gray-900">{{ $r->kode_ruangan }}</td>
-          <td class="px-4 py-2 space-x-2">
-            <a href="{{ route('ruangan.edit', $r->id_ruangan) }}" class="inline-block px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600">Edit</a>
-            {{-- <form action="{{ route('ruangan.destroy', $r->id_ruangan) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">Delete</button>
-            </form> --}}
-          </td>
-        </tr>
-      @endforeach
-    </tbody>
-  </table>
-</body>
-</html>
+@section('title', 'Ruangan')
+
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+
+        <div class="flex flex-col w-full bg-putih">
+            {{-- Profil User di Header --}}
+            @include('components.header')
+
+            {{-- Toast Notification --}}
+            <x-notification.toast-notification />
+
+            {{-- Content --}}
+            <div class="flex flex-row px-6 pb-6 space-x-6">
+                <div class="flex flex-col grow items-end space-y-4">
+
+                    {{-- Judul dan Tombol Tambah Ruangan --}}
+                    <div class="flex justify-between items-center w-full">
+                        <h1 class="text-xl  ">Data Ruangan</h1>
+                        <a href="{{ route('ruangan.create') }}">
+                            <x-button.submit icon="ph ph-plus">
+                                Tambah Ruangan
+                            </x-button.submit>
+                        </a>
+                    </div>
+
+                    {{-- Button Tambah Data Mahasiswa
+                    <h1>Data Ruangan</h1>
+                    <a href="{{ route('ruangan.create') }}">
+                        <x-button.submit icon="ph ph-plus">
+                            Tambah Ruangan
+                        </x-button.submit>
+                    </a> --}}
+
+                    {{-- Tabel Data Mahasiswa --}}
+                    <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
+                        <thead class="bg-brand-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-hitam">#</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Nama Ruangan</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Nama Gedung</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Kode Ruangan</th>
+                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-putih divide-y divide-gray-200">
+                            @foreach ($ruangan as $index => $room)
+                                <tr>
+                                    <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
+                                    <x-table.table-td>{{ $room->nama_ruangan }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $room->nama_gedung }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">{{ $room->kode_ruangan }}</x-table.table-td>
+                                    <td class="px-2 py-2 text-sm text-hitam">
+                                        <div class="flex justify-center items-center space-x-1">
+                                            {{-- Button Edit --}}
+                                            <a href="{{ route('ruangan.edit', $room->id_ruangan) }}"
+                                                class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
+                                                <i class="ph ph-pencil-simple"></i>
+                                            </a>
+
+                                            {{-- Button Delete --}}
+                                            {{-- <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST"
+                                                class="inline-block"
+                                                onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600">
+                                                    <i class="ph ph-trash-simple"></i>
+                                                </button>
+                                            </form> --}}
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

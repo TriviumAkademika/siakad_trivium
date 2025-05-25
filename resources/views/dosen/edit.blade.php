@@ -1,40 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  @vite('resources/css/app.css')
-  <title>Document</title>
-</head>
-<body>
-  <form action="{{ route('dosen.update', $dosen->id_dosen) }}" method="POST" class="max-w-md mx-auto p-6 bg-white rounded shadow">
-    @csrf
-    @method('PUT')
-    <h2 class="text-xl font-semibold mb-4">Edit Dosen</h2>
-  
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Nama Dosen</label>
-      <input type="text" name="nama_dosen" value="{{ $dosen->nama_dosen }}" class="w-full border rounded px-3 py-2" required>
+@extends('master')
+
+@section('title', 'Edit Dosen')
+
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Edit Dosen</h2>
+            {{-- Content --}}
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('dosen.update', $dosen->id_dosen) }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
+                    @method('PUT')
+
+                    {{-- Nama --}}
+                    <x-form.text-field label="Nama Dosen" name="nama_dosen" :value="$dosen->nama_dosen" />
+
+                    {{-- NIP --}}
+                    <x-form.text-number label="NIP" name="nip" :value="$dosen->nip" />
+
+                    {{-- Alamat --}}
+                    <x-form.textarea-field label="Alamat" name="alamat" :value="$dosen->alamat" />
+
+                    {{-- No HP --}}
+                    <x-form.text-number label="No HP" name="no_hp" :value="$dosen->no_hp" />
+
+                    {{-- Status --}}
+                    <x-form.dropdown-field label="Status" name="status" 
+                        :options="[
+                            ['value' => 'AKTIF', 'label' => 'Aktif'],
+                            ['value' => 'CUTI', 'label' => 'Cuti'],
+                            ['value' => 'PENSIUN', 'label' => 'Pensiun'],
+                            ['value' => 'TIDAK AKTIF', 'label' => 'Tidak Aktif']
+                        ]" 
+                        valueField="value" 
+                        labelFields="label" 
+                        :value="$dosen->status" />
+
+                    {{-- Button Perbarui --}}
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/dosen';">
+                            Batal
+                        </x-button.cancel>
+                        <x-button.submit icon="ph ph-floppy-disk">
+                            Perbarui
+                        </x-button.submit>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">NIP</label>
-      <input type="text" name="nip" value="{{ $dosen->nip }}" class="w-full border rounded px-3 py-2" required>
-    </div>
-  
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Alamat</label>
-      <textarea name="alamat" class="w-full border rounded px-3 py-2" required>{{ $dosen->alamat }}</textarea>
-    </div>
-  
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">No HP</label>
-      <input type="text" name="no_hp" value="{{ $dosen->no_hp }}" class="w-full border rounded px-3 py-2" required>
-    </div>
-  
-    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Update</button>
-  </form>
-  
-</body>
-</html>
+@endsection

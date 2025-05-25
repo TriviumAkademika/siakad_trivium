@@ -20,6 +20,11 @@ use App\Http\Controllers\WaktuController;
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/', [AuthenticatedSessionController::class, 'store']);
 
+// Logout 
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
+
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
@@ -51,6 +56,7 @@ Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
     Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
     Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
     Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
+    Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
 });
 
 /// PERMISSION ROLE DOSEN, MAHASISWA
@@ -74,8 +80,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
 
-    // Tabel Dosen CU
+    // Tabel Dosen CU SHOW
     Route::get('/dosen/create', [DosenController::class, 'create'])->name('dosen.create');
+    Route::get('/dosen/{id}', [DosenController::class, 'show'])->name('dosen.show');
     Route::post('/dosen', [DosenController::class, 'store'])->name('dosen.store');
     Route::get('/dosen/{id}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
     Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');

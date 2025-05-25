@@ -71,8 +71,8 @@
                                                     <i class="ph ph-pencil-simple"></i>
                                                 </a>
 
-                                                {{-- Button Hapus --}}
-                                                {{-- <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST"
+                                            {{-- Button Hapus --}}
+                                            {{-- <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST"
                                                 class="inline-block"
                                                 onsubmit="return confirm('Anda yakin ingin menghapus jadwal ini?');">
                                                 @csrf
@@ -82,9 +82,14 @@
                                                     <i class="ph ph-trash-simple"></i>
                                                 </button>
                                             </form> --}}
+<<<<<<< HEAD
+                                        </div>
+                                    </td>
+=======
                                             </div>
                                         </td>
                                     @endif
+>>>>>>> 846b54d06b5c7050174689be992570bc2de85f1a
                                 </tr>
                             @endforeach
                         </tbody>

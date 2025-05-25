@@ -1,39 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  @vite('resources/css/app.css')
-  <title>Document</title>
-</head>
-<body>
-  <form action="{{ route('dosen.store') }}" method="POST" class="max-w-md mx-auto p-6 bg-white rounded shadow">
-    @csrf
-    <h2 class="text-xl font-semibold mb-4">Tambah Dosen</h2>
-  
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Nama Dosen</label>
-      <input type="text" name="nama_dosen" class="w-full border rounded px-3 py-2" required>
+@extends('master')
+
+@section('title', 'Tambah Dosen')
+
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Tambah Dosen</h2>
+            {{-- Content --}}
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('dosen.store') }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
+
+                    {{-- Nama --}}
+                    <x-form.text-field label="Nama Dosen" name="nama_dosen" placeholder="Nama Lengkap"/>
+
+                    {{-- NIP --}}
+                    <x-form.text-number label="NIP" name="nip" placeholder="0192103XXXXXXXXX"/>
+
+                    {{-- Alamat --}}
+                    <x-form.textarea-field label="Alamat" name="alamat" />
+
+                    {{-- No HP --}}
+                    <x-form.text-number label="No HP" name="no_hp" placeholder="081XXXXXXXXX"/>
+
+                    {{-- Status --}}
+                    <x-form.dropdown-field label="Status" name="status" 
+                        :options="[
+                            ['value' => 'AKTIF', 'label' => 'Aktif'],
+                            ['value' => 'CUTI', 'label' => 'Cuti'],
+                            ['value' => 'PENSIUN', 'label' => 'Pensiun'],
+                            ['value' => 'TIDAK AKTIF', 'label' => 'Tidak Aktif']
+                        ]" 
+                        valueField="value" 
+                        labelFields="label" />
+
+                    {{-- Button Simpan --}}
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/dosen';">
+                            Batal
+                        </x-button.cancel>
+                        <x-button.submit icon="ph ph-floppy-disk">
+                            Simpan
+                        </x-button.submit>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">NIP</label>
-      <input type="text" name="nip" class="w-full border rounded px-3 py-2" required>
-    </div>
-  
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Alamat</label>
-      <textarea name="alamat" class="w-full border rounded px-3 py-2" required></textarea>
-    </div>
-  
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">No HP</label>
-      <input type="text" name="no_hp" class="w-full border rounded px-3 py-2" required>
-    </div>
-  
-    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Simpan</button>
-  </form>
-  
-</body>
-</html>
+@endsection

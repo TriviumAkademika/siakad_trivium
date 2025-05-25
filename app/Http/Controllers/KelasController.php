@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use App\Models\Dosen;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -36,6 +37,7 @@ class KelasController extends Controller
             'tahun_masuk' => 'required|string|max:4',
             'prodi' => 'required|string|max:255',
             'paralel' => 'required|string|max:1',
+            'status' => 'required|in:AKTIF,LULUS',
         ]);
 
         Kelas::create($request->all()); // Simpan data kelas yang diterima
@@ -46,9 +48,24 @@ class KelasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Kelas $kelas)
+    public function show($id)
     {
-        //
+        try {
+            // Ambil data kelas dengan relasi dosen
+            $kelas = Kelas::with('dosen')->where('id_kelas', $id)->firstOrFail();
+            
+            // Ambil semua mahasiswa dalam kelas tersebut
+            $mahasiswa = Mahasiswa::where('id_kelas', $id)->get();
+            
+            // Hitung statistik
+            $totalMahasiswa = $mahasiswa->count();
+            $mahasiswaLaki = $mahasiswa->where('gender', 'L')->count();
+            $mahasiswaPerempuan = $mahasiswa->where('gender', 'P')->count();
+            
+            return view('kelas.show', compact('kelas', 'mahasiswa', 'totalMahasiswa', 'mahasiswaLaki', 'mahasiswaPerempuan'));
+        } catch (\Exception $e) {
+            return redirect()->route('kelas.index')->with('error', 'Data kelas tidak ditemukan!');
+        }
     }
 
     /**
@@ -73,6 +90,7 @@ class KelasController extends Controller
             'tahun_masuk' => 'required|string|max:4',
             'prodi' => 'required|string|max:255',
             'paralel' => 'required|string|max:1',
+            'status' => 'required|in:AKTIF,LULUS',
         ]);
 
         $kelas->update($request->all()); // Update data kelas

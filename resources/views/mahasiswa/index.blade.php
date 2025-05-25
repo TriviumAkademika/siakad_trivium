@@ -69,9 +69,9 @@
                                                     <i class="ph ph-pencil-simple"></i>
                                                 </a>
 
-                                                {{-- Button Delete --}}
-                                                {{-- <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}"
-                                                method="POST" class="inline-block"
+                                            {{-- Button Delete --}}
+                                            {{-- <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}" method="POST"
+                                                class="inline-block"
                                                 onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
                                                 @csrf
                                                 @method('DELETE')

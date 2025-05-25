@@ -19,21 +19,21 @@
                     <x-form.text-field label="Nama" name="nama" />
 
                     {{-- NRP --}}
-                    <x-form.text-field label="NRP" name="nrp" />
+                    <x-form.text-number label="NRP" name="nrp" />
 
                     {{-- Kelas --}}
                     <x-form.dropdown-field label="Kelas" name="id_kelas" :options="$kelas" valueField="id_kelas"
                         :labelFields="['prodi', 'paralel']" />
 
                     {{-- Semester --}}
-                    <x-form.text-field label="Semester" name="semester" />
+                    <x-form.text-number label="Semester" name="semester" />
 
                     {{-- Gender --}}
                     <x-form.dropdown-field label="Gender" name="gender" :options="[['value' => 'L', 'label' => 'Laki-laki'], ['value' => 'P', 'label' => 'Perempuan']]" valueField="value"
                         labelFields="label" />
 
                     {{-- No HP --}}
-                    <x-form.text-field label="No HP" name="no_hp" />
+                    <x-form.text-number label="No HP" name="no_hp" />
 
                     {{-- Alamat --}}
                     <x-form.textarea-field label="Alamat" name="alamat" />
