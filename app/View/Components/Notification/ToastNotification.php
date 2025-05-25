@@ -11,6 +11,7 @@ class ToastNotification extends Component
     public $message;
     public $type;
     public $classes;
+    public $iconClass;
 
     public function __construct()
     {
@@ -24,7 +25,15 @@ class ToastNotification extends Component
             'warning' => 'bg-kuning-100 text-warning',
         ];
 
+        $iconMap = [
+            'error' => 'ph ph-info',
+            'info' => 'ph ph-info',
+            'success' => 'ph ph-info',
+            'warning' => 'ph ph-warning',
+        ];
+
         $this->classes = $colorMap[$this->type] ?? $colorMap['info'];
+        $this->iconClass = $iconMap[$this->type] ?? $iconMap['info'];
     }
 
     public function render(): View|Closure|string

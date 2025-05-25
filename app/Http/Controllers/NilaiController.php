@@ -16,12 +16,6 @@ class NilaiController extends Controller
     public function index(Request $request)
     {
         $id_matkul = $request->get('id_matkul');
-        $nilais = nilai::with(['mahasiswa', 'matkul'])
-            ->when($id_matkul, function($q) use ($id_matkul) {
-                $q->where('matakuliah_id', $id_matkul);
-            })
-            ->get();
-
         $jadwals = Jadwal::with('matkul')->get();
         $matkuls = Matkul::all();
 
@@ -30,10 +24,13 @@ class NilaiController extends Controller
         if ($id_matkul) {
             $mahasiswa = Mahasiswa::whereHas('frs.detailFrs.jadwal', function($q) use ($id_matkul) {
                 $q->where('id_matkul', $id_matkul);
-            })->get();
+            })->with(['nilai' => function($query) use ($id_matkul) {
+                // Load nilai hanya untuk matkul yang sedang dipilih
+                $query->where('matakuliah_id', $id_matkul);
+            }])->get();
         }
 
-        return view('nilai.nilai-dosen', compact('nilais', 'jadwals', 'id_matkul', 'matkuls', 'mahasiswa'));
+        return view('nilai.nilai-dosen', compact('jadwals', 'id_matkul', 'matkuls', 'mahasiswa'));
     }
 
     /**
@@ -88,25 +85,93 @@ class NilaiController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($id_mahasiswa, $id_matkul)
     {
-        $nilai = nilai::with(['mahasiswa', 'jadwal'])->findOrFail($id);
-        return view('nilai.edit', compact('nilai'));
+        $mahasiswa = \App\Models\Mahasiswa::findOrFail($id_mahasiswa);
+        $matkul = \App\Models\Matkul::findOrFail($id_matkul);
+
+        // Opsional: Ambil data nilai UTS/UAS yang sudah ada jika ingin ditampilkan di form
+        $nilaiUTS = \App\Models\nilai::where('mahasiswa_id', $id_mahasiswa)
+                                     ->where('matakuliah_id', $id_matkul)
+                                     ->where('jenis_nilai', 'UTS')
+                                     ->first(); // Ambil record UTS jika ada
+        $nilaiUAS = \App\Models\nilai::where('mahasiswa_id', $id_mahasiswa)
+                                     ->where('matakuliah_id', $id_matkul)
+                                     ->where('jenis_nilai', 'UAS')
+                                     ->first(); // Ambil record UAS jika ada
+
+
+        return view('nilai.update', compact('mahasiswa', 'matkul', 'nilaiUTS', 'nilaiUAS')); // Kirim data nilai yang sudah ada ke view
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_mahasiswa, $id_matkul)
     {
+        // Validasi data
         $request->validate([
-            'nilai' => 'required|numeric|min:0|max:100',
+            'mahasiswa_id' => 'required|exists:mahasiswa,id_mahasiswa',
+            'matakuliah_id' => 'required|exists:matkuls,id_matkul',
+            // Ubah validasi menjadi nullable dan pastikan nilai kosong diizinkan
+            'nilai_uts' => 'nullable|in:A,B,C,D,E',
+            'nilai_uas' => 'nullable|in:A,B,C,D,E',
         ]);
 
-        $nilai = nilai::findOrFail($id);
-        $nilai->update(['nilai' => $request->nilai]);
+        // Validasi tambahan: Pastikan ID dari hidden input sesuai dengan parameter route
+        if ($request->mahasiswa_id != $id_mahasiswa || $request->matakuliah_id != $id_matkul) {
+            return back()->withErrors(['msg' => 'Data tidak konsisten dengan URL.']);
+        }
 
-        return redirect()->route('nilai.index', ['id_matkul' => $nilai->id_matkul])
+        // --- Proses Nilai UTS ---
+        // Jika nilai UTS dikirim dan TIDAK kosong
+        if ($request->has('nilai_uts') && $request->nilai_uts !== '') {
+            \App\Models\nilai::updateOrCreate(
+                [
+                    'mahasiswa_id' => $request->mahasiswa_id,
+                    'matakuliah_id' => $request->matakuliah_id,
+                    'jenis_nilai' => 'UTS',
+                ],
+                [
+                    'nilai' => $request->nilai_uts,
+                ]
+            );
+        }
+        // Jika nilai UTS dikirim dan KOSONG ('')
+        elseif ($request->has('nilai_uts') && $request->nilai_uts === '') {
+             \App\Models\nilai::where('mahasiswa_id', $request->mahasiswa_id)
+                                 ->where('matakuliah_id', $request->matakuliah_id)
+                                 ->where('jenis_nilai', 'UTS')
+                                 ->delete(); // Hapus record jika nilai dikosongkan
+        }
+        // Jika nilai UTS tidak dikirim sama sekali (tidak mungkin dengan dropdown biasa)
+
+        // --- Proses Nilai UAS ---
+        // Jika nilai UAS dikirim dan TIDAK kosong
+        if ($request->has('nilai_uas') && $request->nilai_uas !== '') {
+            \App\Models\nilai::updateOrCreate(
+                [
+                    'mahasiswa_id' => $request->mahasiswa_id,
+                    'matakuliah_id' => $request->matakuliah_id,
+                    'jenis_nilai' => 'UAS',
+                ],
+                [
+                    'nilai' => $request->nilai_uas,
+                ]
+            );
+        }
+         // Jika nilai UAS dikirim dan KOSONG ('')
+        elseif ($request->has('nilai_uas') && $request->nilai_uas === '') {
+            \App\Models\nilai::where('mahasiswa_id', $request->mahasiswa_id)
+                                ->where('matakuliah_id', $request->matakuliah_id)
+                                ->where('jenis_nilai', 'UAS')
+                                ->delete(); // Hapus record jika nilai dikosongkan
+        }
+         // Jika nilai UAS tidak dikirim sama sekali (tidak mungkin dengan dropdown biasa)
+
+
+        // Redirect kembali ke halaman nilai-dosen setelah update
+        return redirect()->route('nilai-dosen', ['id_matkul' => $request->matakuliah_id])
             ->with('success', 'Nilai berhasil diperbarui!');
     }
 
@@ -119,38 +184,6 @@ class NilaiController extends Controller
         $nilai->delete();
 
         return back()->with('success', 'Nilai berhasil dihapus!');
-    }
-
-    // Form update nilai
-    public function updateNilaiForm($id_mahasiswa, $id_matkul)
-    {
-        $mahasiswa = \App\Models\Mahasiswa::findOrFail($id_mahasiswa);
-        $matkul = \App\Models\Matkul::findOrFail($id_matkul);
-        return view('nilai.update-nilai', compact('mahasiswa', 'matkul'));
-    }
-
-    public function updateNilai(Request $request)
-    {
-        $request->validate([
-            'mahasiswa_id' => 'required|exists:mahasiswa,id_mahasiswa',
-            'matakuliah_id' => 'required|exists:matkuls,id_matkul',
-            'jenis_nilai' => 'required|in:UTS,UAS',
-            'nilai' => 'required|in:A,B,C,D,E',
-        ]);
-
-        // Simpan atau update nilai
-        $nilai = \App\Models\nilai::updateOrCreate(
-            [
-                'mahasiswa_id' => $request->mahasiswa_id,
-                'matakuliah_id' => $request->matakuliah_id,
-                'jenis_nilai' => $request->jenis_nilai,
-            ],
-            [
-                'nilai' => $request->nilai,
-            ]
-        );
-
-        return back()->with('success', 'Nilai berhasil diperbarui!');
     }
 
     public function nilaiMhs(Request $request)

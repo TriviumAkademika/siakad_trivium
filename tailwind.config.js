@@ -16,8 +16,10 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
+                jakarta: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans], // Optional: biar bisa pakai font-jakarta juga
             },
+
             colors: {
                 putih: '#FDFDFD',
                 hitam: '#464646',

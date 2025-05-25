@@ -1,32 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tambah Waktu</title>
-  @vite('resources/css/app.css')
-</head>
-<body class="p-6 bg-gray-50">
+@extends('master')
 
-  <form action="{{ route('waktu.store') }}" method="POST" class="max-w-md mx-auto bg-white p-6 rounded shadow">
-    @csrf
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Hari</label>
-      <input type="text" name="hari" class="w-full border px-3 py-2 rounded" required>
-    </div>
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Jam Mulai</label>
-      <input type="time" name="jam_mulai" class="w-full border px-3 py-2 rounded" required>
-    </div>
-    <div class="mb-4">
-      <label class="block mb-1 text-sm font-medium">Jam Selesai</label>
-      <input type="time" name="jam_selesai" class="w-full border px-3 py-2 rounded" required>
-    </div>
-    <div class="flex justify-end space-x-2">
-      <a href="{{ route('waktu.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded">Batal</a>
-      <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Simpan</button>
-    </div>
-  </form>
+@section('title', 'Tambah Waktu')
 
-</body>
-</html>
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Tambah Waktu</h2>
+            {{-- Content --}}
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('waktu.store') }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
+
+                    {{-- Nama waktu --}}
+                    <div class="flex w-full">
+                        <label for="hari" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            Hari
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <input type="text" name="hari" id="hari"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required>
+                    </div>
+                    {{-- Nama Gedung --}}
+                    <div class="flex w-full">
+                        <label for="jam_mulai" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            Jam Mulai
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <input type="time" name="jam_mulai" id="jam_mulai"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required>
+                    </div>
+                    {{-- Kode waktu --}}
+                    <div class="flex w-full">
+                        <label for="jam_selesai" class="flex items-center w-1/4 text-base font-medium text-hitam">
+                            Jam Selesai
+                            <span class="pl-1 text-error">*</span>
+                        </label>
+                        <input type="time" name="jam_selesai" id="jam_selesai"
+                            class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
+                            required>
+                    </div>
+
+                    {{-- Button Simpan --}}
+                    <div class="flex justify-end">
+                        <x-button.submit icon="ph ph-floppy-disk">
+                            Simpan
+                        </x-button.submit>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection

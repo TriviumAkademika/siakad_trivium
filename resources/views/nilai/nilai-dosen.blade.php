@@ -13,8 +13,9 @@
 
             {{-- content --}}
             <div class="flex flex-col px-6 pb-6 space-x-6">
-                {{-- Toast Notification
-                <x-notification.toast-notification /> --}}
+                {{-- Toast Notification --}}
+                <x-notification.toast-notification />
+
                 <div class="flex flex-col grow items-end space-y-4">
                 <div class="w-full">
                     <form method="GET" action="" class="flex justify-end">
@@ -45,17 +46,36 @@
                         <tr>
                             <th class="px-4 py-3 text-center text-sm font-medium text-hitam">NRP</th>
                             <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Nama Mahasiswa</th>
+                            <th class="px-4 py-3 text-center text-sm font-medium text-hitam">UTS</th>
+                            <th class="px-4 py-3 text-center text-sm font-medium text-hitam">UAS</th>
                             <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-putih divide-y divide-gray-200">
                         @foreach ($mahasiswa as $mhs)
+                            {{-- DEBUG: Tampilkan data nilai untuk setiap mahasiswa --}}
+                            @php
+                                // dd($mhs->nilai);
+                                // Uncomment baris di atas untuk melihat koleksi nilai
+                                // untuk mahasiswa ini. Cari item dengan jenis_nilai 'UAS'.
+                                // Pastikan array collection tidak kosong dan ada item UAS.
+                            @endphp
                             <tr>
                                 <td class="px-4 py-2 text-center text-sm text-hitam">{{ $mhs->nrp }}</td>
                                 <td class="px-4 py-2 text-center text-sm text-hitam">{{ $mhs->nama }}</td>
+                                {{-- Tampilkan nilai UTS --}}
+                                <td class="px-4 py-2 text-center text-sm text-hitam">
+                                    {{-- Cari nilai UTS di relasi nilai --}}
+                                    {{ $mhs->nilai->where('jenis_nilai', 'UTS')->first()->nilai ?? '-' }}
+                                </td>
+                                {{-- Tampilkan nilai UAS --}}
+                                <td class="px-4 py-2 text-center text-sm text-hitam">
+                                     {{-- Cari nilai UAS di relasi nilai --}}
+                                    {{ $mhs->nilai->where('jenis_nilai', 'UAS')->first()->nilai ?? '-' }}
+                                </td>
                                 <td class="px-4 py-2 text-center text-sm text-hitam">
                                     <div class="flex justify-center items-center space-x-1">
-                                        <a href="{{ route('nilai.updateNilaiForm', ['id_mahasiswa' => $mhs->id_mahasiswa, 'id_matkul' => request('id_matkul')]) }}" class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
+                                        <a href="{{ route('nilai.edit', ['id_mahasiswa' => $mhs->id_mahasiswa, 'id_matkul' => request('id_matkul')]) }}" class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
                                             <i class="ph ph-pencil text-xl"></i>
                                         </a>
                                     </div>
@@ -65,54 +85,9 @@
                     </tbody>
                 </table>
                 </div>
-                
-                {{-- <section class="rounded-lg p-2 grid bg-brand-100 mb-4">
-                    <div class="flex gap-4 text-sm">
-                        <div class="flex-none w-36 p-2 font-semibold text-center">NRP</div>
-                        <div class="flex-grow p-2 font-semibold text-center">Nama Mahasiswa</div>
-                        <div class="flex-none w-28 p-2 font-semibold text-center">Action</div>
-                    </div>
-                </section>
-
-                
-                <section>
-                        @foreach ($mahasiswa as $mhs)
-                        <div class="flex gap-4 text-sm">
-                            <div class="flex-none w-36 p-2 font-semibold text-center">{{ $mhs->nrp }}</div>
-                            <div class="flex-grow p-2 font-semibold text-center">{{ $mhs->nama }}</div>
-                            <div class="flex-none w-28 p-2 font-semibold text-center">
-                                <a href="{{ route('nilai.updateNilaiForm', ['id_mahasiswa' => $mhs->id_mahasiswa, 'id_matkul' => request('id_matkul')]) }}" class="inline-block text-blue-600 hover:text-blue-800">
-                                    <i class="ph ph-pencil text-xl"></i>
-                                </a>
-                            </div>
-                        </div>
-                        @endforeach
-                </section> --}}
             </div>
             </div>
         </div>
     </div>
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const carousel = document.getElementById('carouselMatkul');
-        const matkulLabel = document.getElementById('selected-matkul-label');
-        document.querySelectorAll('.matkul-card').forEach(function(card) {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.matkul-card').forEach(function(c) {
-                    c.classList.remove('ring', 'ring-blue-500');
-                });
-                card.classList.add('ring', 'ring-blue-500');
-                const namaMatkul = card.querySelector('h2').textContent;
-                matkulLabel.textContent = 'Daftar Mahasiswa untuk Matakuliah: ' + namaMatkul;
-            });
-        });
-        document.getElementById('scrollLeft').onclick = function () {
-            carousel.scrollBy({ left: -300, behavior: 'smooth' });
-        };
-        document.getElementById('scrollRight').onclick = function () {
-            carousel.scrollBy({ left: 300, behavior: 'smooth' });
-        };
-    });
-</script> --}}
 
 @endsection

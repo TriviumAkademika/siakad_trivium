@@ -36,4 +36,9 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(\App\Models\Frs::class, 'id_mahasiswa');
     }
+
+    public function nilai()
+    {
+        return $this->hasMany(\App\Models\Nilai::class, 'mahasiswa_id');
+    }
 }

@@ -7,68 +7,90 @@ use App\Models\Mahasiswa;
 use App\Models\Dosen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     // Tampilkan semua user
     public function index()
     {
-        $users = User::with(['mahasiswa', 'dosen'])->get();
+        $users = User::with(['mahasiswa', 'dosen', 'roles'])->get();
         return view('users.index', compact('users'));
     }
 
     // Form tambah user
     public function create()
     {
+        // Ambil mahasiswa dan dosen yang belum memiliki user
         $mahasiswa = Mahasiswa::doesntHave('user')->get();
         $dosen = Dosen::doesntHave('user')->get();
         return view('users.create', compact('mahasiswa', 'dosen'));
     }
 
-    // Simpan user baru
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        // Validasi dasar
+        $rules = [
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed',
-            'role' => 'required|in:admin,mahasiswa,dosen',
-            'nama_user' => 'required_if:role,admin|string|nullable|max:255',
-            'id_mahasiswa' => 'required_if:role,mahasiswa|nullable|exists:mahasiswa,id_mahasiswa',
-            'id_dosen' => 'required_if:role,dosen|nullable|exists:dosen,id_dosen',
-        ]);
+            'role' => 'required|in:mahasiswa,dosen,admin',
+        ];
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-        $user = new User();
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-
-        // Untuk nama admin
-        if ($request->role === 'admin') {
-            $user->name = $request->nama_user;
-        }
-
-        // Untuk relasi
+        // Validasi tambahan berdasarkan role
         if ($request->role === 'mahasiswa') {
-            $user->id_mahasiswa = $request->id_mahasiswa;
+            $rules['id_mahasiswa'] = 'required|exists:mahasiswa,id_mahasiswa|unique:users,id_mahasiswa';
         } elseif ($request->role === 'dosen') {
-            $user->id_dosen = $request->id_dosen;
+            $rules['id_dosen'] = 'required|exists:dosen,id_dosen|unique:users,id_dosen';
+        } elseif ($request->role === 'admin') {
+            $rules['nama_user'] = 'required|string|max:255';
         }
 
-        $user->save();
-        $user->syncRoles([$request->role]); // Gunakan Spatie role
+        $validated = $request->validate($rules);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
+        try {
+            // Buat data user berdasarkan role
+            $userData = [
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ];
+
+            // Tambahkan field spesifik berdasarkan role
+            if ($validated['role'] === 'mahasiswa') {
+                $userData['id_mahasiswa'] = $validated['id_mahasiswa'];
+            } elseif ($validated['role'] === 'dosen') {
+                $userData['id_dosen'] = $validated['id_dosen'];
+            } elseif ($validated['role'] === 'admin') {
+                $userData['name'] = $validated['nama_user'];
+            }
+
+            // Buat user
+            $user = User::create($userData);
+
+            // Assign role menggunakan Spatie Permission (HANYA INI yang menentukan role)
+            $user->assignRole($validated['role']);
+
+            return redirect()->route('users.index')
+                ->with('success', 'User berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
     }
 
     // Form edit user
     public function edit($id)
     {
-        $user = User::with(['mahasiswa', 'dosen'])->findOrFail($id);
-        return view('users.edit', compact('user'));
+        $user = User::with(['mahasiswa', 'dosen', 'roles'])->findOrFail($id);
+        
+        // Ambil mahasiswa dan dosen yang belum memiliki user (kecuali yang sedang diedit)
+        $mahasiswa = Mahasiswa::doesntHave('user')
+            ->orWhere('id_mahasiswa', $user->id_mahasiswa)
+            ->get();
+        $dosen = Dosen::doesntHave('user')
+            ->orWhere('id_dosen', $user->id_dosen)
+            ->get();
+            
+        return view('users.edit', compact('user', 'mahasiswa', 'dosen'));
     }
 
     // Update user
@@ -89,29 +111,46 @@ class UserController extends Controller
             $rules['nama_user'] = 'required|string|max:255';
         }
 
-        $request->validate($rules);
+        $validated = $request->validate($rules);
 
-        $user->email = $request->email;
+        try {
+            $user->email = $validated['email'];
 
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            if ($request->filled('password')) {
+                $user->password = Hash::make($validated['password']);
+            }
+
+            if ($currentRole === 'admin') {
+                $user->name = $validated['nama_user'];
+            }
+
+            $user->save();
+
+            return redirect()->route('users.index')
+                ->with('success', 'User berhasil diupdate.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
         }
-
-        if ($currentRole === 'admin') {
-            $user->name = $request->nama_user;
-        }
-
-        $user->save();
-
-        return redirect()->route('users.index')->with('success', 'User berhasil diupdate.');
     }
 
     // Hapus user
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        try {
+            $user = User::findOrFail($id);
+            
+            // Hapus semua role yang terkait dengan user
+            $user->removeRole($user->getRoleNames()->first());
+            
+            $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
+            return redirect()->route('users.index')
+                ->with('success', 'User berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
     }
 }

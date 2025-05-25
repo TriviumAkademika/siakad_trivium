@@ -18,8 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
 
-            $table->enum('role', ['mahasiswa', 'dosen', 'admin']);
-            $table->string('nama_user')->nullable(); // opsional, hanya untuk admin
+            // Hapus kolom role dan nama_user karena sudah menggunakan Spatie Permission
             $table->unsignedBigInteger('id_mahasiswa')->nullable();
             $table->unsignedBigInteger('id_dosen')->nullable();
 
@@ -29,7 +28,6 @@ return new class extends Migration
             $table->foreign('id_mahasiswa')->references('id_mahasiswa')->on('mahasiswa')->onDelete('set null');
             $table->foreign('id_dosen')->references('id_dosen')->on('dosen')->onDelete('set null');
         });
-
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
