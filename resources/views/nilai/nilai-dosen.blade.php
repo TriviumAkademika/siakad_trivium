@@ -18,7 +18,7 @@
 
                 <div class="flex flex-col grow items-end space-y-4">
                 <div class="w-full">
-                    <form method="GET" action="" class="flex justify-end">
+                    <form method="GET" action="{{ route('nilai-dosen') }}" class="flex justify-end">
                         <select name="id_matkul" class="w-2/5 p-2 rounded border border-gray-300 focus:ring focus:ring-blue-200" onchange="this.form.submit()">
                             <option value="">Pilih Matakuliah</option>
                             @foreach ($matkuls as $matkul)
@@ -65,13 +65,23 @@
                                 <td class="px-4 py-2 text-center text-sm text-hitam">{{ $mhs->nama }}</td>
                                 {{-- Tampilkan nilai UTS --}}
                                 <td class="px-4 py-2 text-center text-sm text-hitam">
-                                    {{-- Cari nilai UTS di relasi nilai --}}
-                                    {{ $mhs->nilai->where('jenis_nilai', 'UTS')->first()->nilai ?? '-' }}
+                                    @php
+                                        $nilaiUTS = $mhs->nilai->where('matakuliah_id', request('id_matkul'))->where('jenis_nilai', 'UTS')->first();
+                                    @endphp
+                                    {{ $nilaiUTS->nilai ?? '-' }}
                                 </td>
                                 {{-- Tampilkan nilai UAS --}}
                                 <td class="px-4 py-2 text-center text-sm text-hitam">
-                                     {{-- Cari nilai UAS di relasi nilai --}}
-                                    {{ $mhs->nilai->where('jenis_nilai', 'UAS')->first()->nilai ?? '-' }}
+                                    @php
+                                        $nilaiUAS = $mhs->nilai->where('matakuliah_id', request('id_matkul'))->where('jenis_nilai', 'UAS')->first();
+                                        \Log::info('Menampilkan nilai UAS', [
+                                            'mahasiswa_id' => $mhs->id_mahasiswa,
+                                            'matakuliah_id' => request('id_matkul'),
+                                            'nilai' => $nilaiUAS ? $nilaiUAS->toArray() : null,
+                                            'semua_nilai' => $mhs->nilai->toArray()
+                                        ]);
+                                    @endphp
+                                    {{ $nilaiUAS->nilai ?? '-' }}
                                 </td>
                                 <td class="px-4 py-2 text-center text-sm text-hitam">
                                     <div class="flex justify-center items-center space-x-1">

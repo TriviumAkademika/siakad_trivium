@@ -20,6 +20,11 @@ use App\Http\Controllers\WaktuController;
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/', [AuthenticatedSessionController::class, 'store']);
 
+// Logout 
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
+
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
@@ -41,6 +46,7 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen|mahasiswa'])->group(fun
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
     Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
     Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
+    Route::get('/kelas/create', [KelasController::class, 'create'])->name('kelas.create');
 });
 
 
@@ -50,6 +56,7 @@ Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
     Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
     Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
     Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
+    Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
 });
 
 /// PERMISSION ROLE DOSEN, MAHASISWA
@@ -63,7 +70,14 @@ Route::middleware(['auth', 'verified', 'role:admin|mahasiswa'])->group(function 
 });
 
 /// PERMISSIONS ROLE ADMIN
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
+    // Rute Nilai Dosen
+    Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
+    
+    // Rute untuk mengedit nilai
+    Route::get('/nilai/{id_mahasiswa}/edit', [NilaiController::class, 'edit'])->name('nilai.edit');
+    Route::put('/nilai/{id_mahasiswa}', [NilaiController::class, 'update'])->name('nilai.update');
+    
     // Tabel Mahasiswa CRU
     Route::get('/mahasiswa/create', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
@@ -74,9 +88,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    // Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
-    // Tabel Dosen CU
+    // Tabel Dosen CU SHOW
     Route::get('/dosen/create', [DosenController::class, 'create'])->name('dosen.create');
+    Route::get('/dosen/{id}', [DosenController::class, 'show'])->name('dosen.show');
     Route::post('/dosen', [DosenController::class, 'store'])->name('dosen.store');
     Route::get('/dosen/{id}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
     Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');
@@ -132,16 +148,18 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 
 /// PERMISSION ROLE DOSEN
 Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
-    Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
-    Route::get('/nilai/{id_mahasiswa}/{id_matkul}/edit', [App\Http\Controllers\NilaiController::class, 'edit'])->name('nilai.edit');
-    Route::put('/nilai/{id_mahasiswa}/{id_matkul}', [App\Http\Controllers\NilaiController::class, 'update'])->name('nilai.update');
+
 });
 
 
 /// PERMISSION ROLE MAHASISWA
 Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
-   Route::get('/nilai-mhs', [App\Http\Controllers\NilaiController::class, 'nilaiMhs'])->name('nilai-mhs'); 
+    
 });
+
+
+
+Route::get('/nilai-mhs', [App\Http\Controllers\NilaiController::class, 'nilaiMhs'])->name('nilai-mhs');
 
 Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
 Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');

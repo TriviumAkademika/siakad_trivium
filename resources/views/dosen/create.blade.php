@@ -16,16 +16,27 @@
                     @csrf
 
                     {{-- Nama --}}
-                    <x-form.text-field label="Nama Dosen" name="nama_dosen" />
+                    <x-form.text-field label="Nama Dosen" name="nama_dosen" placeholder="Nama Lengkap"/>
 
-                    {{-- NRP --}}
-                    <x-form.text-number label="NIP" name="nip" />
+                    {{-- NIP --}}
+                    <x-form.text-number label="NIP" name="nip" placeholder="0192103XXXXXXXXX"/>
 
-                    {{-- Semester --}}
-                    <x-form.text-field label="Alamat" name="alamat" />
+                    {{-- Alamat --}}
+                    <x-form.textarea-field label="Alamat" name="alamat" />
 
                     {{-- No HP --}}
-                    <x-form.text-number label="No HP" name="no_hp" />
+                    <x-form.text-number label="No HP" name="no_hp" placeholder="081XXXXXXXXX"/>
+
+                    {{-- Status --}}
+                    <x-form.dropdown-field label="Status" name="status" 
+                        :options="[
+                            ['value' => 'AKTIF', 'label' => 'Aktif'],
+                            ['value' => 'CUTI', 'label' => 'Cuti'],
+                            ['value' => 'PENSIUN', 'label' => 'Pensiun'],
+                            ['value' => 'TIDAK AKTIF', 'label' => 'Tidak Aktif']
+                        ]" 
+                        valueField="value" 
+                        labelFields="label" />
 
                     {{-- Button Simpan --}}
                     <div class="flex justify-end gap-x-1">

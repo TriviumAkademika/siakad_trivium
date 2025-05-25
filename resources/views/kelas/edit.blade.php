@@ -1,52 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Edit Kelas</title>
-  @vite('resources/css/app.css')
-</head>
-<body class="p-6 bg-gray-50">
+{{-- EDIT.BLADE.PHP --}}
+@extends('master')
 
-  <div class="max-w-lg mx-auto bg-white shadow rounded p-6">
-    <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Kelas</h2>
-    
-    <form action="{{ route('kelas.update', $kelas->id_kelas) }}" method="POST">
-      @csrf
-      @method('PUT')
+@section('title', 'Edit Kelas')
 
-      <div class="mb-4">
-        <label for="id_dosen" class="block text-sm font-semibold text-gray-700">Dosen Wali</label>
-        <select name="id_dosen" id="id_dosen" class="mt-1 p-2 w-full border rounded">
-          @foreach ($dosen as $d)
-            <option value="{{ $d->id_dosen }}" {{ $d->id_dosen == $kelas->id_dosen ? 'selected' : '' }}>
-              {{ $d->nama_dosen }}
-            </option>
-          @endforeach
-        </select>
-      </div>
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Edit Kelas</h2>
+            {{-- Content --}}
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('kelas.update', $kelas->id_kelas) }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
+                    @method('PUT')
 
-      <div class="mb-4">
-        <label for="tahun_masuk" class="block text-sm font-semibold text-gray-700">Tahun Masuk</label>
-        <input type="number" name="tahun_masuk" id="tahun_masuk" value="{{ $kelas->tahun_masuk }}" class="mt-1 p-2 w-full border rounded" required>
-      </div>
+                    {{-- Program Studi --}}
+                    <x-form.text-field label="Program Studi" name="prodi" :value="$kelas->prodi" />
 
-      <div class="mb-4">
-        <label for="prodi" class="block text-sm font-semibold text-gray-700">Prodi</label>
-        <input type="text" name="prodi" id="prodi" value="{{ $kelas->prodi }}" class="mt-1 p-2 w-full border rounded" required>
-      </div>
+                    {{-- Tahun Masuk --}}
+                    <x-form.text-number label="Tahun Masuk" name="tahun_masuk" :value="$kelas->tahun_masuk" />
 
-      <div class="mb-4">
-        <label for="paralel" class="block text-sm font-semibold text-gray-700">Paralel</label>
-        <input type="text" name="paralel" id="paralel" value="{{ $kelas->paralel }}" class="mt-1 p-2 w-full border rounded" required>
-      </div>
+                    {{-- Paralel --}}
+                    <x-form.text-field label="Paralel" name="paralel" :value="$kelas->paralel" />
 
-      <button type="submit" class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
-        Update
-      </button>
-    </form>
-  </div>
+                    {{-- Wali Kelas --}}
+                    <x-form.dropdown-field label="Wali Kelas" name="id_dosen" 
+                        :options="$dosen" 
+                        valueField="id_dosen" 
+                        labelFields="nama_dosen" 
+                        :value="$kelas->id_dosen" />
 
-</body>
-</html>
+                    {{-- Status --}}
+                    <x-form.dropdown-field label="Status" name="status" 
+                        :options="[
+                            ['value' => 'AKTIF', 'label' => 'Aktif'],
+                            ['value' => 'LULUS', 'label' => 'Lulus']
+                        ]" 
+                        valueField="value" 
+                        labelFields="label" 
+                        :value="$kelas->status" />
+
+                    {{-- Button Perbarui --}}
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='{{ route('kelas.index') }}';">
+                            Batal
+                        </x-button.cancel>
+                        <x-button.submit icon="ph ph-floppy-disk">
+                            Perbarui
+                        </x-button.submit>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection

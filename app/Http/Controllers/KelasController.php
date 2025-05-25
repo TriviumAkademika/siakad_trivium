@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use App\Models\Dosen;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -11,10 +12,35 @@ class KelasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kelas = Kelas::with('dosen')->get(); // Mengambil semua kelas beserta dosen yang terkait
-        return view('kelas.index', compact('kelas')); // Kirim data kelas ke view
+        $query = Kelas::with('dosen');
+
+        // Handle search
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('tahun_masuk', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('prodi', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('paralel', 'LIKE', "%{$searchTerm}%")
+                  ->orWhereHas('dosen', function($dosenQuery) use ($searchTerm) {
+                      $dosenQuery->where('nama_dosen', 'LIKE', "%{$searchTerm}%");
+                  });
+            });
+        }
+
+        // Handle status filter
+        if ($request->filled('status')) {
+            $statusFilters = $request->status;
+            if (is_array($statusFilters) && count($statusFilters) > 0) {
+                $query->whereIn('status', $statusFilters);
+            }
+        }
+
+        // Paginate with 10 items per page and preserve query parameters
+        $kelas = $query->paginate(10)->appends($request->query());
+
+        return view('kelas.index', compact('kelas'));
     }
 
     /**
@@ -36,6 +62,7 @@ class KelasController extends Controller
             'tahun_masuk' => 'required|string|max:4',
             'prodi' => 'required|string|max:255',
             'paralel' => 'required|string|max:1',
+            'status' => 'required|in:AKTIF,LULUS',
         ]);
 
         Kelas::create($request->all()); // Simpan data kelas yang diterima
@@ -46,9 +73,24 @@ class KelasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Kelas $kelas)
+    public function show($id)
     {
-        //
+        try {
+            // Ambil data kelas dengan relasi dosen
+            $kelas = Kelas::with('dosen')->where('id_kelas', $id)->firstOrFail();
+            
+            // Ambil semua mahasiswa dalam kelas tersebut
+            $mahasiswa = Mahasiswa::where('id_kelas', $id)->get();
+            
+            // Hitung statistik
+            $totalMahasiswa = $mahasiswa->count();
+            $mahasiswaLaki = $mahasiswa->where('gender', 'L')->count();
+            $mahasiswaPerempuan = $mahasiswa->where('gender', 'P')->count();
+            
+            return view('kelas.show', compact('kelas', 'mahasiswa', 'totalMahasiswa', 'mahasiswaLaki', 'mahasiswaPerempuan'));
+        } catch (\Exception $e) {
+            return redirect()->route('kelas.index')->with('error', 'Data kelas tidak ditemukan!');
+        }
     }
 
     /**
@@ -73,6 +115,7 @@ class KelasController extends Controller
             'tahun_masuk' => 'required|string|max:4',
             'prodi' => 'required|string|max:255',
             'paralel' => 'required|string|max:1',
+            'status' => 'required|in:AKTIF,LULUS',
         ]);
 
         $kelas->update($request->all()); // Update data kelas

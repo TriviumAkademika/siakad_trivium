@@ -30,9 +30,13 @@
             
 
             {{-- Nilai Dosen--}}
+            @if (in_array(auth()->user()->role, ['dosen', 'admin']))
             <a href="{{ route('nilai-dosen') }}" class="flex items-center gap-2">
                 <i class="ph ph-ranking text-xl text-hitam"></i>
                 <span class="text-base text-hitam">Nilai</span>
+            </a>
+            @endif
+            
             {{-- User cuma diakses admin --}}
             @if (auth()->user()->role === 'admin')
                 <a href="{{ route('users.index') }}" class="flex items-center gap-2">
