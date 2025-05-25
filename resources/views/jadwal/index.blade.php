@@ -48,7 +48,7 @@
 
                         <tbody class="bg-putih divide-y divide-gray-200">
                             @foreach ($jadwal as $index => $j)
-                                <tr>
+                                <tr class="hover:bg-gray-100">
                                     <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
                                     <x-table.table-td>{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}</x-table.table-td>
                                     <x-table.table-td>{{ $j->matkul->jenis }} -

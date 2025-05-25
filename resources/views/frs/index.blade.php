@@ -18,7 +18,7 @@
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">
                     {{-- PERMISSION UNTUK ADMIN --}}
-                    {{-- Button Tambah FRS --}}
+                    {{-- Button Tambah Mahasiswa yang Bisa Mengisi FRS --}}
                     @if (auth()->user()->role === 'admin')
                         <a href="{{ route('frs.create') }}">
                             <x-button.submit icon="ph ph-plus">
@@ -46,8 +46,8 @@
 
                         <tbody class="bg-putih divide-y divide-gray-100">
                             @foreach ($frs as $index => $item)
-                                <tr onclick="window.location='{{ route('frs.show', $item->id_frs) }}'"
-                                    class="cursor-pointer hover:bg-brand200">
+                                <tr onclick="window.location='{{ route('detail-frs.index', $item->id_frs) }}'"
+                                    class="hover:bg-gray-100 cursor-pointer">
                                     <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
                                     <x-table.table-td>{{ $item->mahasiswa->nama }}</x-table.table-td>
                                     <x-table.table-td class="text-center">{{ $item->tahun_ajaran }}</x-table.table-td>

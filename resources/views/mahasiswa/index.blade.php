@@ -49,7 +49,7 @@
 
                         <tbody class="bg-putih divide-y divide-gray-200">
                             @foreach ($mahasiswa as $index => $m)
-                                <tr>
+                                <tr class="hover:bg-gray-100">
                                     <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
                                     <x-table.table-td>{{ $m->nama }}</x-table.table-td>
                                     <x-table.table-td class="text-center">{{ $m->nrp }}</x-table.table-td>

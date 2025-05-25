@@ -11,6 +11,7 @@
                 'dashboard' => 'Selamat Datang',
                 'frs.index', 'frs.index' => 'Data FRS',
                 'frs.edit', 'frs.show' => 'Data Detail FRS',
+                'detail-frs.index', 'detail-frs.show' => 'Data Detail FRS',
                 'jadwal.index', 'jadwal.show' => 'Data Jadwal',
                 'mahasiswa.index', 'mahasiswa.show' => 'Data Mahasiswa',
                 'dosen.index', 'dosen.show' => 'Data Dosen',
@@ -31,8 +32,7 @@
         @endphp
 
         <h2 class="text-2xl text-hitam">
-            {{ $pageTitle }}@if (Request::is('dashboard'))
-                , {{ Auth::user()->display_name }}!
+            {{ $pageTitle }}@if (Request::is('dashboard')), {{ Auth::user()->display_name }}!
             @endif
         </h2>
 

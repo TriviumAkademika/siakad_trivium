@@ -1,147 +1,70 @@
 @extends('master')
 
-@section('title', 'Detail FRS Mahasiswa')
+@section('title', 'Detail FRS')
 
 @section('content')
     <div class="flex w-full grow">
+        {{-- Sidebar --}}
         @include('components.sidebar')
 
-        <div class="w-full p-4 bg-putih">
+        <div class="flex flex-col w-full bg-putih">
+            {{-- Profil User di Header --}}
             @include('components.header')
 
-            {{-- Informasi Mahasiswa --}}
-            <section class="rounded-lg p-2 grid grid-cols-1 sm:grid-cols-3 bg-brand100 mb-6 gap-4">
-                <div class="flex flex-col w-full p-4 gap-2 bg-brand-50 rounded-lg shadow">
-                    <label class="font-semibold">Nama</label>
-                    <input type="text" value="{{ $frs->mahasiswa->nama }}" readonly
-                        class="w-full border-2 border-neutral-500 rounded-lg p-2 bg-gray-50 cursor-not-allowed">
-                </div>
-                <div class="flex flex-col w-full p-4 gap-2 bg-brand-50 rounded-lg shadow">
-                    <label class="font-semibold">Semester</label>
-                    <input type="text" value="{{ $frs->semester }}" readonly
-                        class="w-full border-2 border-neutral-500 rounded-lg p-2 bg-gray-50 cursor-not-allowed">
-                </div>
-                <div class="flex flex-col w-full p-4 gap-2 bg-brand-50 rounded-lg shadow">
-                    <label class="font-semibold">Tahun Ajaran</label>
-                    <input type="text" value="{{ $frs->tahun_ajaran }}" readonly
-                        class="w-full border-2 border-neutral-500 rounded-lg p-2 bg-gray-50 cursor-not-allowed">
-                </div>
-            </section>
+            {{-- Content --}}
+            <div class="flex flex-row px-6 pb-6 space-x-6">
+                <div class="flex flex-col grow items-end space-y-4">
+                    {{-- Informasi Mahasiswa --}}
+                    <section class="flex grow w-full gap-x-8 rounded-lg sm:grid-cols-3">
+                        <x-form.card-information label="Nama" :value="$frs->mahasiswa->nama" />
+                        <x-form.card-information label="Semester" :value="$frs->semester" />
+                        <x-form.card-information label="Tahun Ajaran" :value="$frs->tahun_ajaran" />
+                    </section>
 
-            {{-- Table Detail FRS --}}
-            <section class="rounded-lg p-2 grid bg-brand100">
-                {{-- Header Tabel --}}
-                <div class="flex gap-4 font-semibold mb-2">
-                    <div class="flex items-center justify-center flex-none w-32 h-8 p-2 border border-white rounded-t">
-                        Matkul</div>
-                    <div class="flex items-center justify-center flex-grow h-8 p-2 border border-white rounded-t">Dosen
-                    </div>
-                    <div class="flex items-center justify-center flex-none w-24 h-8 p-2 border border-white rounded-t">
-                        Ruangan</div>
-                    <div class="flex items-center justify-center flex-none w-48 h-8 p-2 border border-white rounded-t">Waktu
-                    </div>
-                    <div class="flex items-center justify-center flex-none w-32 h-8 p-2 border border-white rounded-t">
-                        Status</div>
-                    <div class="flex items-center justify-center flex-none w-32 h-8 p-2 border border-white rounded-t">Aksi
-                    </div>
-                </div>
+                    {{-- Modal FRS Component --}}
+                    <x-modal.frs :frs="$frs" :jadwals="$jadwals" :formAction="route('detail-frs.store')" />
 
-                {{-- Isi tabel --}}
-                @foreach ($frs->detailFrs as $detail)
-                    <div class="flex gap-4 border-b border-gray-300 p-4 items-center">
-                        <div class="flex items-center justify-center flex-none w-32">
-                            {{ $detail->jadwal->matkul->nama_matkul }}</div>
-                        <div class="flex items-center justify-center flex-grow">{{ $detail->jadwal->dosen->nama_dosen }}
-                        </div>
-                        <div class="flex items-center justify-center flex-none w-24">
-                            {{ $detail->jadwal->ruangan->kode_ruangan }}</div>
-                        <div class="flex items-center justify-center flex-none w-48">
-                            {{ $detail->jadwal->waktu->hari }} ({{ $detail->jadwal->waktu->jam_mulai }} -
-                            {{ $detail->jadwal->waktu->jam_selesai }})
-                        </div>
-                        <div class="flex items-center justify-center flex-none w-32">
-                            {{ $detail->status ? 'Diterima' : 'Belum Diterima' }}
-
-                            <form action="{{ route('detail-frs.update-status', $detail->id_detail_frs) }}" method="POST"
-                                class="inline-block ml-2">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" class="text-xs text-blue-600 hover:underline">
-                                    {{ $detail->status ? 'Batalkan' : 'Terima' }}
-                                </button>
-                            </form>
-                        </div>
-                        <div class="flex items-center justify-center flex-none w-32">
-                            <form action="{{ route('detail-frs.destroy', $detail->id_detail_frs) }}" method="POST"
-                                onsubmit="return confirm('Hapus jadwal ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="text-xs text-red-600 hover:underline">Hapus</button>
-                            </form>
-                        </div>
-                    </div>
-                @endforeach
-            </section>
-
-            {{-- Tombol Modal --}}
-            <div class="mt-6" x-data="{ open: false }">
-                <button @click="open = true" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    Tambah Jadwal
-                </button>
-
-                {{-- Modal --}}
-                <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                    style="display: none" @click.away="open = false">
-                    <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl p-6 relative">
-                        <button @click="open = false"
-                            class="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-xl">✕</button>
-                        <h3 class="text-xl font-semibold mb-4">Pilih Jadwal</h3>
-
-                        <form method="POST" action="{{ route('detail-frs.store') }}">
-                            @csrf
-                            <input type="hidden" name="id_frs" value="{{ $frs->id_frs }}">
-
-                            <div class="overflow-y-auto max-h-[60vh] border rounded">
-                                <table class="w-full text-sm text-left">
-                                    <thead class="bg-gray-100">
-                                        <tr>
-                                            <th class="px-2 py-2 border">Pilih</th>
-                                            <th class="px-2 py-2 border">Matkul</th>
-                                            <th class="px-2 py-2 border">Dosen</th>
-                                            <th class="px-2 py-2 border">Hari</th>
-                                            <th class="px-2 py-2 border">Jam</th>
-                                            <th class="px-2 py-2 border">Ruangan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($jadwals as $jadwal)
-                                            <tr class="hover:bg-gray-50 border-t">
-                                                <td class="px-2 py-2 border">
-                                                    <input type="checkbox" name="jadwal_ids[]"
-                                                        value="{{ $jadwal->id_jadwal }}">
-                                                </td>
-                                                <td class="px-2 py-2 border">{{ $jadwal->matkul->nama_matkul }}</td>
-                                                <td class="px-2 py-2 border">{{ $jadwal->dosen->nama_dosen }}</td>
-                                                <td class="px-2 py-2 border">{{ $jadwal->waktu->hari }}</td>
-                                                <td class="px-2 py-2 border">{{ $jadwal->waktu->jam_mulai }} -
-                                                    {{ $jadwal->waktu->jam_selesai }}</td>
-                                                <td class="px-2 py-2 border">{{ $jadwal->ruangan->kode_ruangan }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="mt-4 text-right">
-                                <button type="submit"
-                                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Tambah ke
-                                    FRS</button>
-                            </div>
-                        </form>
-                    </div>
+                    {{-- Tabel Data Detail FRS --}}
+                    <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
+                        <thead class="bg-brand-100">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-hitam">#</th>
+                                <th class="w-48 px-4 py-3 text-sm font-semibold text-center text-hitam">Matkul</th>
+                                <th class="w-40 px-4 py-3 text-sm font-semibold text-center text-hitam">Dosen</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Ruangan</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Waktu</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Status</th>
+                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-putih divide-y divide-gray-100">
+                            @foreach ($frs->detailFrs as $index => $detail)
+                                <tr class="hover:bg-gray-100">
+                                    <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
+                                    <x-table.table-td>{{ $detail->jadwal->matkul->nama_matkul }}</x-table.table-td>
+                                    <x-table.table-td>{{ $detail->jadwal->dosen->nama_dosen }}</x-table.table-td>
+                                    <x-table.table-td
+                                        class="text-center">{{ $detail->jadwal->ruangan->kode_ruangan }}</x-table.table-td>
+                                    <x-table.table-td class="text-center">
+                                        <p>{{ $detail->jadwal->waktu->hari }}</p>
+                                        <p>{{ substr($detail->jadwal->waktu->jam_mulai, 0, 5) }} -
+                                            {{ substr($detail->jadwal->waktu->jam_selesai, 0, 5) }}</p>
+                                    </x-table.table-td>
+                                    {{-- Status Dropdown Component --}}
+                                    <x-table.table-td class="text-center">
+                                        <x-form.status-frs :detailId="$detail->id_detail_frs" :currentStatus="$detail->status" />
+                                    </x-table.table-td>
+                                    {{-- Button Delete --}}
+                                    <x-table.table-td class="text-center">
+                                        <x-button.delete :deleteId="$detail->id_detail_frs" :deleteRoute="route('detail-frs.destroy', $detail->id_detail_frs)" :itemName="$detail->jadwal->matkul->nama_matkul"
+                                            title="Hapus Jadwal dari FRS?" />
+                                    </x-table.table-td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
