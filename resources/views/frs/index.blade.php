@@ -38,9 +38,9 @@
                                 <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Total SKS</th>
                                 {{-- PERMISSION UNTUK ADMIN --}}
                                 {{-- Kolom Aksi --}}
-                                @if (auth()->user()->role === 'admin')
+                               {{--  @if (auth()->user()->role === 'admin')
                                     <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Aksi</th>
-                                @endif
+                                @endif --}}
                             </tr>
                         </thead>
 
@@ -54,27 +54,27 @@
                                     <x-table.table-td class="text-center">{{ $item->semester }}</x-table.table-td>
                                     <x-table.table-td class="text-center">{{ $item->total_sks }}</x-table.table-td>
                                     {{-- PERMISSION UNTUK ADMIN --}}
-                                    @if (auth()->user()->role === 'admin')
+                                    {{-- @if (auth()->user()->role === 'admin')
                                         <td class="px-4 py-2 text-sm text-center text-hitam">
                                             <div class="flex justify-center items-center space-x-2"
                                                 onclick="event.stopPropagation()">
-                                                {{-- Button Edit --}}
+                                                Button Edit
                                                 <a href="{{ route('frs.edit', $item->id_frs) }}"
                                                     class="inline-flex items-center justify-center w-8 h-8 bg-brand-700 hover:bg-brand-800 text-white text-sm rounded">
                                                     <i class="ph ph-pencil-simple"></i>
                                                 </a>
 
-                                                {{-- Button Delete --}}
-                                                {{-- <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus data ini?')">
+                                                Button Delete
+                                                <form action="{{ route('frs.destroy', $item->id_frs) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus data ini?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600">
                                                     Delete
                                                 </button>
-                                            </form> --}}
+                                            </form>
                                             </div>
                                         </td>
-                                    @endif
+                                    @endif --}}
                                 </tr>
                             @endforeach
                         </tbody>

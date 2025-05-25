@@ -4,7 +4,7 @@
     'formAction',
 ])
 
-<div x-data="{ open: false }">
+<div x-data="{ open: false }" x-init="open = false">
     {{-- Button Trigger Modal --}}
     <x-button.submit @click="open = true" icon="ph ph-plus">
         Tambah FRS
@@ -23,6 +23,12 @@
             
             {{-- Judul Modal --}}
             <h3 class="text-xl font-semibold">Pilih Jadwal</h3>
+
+            {{-- Total SKS di Modal --}}
+            {{-- <div class="mb-2 text-right">
+                <span class="font-semibold">Total SKS: </span>
+                <span>{{ $frs->total_sks ?? 0 }}</span>
+            </div> --}}
             
             {{-- Form --}}
             <form method="POST" id="frsForm" class="space-y-4" action="{{ route('detail-frs.store') }}">

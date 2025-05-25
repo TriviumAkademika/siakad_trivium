@@ -39,6 +39,7 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen|mahasiswa'])->group(fun
     Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index');
     Route::get('/matkul', [MatkulController::class, 'index'])->name('matkul.index');
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+    Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
     Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
     Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
 });
@@ -118,7 +119,6 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     // Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
 
     // Tabel FRS CRU
-    Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
     Route::post('/frs', [FrsController::class, 'store'])->name('frs.store');
     Route::get('/frs/{id}/edit', [FrsController::class, 'edit'])->name('frs.edit');
     Route::put('/frs/{id}', [FrsController::class, 'update'])->name('frs.update');

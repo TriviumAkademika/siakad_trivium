@@ -18,14 +18,21 @@
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">
                     {{-- Informasi Mahasiswa --}}
-                    <section class="flex grow w-full gap-x-8 rounded-lg sm:grid-cols-3">
+                    <section class="flex grow w-full gap-x-4 rounded-lg sm:grid-cols-4">
                         <x-form.card-information label="Nama" :value="$frs->mahasiswa->nama" />
                         <x-form.card-information label="Semester" :value="$frs->semester" />
                         <x-form.card-information label="Tahun Ajaran" :value="$frs->tahun_ajaran" />
+                        <x-form.card-information label="Total SKS" :value="$frs->total_sks ?? 0" />
                     </section>
 
                     {{-- Modal FRS Component --}}
                     <x-modal.frs :frs="$frs" :jadwals="$jadwals" :formAction="route('detail-frs.store')" />
+
+                    {{-- Total SKS --}}
+                    {{-- <div class="w-full flex justify-end mb-2">
+                        <span class="font-semibold">Total SKS: </span>
+                        <span class="ml-2">{{ $frs->total_sks ?? 0 }}</span>
+                    </div> --}}
 
                     {{-- Tabel Data Detail FRS --}}
                     <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
@@ -41,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody class="bg-putih divide-y divide-gray-100">
-                            @foreach ($frs->detailFrs as $index => $detail)
+                            @forelse ($frs->detailFrs as $index => $detail)
                                 <tr class="hover:bg-gray-100">
                                     <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
                                     <x-table.table-td>{{ $detail->jadwal->matkul->nama_matkul }}</x-table.table-td>
@@ -63,7 +70,11 @@
                                             title="Hapus Jadwal dari FRS?" />
                                     </x-table.table-td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center py-4 text-gray-400">Belum ada FRS diambil.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
