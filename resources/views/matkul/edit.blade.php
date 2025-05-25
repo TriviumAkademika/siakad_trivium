@@ -1,46 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  @vite('resources/css/app.css')
-  <title>Document</title>
-</head>
-<body>
-<div class="max-w-xl mx-auto p-6 bg-white shadow rounded">
-  <h2 class="text-lg font-semibold mb-4">Edit Mata Kuliah</h2>
+@extends('master')
 
-  <form action="{{ route('matkul.update', $matkul->id_matkul) }}" method="POST">
-    @csrf
-    @method('PUT')
+@section('title', 'Edit Mata Kuliah')
 
-    <div class="mb-4">
-      <label for="nama_matkul" class="block text-sm font-medium">Nama Mata Kuliah</label>
-      <input type="text" name="nama_matkul" id="nama_matkul" value="{{ $matkul->nama_matkul }}" class="mt-1 block w-full border rounded px-3 py-2" required>
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Edit Mata Kuliah</h2>
+            {{-- Content --}}
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('matkul.update', $matkul->id_matkul) }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
+                    @method('PUT')
+
+                    {{-- Nama Mata Kuliah --}}
+                    <x-form.text-field label="Nama Mata Kuliah" name="nama_matkul" 
+                        value="{{ old('nama_matkul', $matkul->nama_matkul) }}" 
+                        placeholder="Contoh: Pemrograman Web, Basis Data"/>
+
+                    {{-- Jenis --}}
+                    <x-form.dropdown-field label="Jenis" name="jenis" 
+                        :options="[
+                            ['value' => 'Wajib', 'label' => 'Wajib'],
+                            ['value' => 'Pilihan', 'label' => 'Pilihan']
+                        ]" 
+                        valueField="value" 
+                        labelFields="label" 
+                        placeholder="Pilih Jenis Mata Kuliah"
+                        :selected="old('jenis', $matkul->jenis)"/>
+
+                    {{-- SKS --}}
+                    <x-form.text-number label="SKS" name="sks" 
+                        value="{{ old('sks', $matkul->sks) }}" 
+                        placeholder="Contoh: 2, 3, 4"/>
+
+                    {{-- Kapasitas Kelas --}}
+                    <x-form.text-number label="Kapasitas Kelas" name="kapasitas_kelas" 
+                        value="{{ old('kapasitas_kelas', $matkul->kapasitas_kelas) }}" 
+                        placeholder="Contoh: 30, 35, 40"/>
+
+                    {{-- Button Simpan --}}
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='{{ route('matkul.index') }}';">
+                            Batal
+                        </x-button.cancel>
+                        <x-button.submit icon="ph ph-floppy-disk">
+                            Update
+                        </x-button.submit>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-4">
-      <label for="jenis" class="block text-sm font-medium">Jenis</label>
-      <input type="text" name="jenis" id="jenis" value="{{ $matkul->jenis }}" class="mt-1 block w-full border rounded px-3 py-2" required>
-    </div>
-
-    <div class="mb-4">
-      <label for="sks" class="block text-sm font-medium">SKS</label>
-      <input type="number" name="sks" id="sks" value="{{ $matkul->sks }}" class="mt-1 block w-full border rounded px-3 py-2" required>
-    </div>
-
-    <div class="mb-4">
-      <label for="kapasitas_kelas" class="block text-sm font-medium">Kapasitas Kelas</label>
-      <input type="number" name="kapasitas_kelas" id="kapasitas_kelas" value="{{ $matkul->kapasitas_kelas }}" class="mt-1 block w-full border rounded px-3 py-2" required>
-    </div>
-
-    <div class="flex justify-end space-x-2">
-      <a href="{{ route('matkul.index') }}" class="px-4 py-2 bg-gray-300 text-sm rounded hover:bg-gray-400">Batal</a>
-      <button type="submit" class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">Update</button>
-    </div>
-  </form>
-</div>
-
-</body>
-</html>
+@endsection

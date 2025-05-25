@@ -11,7 +11,7 @@
 @endphp
 
 <div class="flex w-full">
-    <label for="{{ $name }}" class="flex items-center w-1/4 text-base font-medium text-hitam">
+    <label for="{{ $name }}" class="flex items-center w-1/4 text-base font-semibold text-hitam">
         {{ $label }}
         @if ($required)
             <span class="pl-1 text-error">*</span>

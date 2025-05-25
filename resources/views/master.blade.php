@@ -23,5 +23,6 @@
 
 <body class="flex flex-col w-screen h-screen min-h-screen overflow-x-hidden bg-putih">
     @yield('content')
+    @stack('scripts')
 </body>
 </html>

@@ -10,22 +10,22 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::create('mahasiswa', function (Blueprint $table) {
-        $table->id('id_mahasiswa');
-        $table->unsignedBigInteger('id_kelas');
-        $table->string('nama');
-        $table->string('nrp')->unique();
-        $table->string('semester');
-        $table->enum('gender', ['L', 'P']);
-        $table->mediumText('alamat');
-        $table->string('no_hp');
-        $table->timestamps();
+    {
+        Schema::create('mahasiswa', function (Blueprint $table) {
+            $table->id('id_mahasiswa');
+            $table->unsignedBigInteger('id_kelas');
+            $table->string('nama');
+            $table->string('nrp')->unique();
+            $table->string('semester');
+            $table->enum('gender', ['L', 'P']);
+            $table->mediumText('alamat');
+            $table->string('no_hp');
+            $table->enum('status', ['aktif', 'non-aktif', 'cuti', 'lulus'])->default('aktif');
+            $table->timestamps();
 
-        $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
-    });
-}
-
+            $table->foreign('id_kelas')->references('id_kelas')->on('kelas')->onDelete('cascade');
+        });
+    }
 
     /**
      * Reverse the migrations.

@@ -7,9 +7,9 @@
         class="fixed top-8 right-8 {{ $classes }} px-6 py-4 rounded shadow z-50 flex items-center space-x-2">
         
         {{-- Icon --}}
-        <i class="{{ $iconClass }} text-lg"></i>
+        <i class="{{ $iconClass }} text-lg font-medium"></i>
 
         {{-- Message --}}
-        <span class="text-sm">{{ $message }}</span>
+        <span class="text-sm font-medium">{{ $message }}</span>
     </div>
 @endif
