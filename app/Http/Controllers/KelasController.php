@@ -37,6 +37,9 @@ class KelasController extends Controller
             }
         }
 
+        // Order by id kelas
+        $query->orderBy('id_kelas', 'asc');
+
         // Paginate with 10 items per page and preserve query parameters
         $kelas = $query->paginate(10)->appends($request->query());
 
@@ -97,11 +100,16 @@ class KelasController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-    {
-        $kelas = Kelas::findOrFail($id); // Ambil data kelas berdasarkan id
-        $dosen = Dosen::all(); // Ambil semua dosen untuk dropdown
-        return view('kelas.edit', compact('kelas', 'dosen')); // Tampilkan form edit dengan data kelas dan dosen
-    }
+{
+    $kelas = Kelas::findOrFail($id);
+    
+    // Pastikan data dosen diambil dengan benar
+    $dosen = Dosen::where('status', 'AKTIF')
+                  ->orderBy('nama_dosen', 'asc')
+                  ->get();
+    
+    return view('kelas.edit', compact('kelas', 'dosen'));
+}
 
     /**
      * Update the specified resource in storage.

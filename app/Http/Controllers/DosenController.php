@@ -29,8 +29,8 @@ class DosenController extends Controller
             $query->whereIn('status', $statusFilters);
         }
 
-        // Order by nama_dosen
-        $query->orderBy('nama_dosen', 'asc');
+        // Order by id_dosen
+        $query->orderBy('id_dosen', 'asc');
 
         // Paginate with 10 items per page
         $dosen = $query->paginate(10);

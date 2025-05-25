@@ -18,20 +18,21 @@
                     @method('PUT')
 
                     {{-- Program Studi --}}
-                    <x-form.text-field label="Program Studi" name="prodi" :value="$kelas->prodi" />
+                    <x-form.text-field label="Program Studi" name="prodi" :value="old('prodi', $kelas->prodi)" />
 
                     {{-- Tahun Masuk --}}
-                    <x-form.text-number label="Tahun Masuk" name="tahun_masuk" :value="$kelas->tahun_masuk" />
+                    <x-form.text-number label="Tahun Masuk" name="tahun_masuk" :value="old('tahun_masuk', $kelas->tahun_masuk)" />
 
                     {{-- Paralel --}}
-                    <x-form.text-field label="Paralel" name="paralel" :value="$kelas->paralel" />
+                    <x-form.text-field label="Paralel" name="paralel" :value="old('paralel', $kelas->paralel)" />
 
                     {{-- Wali Kelas --}}
                     <x-form.dropdown-field label="Wali Kelas" name="id_dosen" 
                         :options="$dosen" 
                         valueField="id_dosen" 
                         labelFields="nama_dosen" 
-                        :value="$kelas->id_dosen" />
+                        :value="old('id_dosen', $kelas->id_dosen)"
+                        placeholder="Pilih Wali Kelas" />
 
                     {{-- Status --}}
                     <x-form.dropdown-field label="Status" name="status" 
@@ -41,7 +42,8 @@
                         ]" 
                         valueField="value" 
                         labelFields="label" 
-                        :value="$kelas->status" />
+                        :value="old('status', $kelas->status)"
+                        placeholder="Pilih Status" />
 
                     {{-- Button Perbarui --}}
                     <div class="flex justify-end gap-x-1">
