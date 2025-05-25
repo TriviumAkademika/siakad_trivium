@@ -1,3 +1,4 @@
+{{-- CREATE.BLADE.PHP --}}
 @extends('master')
 
 @section('title', 'Tambah Kelas')
@@ -15,23 +16,34 @@
                     class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
                     @csrf
 
-                    {{-- Nama Dosen Wali --}}
-                    <x-form.dropdown-field label="Dosen Wali" name="id_dosen" :options="$dosen" valueField="id_dosen"
-                        :labelFields="['nama_dosen']" />
+                    {{-- Program Studi --}}
+                    <x-form.text-field label="Program Studi" name="prodi" placeholder="Contoh: D3 TI, S1 SI, D4 RPL"/>
 
                     {{-- Tahun Masuk --}}
-                    <x-form.text-field label="Tahun Masuk" name="tahun_masuk" placeholder="2020" />
-
-                    {{-- Prodi --}}
-                    <x-form.text-number label="Prodi" name="prodi" />
+                    <x-form.text-number label="Tahun Masuk" name="tahun_masuk" placeholder="{{ date('Y') }}"/>
 
                     {{-- Paralel --}}
-                    <x-form.text-number label="paralel" name="paralel" />
+                    <x-form.text-field label="Paralel" name="paralel" placeholder="A, B, C, dll"/>
 
+                    {{-- Wali Kelas --}}
+                    <x-form.dropdown-field label="Wali Kelas" name="id_dosen" 
+                        :options="$dosen" 
+                        valueField="id_dosen" 
+                        labelFields="nama_dosen" 
+                        placeholder="Pilih Wali Kelas"/>
+
+                    {{-- Status --}}
+                    <x-form.dropdown-field label="Status" name="status" 
+                        :options="[
+                            ['value' => 'AKTIF', 'label' => 'Aktif'],
+                            ['value' => 'LULUS', 'label' => 'Lulus']
+                        ]" 
+                        valueField="value" 
+                        labelFields="label" />
 
                     {{-- Button Simpan --}}
                     <div class="flex justify-end gap-x-1">
-                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/kelas';">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='{{ route('kelas.index') }}';">
                             Batal
                         </x-button.cancel>
                         <x-button.submit icon="ph ph-floppy-disk">

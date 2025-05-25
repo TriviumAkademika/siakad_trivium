@@ -16,16 +16,16 @@
                     @csrf
 
                     {{-- Nama --}}
-                    <x-form.text-field label="Nama Dosen" name="nama_dosen" />
+                    <x-form.text-field label="Nama Dosen" name="nama_dosen" placeholder="Nama Lengkap"/>
 
                     {{-- NIP --}}
-                    <x-form.text-number label="NIP" name="nip" />
+                    <x-form.text-number label="NIP" name="nip" placeholder="0192103XXXXXXXXX"/>
 
                     {{-- Alamat --}}
-                    <x-form.text-field label="Alamat" name="alamat" />
+                    <x-form.textarea-field label="Alamat" name="alamat" />
 
                     {{-- No HP --}}
-                    <x-form.text-number label="No HP" name="no_hp" />
+                    <x-form.text-number label="No HP" name="no_hp" placeholder="081XXXXXXXXX"/>
 
                     {{-- Status --}}
                     <x-form.dropdown-field label="Status" name="status" 

@@ -55,6 +55,7 @@ Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
     Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
     Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
     Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
+    Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
 });
 
 /// PERMISSION ROLE DOSEN, MAHASISWA
@@ -78,7 +79,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
 
-    // Tabel Dosen CU
+    // Tabel Dosen CU SHOW
     Route::get('/dosen/create', [DosenController::class, 'create'])->name('dosen.create');
     Route::get('/dosen/{id}', [DosenController::class, 'show'])->name('dosen.show');
     Route::post('/dosen', [DosenController::class, 'store'])->name('dosen.store');
