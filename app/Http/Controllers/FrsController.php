@@ -33,10 +33,10 @@ class FrsController extends Controller
 
         // Ambil data mahasiswa untuk mendapatkan semester
         $mahasiswa = Mahasiswa::findOrFail($validatedData['id_mahasiswa']);
-        
+
         // Set semester dari data mahasiswa
         $validatedData['semester'] = $mahasiswa->semester;
-        
+
         // Set default values
         $validatedData['total_sks'] = $validatedData['total_sks'] ?? 0;
         $validatedData['tgl_pengisian'] = now();
@@ -45,7 +45,7 @@ class FrsController extends Controller
 
         try {
             Frs::create($validatedData);
-            
+
             return redirect()->route('frs.index')->with([
                 'message' => 'FRS berhasil ditambahkan!',
                 'type' => 'success'
@@ -68,7 +68,7 @@ class FrsController extends Controller
     public function update(Request $request, $id)
     {
         $frs = Frs::findOrFail($id);
-        
+
         $validatedData = $request->validate([
             'id_mahasiswa' => 'required|exists:mahasiswa,id_mahasiswa',
             'tahun_ajaran' => 'required|string|max:255',
@@ -79,7 +79,7 @@ class FrsController extends Controller
 
         // Ambil data mahasiswa untuk mendapatkan semester
         $mahasiswa = Mahasiswa::findOrFail($validatedData['id_mahasiswa']);
-        
+
         // Set semester dari data mahasiswa
         $validatedData['semester'] = $mahasiswa->semester;
 
@@ -88,7 +88,7 @@ class FrsController extends Controller
 
         try {
             $frs->update($validatedData);
-            
+
             return redirect()->route('frs.index')->with([
                 'message' => 'FRS berhasil diperbarui!',
                 'type' => 'success'
@@ -105,13 +105,13 @@ class FrsController extends Controller
     {
         try {
             $frs = Frs::findOrFail($id);
-            
+
             // Hapus detail FRS terlebih dahulu (jika ada relasi)
             $frs->detailFrs()->delete();
-            
+
             // Hapus FRS
             $frs->delete();
-            
+
             return redirect()->route('frs.index')->with([
                 'message' => 'FRS berhasil dihapus!',
                 'type' => 'warning'
@@ -127,14 +127,20 @@ class FrsController extends Controller
     public function show($id)
     {
         $frs = Frs::with([
-            'mahasiswa', 
-            'detailFrs.jadwal.matkul', 
-            'detailFrs.jadwal.dosen', 
-            'detailFrs.jadwal.ruangan', 
+            'mahasiswa',
+            'detailFrs.jadwal.matkul',
+            'detailFrs.jadwal.dosen',
+            'detailFrs.jadwal.ruangan',
             'detailFrs.jadwal.waktu'
         ])->findOrFail($id);
-        
-        $jadwals = Jadwal::with(['matkul', 'dosen', 'ruangan', 'waktu'])->get();
+
+        // Ambil ID jadwal yang sudah dipilih di FRS ini
+        $jadwalTerpilih = $frs->detailFrs->pluck('id_jadwal')->toArray();
+
+        // Filter jadwal yang belum dipilih
+        $jadwals = Jadwal::whereNotIn('id_jadwal', $jadwalTerpilih)
+            ->with(['matkul', 'dosen', 'ruangan', 'waktu'])
+            ->get();
 
         return view('detail_frs.index', compact('frs', 'jadwals'));
     }
@@ -146,18 +152,18 @@ class FrsController extends Controller
     {
         try {
             $frs = Frs::findOrFail($id);
-            
+
             $frs->update([
                 'tgl_drop' => now(),
                 'tgl_perubahan' => now()
             ]);
-            
+
             // Set semua detail FRS menjadi tidak aktif
             $frs->detailFrs()->update([
                 'status' => false,
                 'tgl_drop' => now()
             ]);
-            
+
             return redirect()->route('frs.index')->with([
                 'message' => 'FRS berhasil di-drop!',
                 'type' => 'warning'
@@ -177,12 +183,12 @@ class FrsController extends Controller
     {
         try {
             $frs = Frs::findOrFail($id);
-            
+
             $frs->update([
                 'tgl_drop' => null,
                 'tgl_perubahan' => now()
             ]);
-            
+
             return redirect()->route('frs.index')->with([
                 'message' => 'FRS berhasil direaktivasi!',
                 'type' => 'success'

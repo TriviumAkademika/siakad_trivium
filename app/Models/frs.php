@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,8 +11,15 @@ class Frs extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id_mahasiswa', 'tahun_ajaran', 'semester', 'total_sks',
-        'ips', 'ipk', 'tgl_pengisian', 'tgl_perubahan', 'tgl_drop'
+        'id_mahasiswa',
+        'tahun_ajaran',
+        'semester',
+        'total_sks',
+        'ips',
+        'ipk',
+        'tgl_pengisian',
+        'tgl_perubahan',
+        'tgl_drop'
     ];
 
     public function mahasiswa()

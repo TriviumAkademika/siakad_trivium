@@ -11,6 +11,9 @@
             {{-- Profil User di Header --}}
             @include('components.header')
 
+            {{-- Toast Notification --}}
+            <x-notification.toast-notification />
+
             {{-- Content --}}
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">

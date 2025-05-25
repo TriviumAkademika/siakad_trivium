@@ -68,7 +68,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/mahasiswa/{id}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
     Route::put('/mahasiswa/{id}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
 
-    // tabel User CR
+    // Tabel User CR
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -87,7 +87,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::put('/waktu/{id}', [WaktuController::class, 'update'])->name('waktu.update');
     // Route::delete('/waktu/{id}', [WaktuController::class, 'destroy'])->name('waktu.destroy');
 
-    // tabel Ruangan CRU
+    // Tabel Ruangan CRU
     Route::get('/ruangan', [RuanganController::class, 'index'])->name('ruangan.index');
     Route::get('/ruangan/create', [RuanganController::class, 'create'])->name('ruangan.create');
     Route::post('/ruangan', [RuanganController::class, 'store'])->name('ruangan.store');
@@ -95,14 +95,14 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::put('/ruangan/{id}', [RuanganController::class, 'update'])->name('ruangan.update');
     // Route::delete('/ruangan/{id}', [RuanganController::class, 'destroy'])->name('ruangan.destroy');
 
-    // tabel Mata Kuliah CRU
+    // Tabel Mata Kuliah CRU
     Route::get('/matkul/create', [MatkulController::class, 'create'])->name('matkul.create');
     Route::post('/matkul', [MatkulController::class, 'store'])->name('matkul.store');
     Route::get('/matkul/{id}/edit', [MatkulController::class, 'edit'])->name('matkul.edit');
     Route::put('/matkul/{id}', [MatkulController::class, 'update'])->name('matkul.update');
     // Route::delete('/matkul/{id}', [MatkulController::class, 'destroy'])->name('matkul.destroy');
 
-    // tabel Kelas CRU
+    // Tabel Kelas CRU
     Route::get('/kelas', [KelasController::class, 'index'])->name('kelas.index');
     Route::get('/kelas/create', [KelasController::class, 'create'])->name('kelas.create');
     Route::post('/kelas', [KelasController::class, 'store'])->name('kelas.store');
@@ -110,32 +110,32 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::put('/kelas/{id}', [KelasController::class, 'update'])->name('kelas.update');
     // Route::delete('/kelas/{id}', [KelasController::class, 'destroy'])->name('kelas.destroy');
 
-    //tabel Jadwal CRU
+    //Tabel Jadwal CRU
     Route::get('/jadwal/create', [JadwalController::class, 'create'])->name('jadwal.create');
     Route::post('/jadwal', [JadwalController::class, 'store'])->name('jadwal.store');
     Route::get('/jadwal/{id}/edit', [JadwalController::class, 'edit'])->name('jadwal.edit');
     Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
     // Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
 
-    // tabel FRS CRU
+    // Tabel FRS CRU
     Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
     Route::post('/frs', [FrsController::class, 'store'])->name('frs.store');
     Route::get('/frs/{id}/edit', [FrsController::class, 'edit'])->name('frs.edit');
     Route::put('/frs/{id}', [FrsController::class, 'update'])->name('frs.update');
     // Route::delete('/frs/{id}', [FrsController::class, 'destroy'])->name('frs.destroy');
+
+    // Tabel Detail FRS CRUD
+    Route::patch('/detail-frs/{id}/update-status', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
+    Route::post('/detail-frs/set-session', [DetailFrsController::class, 'setSession'])->name('detail-frs.set-session');
 });
 
 
 /// PERMISSION ROLE DOSEN
-Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
-
-});
+Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {});
 
 
 /// PERMISSION ROLE MAHASISWA
-Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
-    
-});
+Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {});
 
 
 

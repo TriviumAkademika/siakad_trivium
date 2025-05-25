@@ -25,7 +25,7 @@
             <h3 class="text-xl font-semibold">Pilih Jadwal</h3>
             
             {{-- Form --}}
-            <form method="POST" id="frsForm" class="space-y-4" action="{{ $formAction }}">
+            <form method="POST" id="frsForm" class="space-y-4" action="{{ route('detail-frs.store') }}">
                 @csrf
                 <input type="hidden" name="id_frs" value="{{ $frs->id_frs }}">
                 
