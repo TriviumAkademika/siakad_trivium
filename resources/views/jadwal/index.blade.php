@@ -62,7 +62,7 @@
                                             </a>
 
                                             {{-- Button Hapus --}}
-                                            <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST"
+                                            {{-- <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST"
                                                 class="inline-block"
                                                 onsubmit="return confirm('Anda yakin ingin menghapus jadwal ini?');">
                                                 @csrf
@@ -71,7 +71,7 @@
                                                     class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600">
                                                     <i class="ph ph-trash-simple"></i>
                                                 </button>
-                                            </form>
+                                            </form> --}}
                                         </div>
                                     </td>
                                 </tr>

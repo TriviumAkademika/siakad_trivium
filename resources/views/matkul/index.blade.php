@@ -51,6 +51,7 @@
                         <div class="flex items-center justify-center p-2">
                             {{ $m->kapasitas_kelas }}
                         </div>
+                        {{-- kolom ini hanya ditampilkan ketika diakses oleh: --}}
                         @if (auth()->user()->role === 'admin')
                             <div class="flex items-center justify-center p-2 space-x-2">
                                 <a href="{{ route('matkul.edit', $m->id_matkul) }}"

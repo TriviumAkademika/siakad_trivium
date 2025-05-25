@@ -1,78 +1,98 @@
-@extends ('master')
+@extends('master')
 
-@section ('title', 'Nilai Mahasiswa')
+@section('title', 'nilai')
 
-@section ('content')
+@section('content')
+    <div class="flex w-full grow">
+        {{-- sidebar --}}
+        @include('components.sidebar')
 
-  <div class="flex w-full h-full bg-white">
-      @include('components.sidebar')
+        <div class="flex flex-col w-full bg-white">
+            {{-- header --}}
+            @include('components.header')
 
-    <div class="w-full max-w-6xl mx-auto p-4">
-      @include('components.header')
-      {{-- Carousel Matkul --}}
-      <div class="relative w-full">
-        {{-- Carousel --}}
-        <div id="carouselMatkul"
-            class="w-full overflow-x-auto scroll-smooth flex space-x-4"
-            style="scrollbar-width: thin;">
-            @foreach($matkuls as $matkul)
-                <div class="w-64 flex-shrink-0 carousel-item py-4">
-                    <a href="?id_matkul={{ $matkul->id_matkul }}">
-                        <div class="bg-brand-50 shadow rounded-lg p-4 w-full cursor-pointer matkul-card {{ request('id_matkul') == $matkul->id_matkul ? 'ring ring-blue-500' : '' }}" data-matkul-id="{{ $matkul->id_matkul }}">
-                            <p class="text-sm text-gray-500 mb-2">
-                                Matakuliah {{ $matkul->jenis }} - {{ $matkul->sks }} SKS
-                            </p>
-                            <h2 class="font-bold">{{ $matkul->nama_matkul }}</h2>
-                            <p class="text-sm mt-2 text-gray-700">
-                                @php
-                                    $dosen = \App\Models\Dosen::inRandomOrder()->first();
-                                @endphp
-                                {{ $dosen->nama_dosen ?? '-' }}
-                            </p>
-                        </div>
-                    </a>
+            {{-- content --}}
+            <div class="flex flex-col px-6 pb-6 space-x-6">
+                {{-- Toast Notification
+                <x-notification.toast-notification /> --}}
+                <div class="flex flex-col grow items-end space-y-4">
+                <div class="w-full">
+                    <form method="GET" action="" class="flex justify-end">
+                        <select name="id_matkul" class="w-2/5 p-2 rounded border border-gray-300 focus:ring focus:ring-blue-200" onchange="this.form.submit()">
+                            <option value="">Pilih Matakuliah</option>
+                            @foreach ($matkuls as $matkul)
+                                <option value="{{ $matkul->id_matkul }}" {{ request('id_matkul') == $matkul->id_matkul ? 'selected' : '' }}>
+                                    {{ $matkul->nama_matkul }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </form>
                 </div>
-            @endforeach
-        </div>
-      </div>
 
-      {{-- Tabel MHS --}}
-      <div class="w-full mt-4">
-        <div class="mb-2">
-          <span id="selected-matkul-label" class="font-semibold text-lg text-gray-700">
-            @if(request('id_matkul'))
-                Daftar Mahasiswa untuk Matakuliah: {{ $matkuls->where('id_matkul', request('id_matkul'))->first()->nama_matkul ?? '-' }}
-            @else
-                Pilih salah satu matakuliah di atas
-            @endif
-          </span>
+                <div class="flex w-full pb-2">
+                    <span id="selected-matkul">
+                        @if (request('id_matkul'))
+                            Daftar Mahasiswa untuk Matakuliah: {{ $matkuls->where('id_matkul', request('id_matkul'))->first()->nama_matkul ?? '-' }}
+                            @else
+                                Pilih Matakuliah
+                            @endif
+                    </span>
+                </div>
+
+                {{-- header tabel --}}
+                <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
+                    <thead class="bg-brand-100">
+                        <tr>
+                            <th class="px-4 py-3 text-center text-sm font-medium text-hitam">NRP</th>
+                            <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Nama Mahasiswa</th>
+                            <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-putih divide-y divide-gray-200">
+                        @foreach ($mahasiswa as $mhs)
+                            <tr>
+                                <td class="px-4 py-2 text-center text-sm text-hitam">{{ $mhs->nrp }}</td>
+                                <td class="px-4 py-2 text-center text-sm text-hitam">{{ $mhs->nama }}</td>
+                                <td class="px-4 py-2 text-center text-sm text-hitam">
+                                    <div class="flex justify-center items-center space-x-1">
+                                        <a href="{{ route('nilai.updateNilaiForm', ['id_mahasiswa' => $mhs->id_mahasiswa, 'id_matkul' => request('id_matkul')]) }}" class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
+                                            <i class="ph ph-pencil text-xl"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                </div>
+                
+                {{-- <section class="rounded-lg p-2 grid bg-brand-100 mb-4">
+                    <div class="flex gap-4 text-sm">
+                        <div class="flex-none w-36 p-2 font-semibold text-center">NRP</div>
+                        <div class="flex-grow p-2 font-semibold text-center">Nama Mahasiswa</div>
+                        <div class="flex-none w-28 p-2 font-semibold text-center">Action</div>
+                    </div>
+                </section>
+
+                
+                <section>
+                        @foreach ($mahasiswa as $mhs)
+                        <div class="flex gap-4 text-sm">
+                            <div class="flex-none w-36 p-2 font-semibold text-center">{{ $mhs->nrp }}</div>
+                            <div class="flex-grow p-2 font-semibold text-center">{{ $mhs->nama }}</div>
+                            <div class="flex-none w-28 p-2 font-semibold text-center">
+                                <a href="{{ route('nilai.updateNilaiForm', ['id_mahasiswa' => $mhs->id_mahasiswa, 'id_matkul' => request('id_matkul')]) }}" class="inline-block text-blue-600 hover:text-blue-800">
+                                    <i class="ph ph-pencil text-xl"></i>
+                                </a>
+                            </div>
+                        </div>
+                        @endforeach
+                </section> --}}
+            </div>
+            </div>
         </div>
-        <table class="w-full rounded-lg bg-brand-100 mb-4">
-          <thead>
-            <tr>
-              <th class="w-32 p-2 text-center">NRP</th>
-              <th class="p-2 text-center">Nama</th>
-              <th class="w-32 p-2 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach($mahasiswas as $mhs)
-              <tr class="bg-white border-b">
-                <td class="p-2 text-center">{{ $mhs->nrp }}</td>
-                <td class="p-2 text-center">{{ $mhs->nama }}</td>
-                <td class="p-2 text-center">
-                  <a href="{{ route('nilai.updateNilaiForm', ['id_mahasiswa' => $mhs->id_mahasiswa, 'id_matkul' => request('id_matkul')]) }}" class="inline-block text-blue-600 hover:text-blue-800">
-                    <i class="ph ph-pencil text-xl"></i>
-                  </a>
-                </td>
-              </tr>
-            @endforeach
-          </tbody>
-        </table>
-      </div>
     </div>
-
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function () {
         const carousel = document.getElementById('carouselMatkul');
         const matkulLabel = document.getElementById('selected-matkul-label');
@@ -93,5 +113,6 @@
             carousel.scrollBy({ left: 300, behavior: 'smooth' });
         };
     });
-</script>
+</script> --}}
+
 @endsection

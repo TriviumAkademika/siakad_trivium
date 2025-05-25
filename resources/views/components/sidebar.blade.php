@@ -20,8 +20,17 @@
                 <span class="text-base text-hitam">Beranda</span>
             </a>
 
-            {{-- Nilai --}}
-            <a href="#" class="flex items-center gap-2">
+            {{-- Nilai Mahasiswa--}}
+            @if ((auth()->user()->role === 'mahasiswa'))
+              <a href="{{ route('nilai-mhs') }}" class="flex items-center gap-2">
+                <i class="ph ph-ranking text-xl text-hitam"></i>
+                <span class="text-base text-hitam">Nilai</span>
+            </a>  
+            @endif
+            
+
+            {{-- Nilai Dosen--}}
+            <a href="{{ route('nilai-dosen') }}" class="flex items-center gap-2">
                 <i class="ph ph-ranking text-xl text-hitam"></i>
                 <span class="text-base text-hitam">Nilai</span>
             </a>

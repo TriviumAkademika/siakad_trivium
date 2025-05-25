@@ -6,6 +6,7 @@ use App\Models\nilai;
 use App\Models\Jadwal;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use App\Models\Matkul;
 
 class NilaiController extends Controller
 {
@@ -22,17 +23,17 @@ class NilaiController extends Controller
             ->get();
 
         $jadwals = Jadwal::with('matkul')->get();
-        $matkuls = \App\Models\Matkul::all();
+        $matkuls = Matkul::all();
 
         // Ambil mahasiswa yang mengambil FRS dan detail_frs pada matkul ini
-        $mahasiswas = [];
+        $mahasiswa = collect(); // default kosong
         if ($id_matkul) {
-            $mahasiswas = \App\Models\Mahasiswa::whereHas('frs.detailFrs.jadwal', function($q) use ($id_matkul) {
+            $mahasiswa = Mahasiswa::whereHas('frs.detailFrs.jadwal', function($q) use ($id_matkul) {
                 $q->where('id_matkul', $id_matkul);
             })->get();
         }
 
-        return view('nilai.nilai-dosen', compact('nilais', 'jadwals', 'id_matkul', 'matkuls', 'mahasiswas'));
+        return view('nilai.nilai-dosen', compact('nilais', 'jadwals', 'id_matkul', 'matkuls', 'mahasiswa'));
     }
 
     /**
