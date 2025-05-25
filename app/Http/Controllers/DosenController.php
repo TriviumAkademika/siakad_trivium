@@ -31,6 +31,7 @@ class DosenController extends Controller
             'nip' => 'required|string|max:50|unique:dosen,nip',
             'alamat' => 'required|string',
             'no_hp' => 'required|string|max:20',
+            'status' => 'required|in:AKTIF,CUTI,PENSIUN,TIDAK AKTIF',
         ]);
 
         Dosen::create($request->all());
@@ -41,9 +42,10 @@ class DosenController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Dosen $dosen)
+    public function show($id)
     {
-        //
+        $dosen = Dosen::findOrFail($id);
+        return view('dosen.show', compact('dosen'));
     }
 
     public function edit($id)
@@ -61,6 +63,7 @@ class DosenController extends Controller
             'nip' => 'required|string|max:50|unique:dosen,nip,' . $id . ',id_dosen',
             'alamat' => 'required|string',
             'no_hp' => 'required|string|max:20',
+            'status' => 'required|in:AKTIF,CUTI,PENSIUN,TIDAK AKTIF',
         ]);
 
         $dosen->update($request->all());

@@ -19,7 +19,7 @@
                     {{-- Nama --}}
                     <x-form.text-field label="Nama Dosen" name="nama_dosen" :value="$dosen->nama_dosen" />
 
-                    {{-- NRP --}}
+                    {{-- NIP --}}
                     <x-form.text-number label="NIP" name="nip" :value="$dosen->nip" />
 
                     {{-- Alamat --}}
@@ -27,6 +27,18 @@
 
                     {{-- No HP --}}
                     <x-form.text-number label="No HP" name="no_hp" :value="$dosen->no_hp" />
+
+                    {{-- Status --}}
+                    <x-form.dropdown-field label="Status" name="status" 
+                        :options="[
+                            ['value' => 'AKTIF', 'label' => 'Aktif'],
+                            ['value' => 'CUTI', 'label' => 'Cuti'],
+                            ['value' => 'PENSIUN', 'label' => 'Pensiun'],
+                            ['value' => 'TIDAK AKTIF', 'label' => 'Tidak Aktif']
+                        ]" 
+                        valueField="value" 
+                        labelFields="label" 
+                        :value="$dosen->status" />
 
                     {{-- Button Perbarui --}}
                     <div class="flex justify-end gap-x-1">

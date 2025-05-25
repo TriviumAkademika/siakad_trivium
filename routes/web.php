@@ -20,6 +20,11 @@ use App\Http\Controllers\WaktuController;
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/', [AuthenticatedSessionController::class, 'store']);
 
+// Logout 
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
+
 // Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
@@ -75,6 +80,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 
     // Tabel Dosen CU
     Route::get('/dosen/create', [DosenController::class, 'create'])->name('dosen.create');
+    Route::get('/dosen/{id}', [DosenController::class, 'show'])->name('dosen.show');
     Route::post('/dosen', [DosenController::class, 'store'])->name('dosen.store');
     Route::get('/dosen/{id}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
     Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');

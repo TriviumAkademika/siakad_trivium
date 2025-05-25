@@ -18,14 +18,25 @@
                     {{-- Nama --}}
                     <x-form.text-field label="Nama Dosen" name="nama_dosen" />
 
-                    {{-- NRP --}}
+                    {{-- NIP --}}
                     <x-form.text-number label="NIP" name="nip" />
 
-                    {{-- Semester --}}
+                    {{-- Alamat --}}
                     <x-form.text-field label="Alamat" name="alamat" />
 
                     {{-- No HP --}}
                     <x-form.text-number label="No HP" name="no_hp" />
+
+                    {{-- Status --}}
+                    <x-form.dropdown-field label="Status" name="status" 
+                        :options="[
+                            ['value' => 'AKTIF', 'label' => 'Aktif'],
+                            ['value' => 'CUTI', 'label' => 'Cuti'],
+                            ['value' => 'PENSIUN', 'label' => 'Pensiun'],
+                            ['value' => 'TIDAK AKTIF', 'label' => 'Tidak Aktif']
+                        ]" 
+                        valueField="value" 
+                        labelFields="label" />
 
                     {{-- Button Simpan --}}
                     <div class="flex justify-end gap-x-1">
