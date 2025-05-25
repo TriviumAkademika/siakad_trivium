@@ -27,7 +27,7 @@
                         valueField="id_kelas" :labelFields="['prodi', 'paralel']" />
 
                     {{-- Semester --}}
-                    <x-form.text-number label="Semester" name="semester" :value="$mahasiswa->semester" />
+                    <x-form.text-field label="Semester" name="semester" type="number" :value="$mahasiswa->semester" />
 
                     {{-- Gender --}}
                     <x-form.dropdown-field label="Gender" name="gender" :options="[['value' => 'L', 'label' => 'Laki-laki'], ['value' => 'P', 'label' => 'Perempuan']]" :selected="$mahasiswa->gender" valueField="value"

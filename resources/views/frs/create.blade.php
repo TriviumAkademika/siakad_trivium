@@ -1,42 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('master')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite('resources/css/app.css')
-    <title>Document</title>
-</head>
+@section('title', 'Tambah FRS')
 
-<body>
-    <h2>Tambah FRS</h2>
-    <form action="{{ route('frs.store') }}" method="POST">
-        @csrf
-        <div class="form-group">
-            <label>Mahasiswa</label>
-            <select name="id_mahasiswa" class="form-control">
-                @foreach ($mahasiswa as $m)
-                    <option value="{{ $m->id_mahasiswa }}">{{ $m->nama }}</option>
-                @endforeach
-            </select>
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
+
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Tambah FRS</h2>
+
+            {{-- Content --}}
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('frs.store') }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
+
+                    {{-- Mahasiswa --}}
+                    <x-form.dropdown-field label="Mahasiswa" name="id_mahasiswa" :options="$mahasiswa" valueField="id_mahasiswa"
+                        labelFields="nama" />
+
+                    {{-- Tahun Ajaran --}}
+                    <x-form.dropdown-field label="Tahun Ajaran" name="tahun_ajaran" :options="$tahunAjaranList" :selected="old('tahun_ajaran', '2024/2025')" />
+
+                    {{-- Semester --}}
+                    {{-- <x-form.text-field label="Semester" name="semester" :value="old('semester')" readonly /> --}}
+
+                    {{-- Total SKS --}}
+                    {{-- <x-form.text-field label="Total SKS" name="total_sks" type="number" min="0" /> --}}
+
+                    {{-- IPS --}}
+                    {{-- <x-form.text-field label="IPS" name="ips" type="number" min="0" max="4"
+                        step="0.01" /> --}}
+
+                    {{-- IPK --}}
+                    {{-- <x-form.text-field label="IPK" name="ipk" type="number" min="0" max="4"
+                        step="0.01" /> --}}
+
+                    {{-- Button Simpan --}}
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/frs';">
+                            Batal
+                        </x-button.cancel>
+                        <x-button.submit icon="ph ph-floppy-disk">
+                            Simpan
+                        </x-button.submit>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Tahun Ajaran</label>
-            <input type="text" name="tahun_ajaran" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>Semester</label>
-            <input type="text" name="semester" class="form-control">
-        </div>
-        <div class="form-group">
-            <label>Total SKS</label>
-            <input type="number" name="total_sks" class="form-control">
-        </div>
-        <button class="btn btn-success">Simpan</button>
-    </form>
-
-
-</body>
-
-</html>
+    </div>
+@endsection

@@ -26,7 +26,7 @@ class MahasiswaController extends Controller
             'id_kelas' => 'required|exists:kelas,id_kelas',
             'nama' => 'required|string|max:255',
             'nrp' => 'required|string|unique:mahasiswa,nrp',
-            'semester' => 'required|string',
+            'semester' => 'required|integer',
             'gender' => 'required|in:L,P',
             'alamat' => 'required|string',
             'no_hp' => 'required|string',

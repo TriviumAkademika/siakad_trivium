@@ -32,24 +32,24 @@
                     <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
                         <thead class="bg-brand-100">
                             <tr>
-                                <th class="px-4 py-3 text-left text-sm font-medium text-hitam">#</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Nama</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">NRP</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Kelas</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Semester</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Gender</th>
-                                <th class="px-4 py-3 text-center text-sm font-medium text-hitam">No HP</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-hitam">#</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Nama</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">NRP</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Kelas</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Semester</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Gender</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">No HP</th>
                                 {{-- PERMISSION UNTUK ADMIN --}}
                                 {{-- Kolom Aksi --}}
                                 @if (auth()->user()->role === 'admin')
-                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                                    <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Aksi</th>
                                 @endif
                             </tr>
                         </thead>
 
                         <tbody class="bg-putih divide-y divide-gray-200">
                             @foreach ($mahasiswa as $index => $m)
-                                <tr>
+                                <tr class="hover:bg-gray-100">
                                     <x-table.table-td>{{ $index + 1 }}</x-table.table-td>
                                     <x-table.table-td>{{ $m->nama }}</x-table.table-td>
                                     <x-table.table-td class="text-center">{{ $m->nrp }}</x-table.table-td>

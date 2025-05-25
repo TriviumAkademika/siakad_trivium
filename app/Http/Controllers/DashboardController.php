@@ -13,7 +13,7 @@ class DashboardController extends Controller
     public function index()
     {
         $mahasiswa = Mahasiswa::first();
-        return view('pages.dashboard-mahasiswa', compact('mahasiswa'));
+        return view('dashboard', compact('mahasiswa'));
     }
 
     /**

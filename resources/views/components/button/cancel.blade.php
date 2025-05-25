@@ -1,26 +1,28 @@
 @props([
     'icon' => '',
-    'title' => 'Apakah Anda yakin ingin keluar?',
-    'text' => 'Semua perubahan yang belum disimpan akan hilang.',
-    'confirmText' => 'Keluar',
+    'title' => '',
+    'text' => '',
+    'confirmText' => '',
     'cancelText' => 'Batal',
     'onConfirm' => '',
+    'showAlert' => true, // ← tambahan properti
 ])
 
 <button type="button"
     class="btn bg-merah-700 hover:bg-merah-800 flex items-center justify-center text-sm font-normal text-putih rounded-lg focus:outline-none focus:ring-0 transition"
     {{ $attributes }} x-data
     @click="
+        {{ $showAlert ? "
         Swal.fire({
             html: `
                 <i class='ph ph-warning text-8xl text-merah-700'></i>
-                <h2 class='text-2xl font-semibold'>{{ $title }}</h2>
-                <p class='text-base text-hitam'>{{ $text }}</p>
+                <h2 class='text-2xl font-semibold'>" . ($title ?: 'Apakah Anda yakin ingin keluar?') . "</h2>
+                <p class='text-base text-hitam'>" . ($text ?: 'Semua perubahan yang belum disimpan akan hilang.') . "</p>
             `,
             showCancelButton: true,
             showConfirmButton: true,
-            confirmButtonText: '{{ $confirmText }}',
-            cancelButtonText: '{{ $cancelText }}',
+            confirmButtonText: '" . ($confirmText ?: 'Keluar') . "',
+            cancelButtonText: '" . ($cancelText ?: 'Batal') . "',
             backdrop: false,
             allowOutsideClick: true,
             allowEscapeKey: true,
@@ -33,9 +35,9 @@
             },
         }).then((result) => {
             if (result.isConfirmed) {
-                {{ $onConfirm }}
+                {$onConfirm}
             }
-        });
+        });" : $onConfirm }}
     ">
     @if ($icon)
         <i class="{{ $icon }}"></i>

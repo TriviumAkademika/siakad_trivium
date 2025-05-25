@@ -1,18 +1,40 @@
+{{-- resources/views/components/header.blade.php --}}
 <header>
     <div class="flex flex-row w-full p-6 justify-between items-center">
         @php
             $user = Auth::user();
+            $currentPath = Request::path();
+            $currentRouteName = Route::currentRouteName(); // Nama Route di Header
+
+            // Tentukan page title berdasarkan path
+            $pageTitle = match ($currentRouteName) {
+                'dashboard' => 'Selamat Datang',
+                'frs.index', 'frs.index' => 'Data FRS',
+                'frs.edit', 'frs.show' => 'Data Detail FRS',
+                'detail-frs.index', 'detail-frs.show' => 'Data Detail FRS',
+                'jadwal.index', 'jadwal.show' => 'Data Jadwal',
+                'mahasiswa.index', 'mahasiswa.show' => 'Data Mahasiswa',
+                'dosen.index', 'dosen.show' => 'Data Dosen',
+                default => 'Dashboard',
+            };
+
+            // Cek apakah user adalah admin dan bukan di dashboard
+            $isAdminNotDashboard = $user->hasRole('admin') && $currentPath !== 'dashboard';
+
             $nama = null;
             if ($user->mahasiswa) {
                 $nama = $user->mahasiswa->nama;
             } elseif ($user->dosen) {
                 $nama = $user->dosen->nama;
             } else {
-                $nama = $user->nama_user ?? 'User'; // fallback
+                $nama = $user->nama_user ?? 'User'; // Fallback
             }
         @endphp
 
-        <h2 class="text-2xl text-hitam">Selamat Datang, {{ Auth::user()->display_name }} !</h2>
+        <h2 class="text-2xl text-hitam">
+            {{ $pageTitle }}@if (Request::is('dashboard')), {{ Auth::user()->display_name }}!
+            @endif
+        </h2>
 
         <div class="flex flex-row items-center space-x-2">
             <div class="avatar">
