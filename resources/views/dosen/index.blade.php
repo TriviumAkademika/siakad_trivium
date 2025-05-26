@@ -210,7 +210,7 @@
                                     <th class="px-4 py-3 text-center text-sm font-medium text-hitam">NIP</th>
                                     <th class="px-4 py-3 text-center text-sm font-medium text-hitam">No HP</th>
                                     <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Status</th>
-                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Action</th>
+                                    <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
                                 </tr>
                             </thead>
 
@@ -242,10 +242,23 @@
                                                 {{-- Button Edit --}}
                                                 @if (auth()->user()->role === 'admin')
                                                     <a href="{{ route('dosen.edit', $d->id_dosen) }}"
-                                                    class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700"
-                                                    title="Edit">
-                                                    <i class="ph ph-pencil-simple"></i>
-                                                </a>
+                                                        class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700"
+                                                        title="Edit">
+                                                        <i class="ph ph-pencil-simple"></i>
+                                                    </a>
+                                                    {{-- Button Hapus --}}
+                                                    <form action="{{ route('dosen.destroy', $d->id_dosen) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')"
+                                                        class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="inline-flex items-center justify-center w-8 h-8 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                                                            title="Hapus">
+                                                            <i class="ph ph-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 @endif
                                             </div>
                                         </td>
