@@ -16,11 +16,15 @@ class DetailFrsSeeder extends Seeder
                 'id_frs' => 1,
                 'status' => true,
             ],
+
+            // frs nata
             [
                 'id_jadwal' => 2,
                 'id_frs' => 1,
-                'status' => false,
+                'status' => true,
             ],
+            
+            // frs jali
             [
                 'id_jadwal' => 3,
                 'id_frs' => 2,
