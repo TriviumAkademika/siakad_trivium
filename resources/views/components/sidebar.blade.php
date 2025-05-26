@@ -113,12 +113,30 @@
                 <span class="text-base text-hitam">FRS</span>
             </a>
 
+            {{-- FRS untuk Mahasiswa - otomatis ke FRS mereka sendiri --}}
+            @if (auth()->user()->role === 'mahasiswa')
+                @php
+                    // Cari FRS mahasiswa yang login
+                    $mahasiswaFrs = \App\Models\Frs::where(
+                        'id_mahasiswa',
+                        auth()->user()->mahasiswa->id_mahasiswa ?? 0,
+                    )->first();
+                @endphp
+                @if ($mahasiswaFrs)
+                    <a href="{{ route('detail-frs.index', $mahasiswaFrs->id_frs) }}"
+                        class="flex items-center gap-2 {{ request()->routeIs('detail-frs.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
+                        <i class="ph ph-clipboard-text text-xl text-hitam"></i>
+                        <span class="text-base text-hitam">FRS Saya</span>
+                    </a>
+                @endif
+            @endif
+
             {{-- Nilai tampilan dosen --}}
             @if (auth()->user()->role === 'dosen')
-                            <a href="{{ route('nilai-dosen') }}" class="flex items-center gap-2 p-2 rounded-lg">
-                <i class="ph ph-ranking text-xl text-hitam"></i>
-                <span class="text-base text-hitam">Nilai</span>
-            </a>
+                <a href="{{ route('nilai-dosen') }}" class="flex items-center gap-2 p-2 rounded-lg">
+                    <i class="ph ph-ranking text-xl text-hitam"></i>
+                    <span class="text-base text-hitam">Nilai</span>
+                </a>
             @endif
         </div>
     </div>
