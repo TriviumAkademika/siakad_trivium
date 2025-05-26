@@ -15,21 +15,7 @@ class FrsController extends Controller
         return view('frs.index', compact('frs'));
     }
 
-    public function create()
-    {
-        $mahasiswa = Mahasiswa::all();
-
-        // Generate tahun ajaran dinamis
-        $tahunAjaranList = [];
-        $currentYear = 2024; // Mulai dari 2024/2025
-        for ($i = 0; $i < 3; $i++) {
-            $start = $currentYear + $i;
-            $tahunAjaranList[] = "$start/" . ($start + 1);
-        }
-
-        return view('frs.create', compact('mahasiswa', 'tahunAjaranList'));
-    }
-
+    z
     public function store(Request $request)
     {
         $validatedData = $request->validate([
