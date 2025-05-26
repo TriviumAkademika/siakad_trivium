@@ -22,7 +22,8 @@
                     <div class="flex justify-between items-center w-full gap-4">
                         <div class="flex items-center gap-4 flex-1">
                             {{-- Search Form --}}
-                            <form method="GET" action="{{ route('mahasiswa.index') }}" class="flex-1 max-w-md" id="searchForm">
+                            <form method="GET" action="{{ route('mahasiswa.index') }}" class="flex-1 max-w-md"
+                                id="searchForm">
                                 <div class="relative">
                                     <input type="text" name="search" id="searchInput" value="{{ request('search') }}"
                                         placeholder="Cari nama, NRP, kelas, alamat, atau no HP..."
@@ -220,7 +221,8 @@
                                         </x-table.table-td>
                                         <x-table.table-td>{{ $m->no_hp }}</x-table.table-td>
                                         <x-table.table-td class="text-center">
-                                            <span class="px-2 py-1 text-xs font-medium rounded-full {{ $m->status_badge_color }}">
+                                            <span
+                                                class="px-2 py-1 text-xs font-medium rounded-full {{ $m->status_badge_color }}">
                                                 {{ $m->status_formatted }}
                                             </span>
                                         </x-table.table-td>
@@ -241,6 +243,19 @@
                                                         title="Edit">
                                                         <i class="ph ph-pencil-simple"></i>
                                                     </a>
+                                                    {{-- Button Hapus --}}
+                                                    <form action="{{ route('mahasiswa.destroy', $m->id_mahasiswa) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')"
+                                                        class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="inline-flex items-center justify-center w-8 h-8 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                                                            title="Hapus">
+                                                            <i class="ph ph-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 @endif
                                             </div>
                                         </td>
