@@ -16,6 +16,18 @@ use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WaktuController;
 
+Route::middleware(['auth'])->group(function () {
+    // Route untuk dosen melihat jadwal mengajar
+    Route::get('/jadwal/dosen', [JadwalController::class, 'jadwalDosen'])
+        ->name('jadwal.dosen')
+        ->middleware('role:dosen');
+
+    // Route untuk mahasiswa melihat jadwal kuliah
+    Route::get('/jadwal/mahasiswa', [JadwalController::class, 'jadwalMahasiswa'])
+        ->name('jadwal.mahasiswa')
+        ->middleware('role:mahasiswa');
+});
+
 // Login
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/', [AuthenticatedSessionController::class, 'store']);
