@@ -10,13 +10,25 @@ use App\Models\Waktu;
 use App\Models\Ruangan;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class JadwalController extends Controller
 {
     public function index(Request $request)
     {
-              $totalJadwal = Jadwal::count();
         $query = Jadwal::with(['kelas', 'matkul', 'dosen', 'dosen2', 'waktu', 'ruangan']);
+
+        // Auto-filter berdasarkan role user yang login
+        $user = Auth::user();
+        $isDosenRole = $user->hasRole('dosen'); // Menggunakan Spatie Permission
+        
+        // Jika user adalah dosen, filter otomatis berdasarkan ID dosen
+        if ($isDosenRole && $user->id_dosen) {
+            $query->where(function ($q) use ($user) {
+                $q->where('id_dosen', $user->id_dosen)
+                  ->orWhere('id_dosen_2', $user->id_dosen);
+            });
+        }
 
         // Search functionality
         if ($request->filled('search')) {
@@ -51,8 +63,8 @@ class JadwalController extends Controller
             });
         }
 
-        // Filter by prodi
-        if ($request->filled('prodi')) {
+        // Filter by prodi (hanya untuk admin atau jika tidak ada filter dosen)
+        if ($request->filled('prodi') && (!$isDosenRole || !$user->id_dosen)) {
             $query->whereHas('kelas', function ($q) use ($request) {
                 $q->where('prodi', $request->prodi);
             });
@@ -62,13 +74,33 @@ class JadwalController extends Controller
         $jadwal = $query->paginate(10)->withQueryString();
 
         // Get unique prodi for filter dropdown
-        $prodiList = Kelas::distinct()->pluck('prodi')->sort()->values();
+        // Jika dosen, ambil prodi dari kelas yang dia ajar
+        if ($isDosenRole && $user->id_dosen) {
+            $prodiList = Jadwal::where(function ($q) use ($user) {
+                $q->where('id_dosen', $user->id_dosen)
+                  ->orWhere('id_dosen_2', $user->id_dosen);
+            })
+            ->with('kelas')
+            ->get()
+            ->pluck('kelas.prodi')
+            ->unique()
+            ->sort()
+            ->values();
+        } else {
+            // Untuk admin, tampilkan semua prodi
+            $prodiList = Kelas::distinct()->pluck('prodi')->sort()->values();
+        }
 
         return view('jadwal.index', compact('jadwal', 'prodiList'));
     }
 
     public function create()
     {
+        // Hanya admin yang bisa create
+        if (!Auth::user()->hasRole('admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $kelas = Kelas::all();
         $matkul = Matkul::all();
         $dosen = Dosen::all();
@@ -80,6 +112,11 @@ class JadwalController extends Controller
 
     public function store(Request $request)
     {
+        // Hanya admin yang bisa store
+        if (!Auth::user()->hasRole('admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $request->validate([
             'id_kelas' => 'required|exists:kelas,id_kelas',
             'id_matkul' => 'required|exists:matkuls,id_matkul',
@@ -155,6 +192,11 @@ class JadwalController extends Controller
 
     public function edit($id)
     {
+        // Hanya admin yang bisa edit
+        if (!Auth::user()->hasRole('admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $jadwal = Jadwal::findOrFail($id);
         $kelas = Kelas::all();
         $matkul = Matkul::all();
@@ -167,6 +209,11 @@ class JadwalController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Hanya admin yang bisa update
+        if (!Auth::user()->hasRole('admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $jadwal = Jadwal::findOrFail($id);
 
         $request->validate([
@@ -248,6 +295,11 @@ class JadwalController extends Controller
 
     public function destroy($id)
     {
+        // Hanya admin yang bisa delete
+        if (!Auth::user()->hasRole('admin')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $jadwal = Jadwal::findOrFail($id);
         $jadwal->delete();
 

@@ -18,6 +18,19 @@
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">
 
+                    {{-- Info Filter Otomatis untuk Dosen --}}
+                    @if (auth()->user()->hasRole('dosen'))
+                        <div class="w-full bg-green-50 border border-green-200 rounded-md p-3">
+                            <div class="flex items-center">
+                                <i class="ph ph-user-check text-green-500 mr-2"></i>
+                                <span class="text-green-700 text-sm">
+                                    <strong>Filter Otomatis:</strong> Menampilkan jadwal mengajar Anda sebagai 
+                                    {{ auth()->user()->dosen->nama_dosen ?? 'Dosen' }}
+                                </span>
+                            </div>
+                        </div>
+                    @endif
+
                     {{-- Search, Filter, dan Tombol Tambah Jadwal --}}
                     <div class="flex justify-between items-center w-full gap-4">
                         <div class="flex items-center gap-4 flex-1">
@@ -119,25 +132,33 @@
                                     </div>
                                 </div>
 
-                                {{-- Filter Prodi --}}
-                                <div class="relative">
-                                    <select name="prodi" id="prodiFilter" 
-                                        class="inline-flex items-center px-3 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        onchange="this.form.submit()">
-                                        <option value="">Semua Prodi</option>
-                                        @foreach ($prodiList as $prodi)
-                                            <option value="{{ $prodi }}" {{ request('prodi') == $prodi ? 'selected' : '' }}>
-                                                {{ $prodi }}
+                                {{-- Filter Prodi (hanya tampil jika ada lebih dari 1 prodi atau user adalah admin) --}}
+                                @if ($prodiList->count() > 1 || auth()->user()->hasRole('admin'))
+                                    <div class="relative">
+                                        <select name="prodi" id="prodiFilter" 
+                                            class="inline-flex items-center px-3 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            onchange="this.form.submit()">
+                                            <option value="">
+                                                @if (auth()->user()->hasRole('dosen'))
+                                                    Semua Prodi Anda
+                                                @else
+                                                    Semua Prodi
+                                                @endif
                                             </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                            @foreach ($prodiList as $prodi)
+                                                <option value="{{ $prodi }}" {{ request('prodi') == $prodi ? 'selected' : '' }}>
+                                                    {{ $prodi }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
                             </form>
                         </div>
 
                         {{-- PERMISSION UNTUK ADMIN --}}
                         {{-- Button Tambah Jadwal --}}
-                        @if (auth()->user()->role === 'admin')
+                        @if (auth()->user()->hasRole('admin'))
                             <a href="{{ route('jadwal.create') }}">
                                 <x-button.submit icon="ph ph-plus">
                                     Tambah Jadwal
@@ -223,7 +244,7 @@
                                     <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Waktu</th>
                                     {{-- PERMISSION UNTUK ADMIN --}}
                                     {{-- Kolom Aksi --}}
-                                    @if (auth()->user()->role === 'admin')
+                                    @if (auth()->user()->hasRole('admin'))
                                         <th class="px-4 py-3 text-center text-sm font-semibold text-hitam">Aksi</th>
                                     @endif
                                 </tr>
@@ -232,55 +253,104 @@
                             <tbody class="bg-putih divide-y divide-gray-200">
                                 @foreach ($jadwal as $index => $j)
                                     <tr class="hover:bg-gray-100">
+                                        {{-- Nomor urut --}}
                                         <x-table.table-td>{{ $jadwal->firstItem() + $index }}</x-table.table-td>
-                                        <x-table.table-td>{{ $j->kelas->prodi }}-{{ $j->kelas->paralel }}</x-table.table-td>
-                                        <x-table.table-td>{{ $j->matkul->jenis }} -
-                                            {{ $j->matkul->nama_matkul }}</x-table.table-td>
-                                        <x-table.table-td>{{ $j->dosen->nama_dosen }}</x-table.table-td>
-                                        <x-table.table-td>{{ $j->dosen2 ? $j->dosen2->nama_dosen : '-' }}</x-table.table-td>
-                                        <x-table.table-td class="text-center">{{ $j->ruangan->kode_ruangan }}</x-table.table-td>
+                                        
+                                        {{-- Kelas --}}
                                         <x-table.table-td class="text-center">
                                             <div class="flex flex-col items-center">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full
-                                                    @if($j->waktu->hari == 'Senin') bg-red-100 text-red-800
-                                                    @elseif($j->waktu->hari == 'Selasa') bg-orange-100 text-orange-800
-                                                    @elseif($j->waktu->hari == 'Rabu') bg-yellow-100 text-yellow-800
-                                                    @elseif($j->waktu->hari == 'Kamis') bg-green-100 text-green-800
-                                                    @elseif($j->waktu->hari == 'Jumat') bg-blue-100 text-blue-800
-                                                    @else bg-purple-100 text-purple-800 @endif">
-                                                    {{ $j->waktu->hari }}
-                                                </span>
-                                                <span class="text-sm mt-1">
-                                                    {{ substr($j->waktu->jam_mulai, 0, 5) }} -
-                                                    {{ substr($j->waktu->jam_selesai, 0, 5) }}
+                                                <span class="font-semibold text-blue-600">{{ $j->kelas->prodi ?? '-' }}</span>
+                                                <span class="text-sm text-gray-500">{{ $j->kelas->paralel ?? '-' }}</span>
+                                            </div>
+                                        </x-table.table-td>
+
+                                        {{-- Mata Kuliah --}}
+                                        <x-table.table-td class="text-center">
+                                            <div class="flex flex-col items-center">
+                                                <span class="font-semibold text-gray-900">{{ $j->matkul->nama_matkul ?? '-' }}</span>
+                                                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                                    {{ $j->matkul->jenis ?? '-' }}
                                                 </span>
                                             </div>
                                         </x-table.table-td>
-                                        {{-- PERMISSION UNTUK ADMIN --}}
-                                        @if (auth()->user()->role === 'admin')
-                                            <td class="px-2 py-2 text-center text-sm text-hitam">
-                                                <div class="flex justify-center items-center space-x-1">
-                                                    {{-- Button Edit --}}
-                                                    <a href="{{ route('jadwal.edit', $j->id_jadwal) }}"
-                                                        class="inline-flex items-center justify-center w-8 h-8 bg-brand-700 hover:bg-brand-800 text-white text-sm rounded"
-                                                        title="Edit">
-                                                        <i class="ph ph-pencil-simple"></i>
-                                                    </a>
 
-                                                    {{-- Button Hapus --}}
-                                                    {{-- <form action="{{ route('jadwal.destroy', $j->id_jadwal) }}" method="POST"
-                                                        class="inline-block"
-                                                        onsubmit="return confirm('Anda yakin ingin menghapus jadwal ini?');">
+                                        {{-- Dosen Utama --}}
+                                        <x-table.table-td class="text-center">
+                                            <div class="flex flex-col items-center">
+                                                <span class="font-medium text-gray-900">{{ $j->dosen->nama_dosen ?? '-' }}</span>
+                                                <span class="text-xs text-gray-500">(Utama)</span>
+                                            </div>
+                                        </x-table.table-td>
+
+                                        {{-- Dosen Pendamping --}}
+                                        <x-table.table-td class="text-center">
+                                            @if ($j->dosen2)
+                                                <div class="flex flex-col items-center">
+                                                    <span class="font-medium text-gray-700">{{ $j->dosen2->nama_dosen }}</span>
+                                                    <span class="text-xs text-gray-500">(Pendamping)</span>
+                                                </div>
+                                            @else
+                                                <span class="text-gray-400 text-sm">-</span>
+                                            @endif
+                                        </x-table.table-td>
+
+                                        {{-- Ruangan --}}
+                                        <x-table.table-td class="text-center">
+                                            <div class="flex flex-col items-center">
+                                                <span class="font-semibold text-purple-600">{{ $j->ruangan->kode_ruangan ?? '-' }}</span>
+                                                <span class="text-xs text-gray-500">{{ $j->ruangan->nama_ruangan ?? '-' }}</span>
+                                            </div>
+                                        </x-table.table-td>
+
+                                        {{-- Waktu --}}
+                                        <x-table.table-td class="text-center">
+                                            <div class="flex flex-col items-center">
+                                                @php
+                                                    $hariColors = [
+                                                        'Senin' => 'bg-red-100 text-red-800',
+                                                        'Selasa' => 'bg-orange-100 text-orange-800',
+                                                        'Rabu' => 'bg-yellow-100 text-yellow-800',
+                                                        'Kamis' => 'bg-green-100 text-green-800',
+                                                        'Jumat' => 'bg-blue-100 text-blue-800',
+                                                        'Sabtu' => 'bg-purple-100 text-purple-800',
+                                                    ];
+                                                    $hariColor = $hariColors[$j->waktu->hari ?? ''] ?? 'bg-gray-100 text-gray-800';
+                                                @endphp
+                                                <span class="text-xs font-medium px-2 py-1 rounded-full {{ $hariColor }}">
+                                                    {{ $j->waktu->hari ?? '-' }}
+                                                </span>
+                                                <span class="text-sm font-medium mt-1">
+                                                    {{ $j->waktu->jam_mulai ?? '-' }} - {{ $j->waktu->jam_selesai ?? '-' }}
+                                                </span>
+                                            </div>
+                                        </x-table.table-td>
+
+                                        {{-- PERMISSION UNTUK ADMIN --}}
+                                        {{-- Aksi --}}
+                                        @if (auth()->user()->hasRole('admin'))
+                                            <x-table.table-td class="text-center">
+                                                <div class="flex justify-center items-center space-x-2">
+                                                    {{-- Edit --}}
+                                                    <a href="{{ route('jadwal.edit', $j->id_jadwal) }}"
+                                                        class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded hover:bg-blue-100 hover:text-blue-700 transition-colors">
+                                                        <i class="ph ph-pencil mr-1"></i>
+                                                        Edit
+                                                    </a>
+                                                    
+                                                    {{-- Delete --}}
+                                                    <form method="POST" action="{{ route('jadwal.destroy', $j->id_jadwal) }}" 
+                                                          class="inline-block"
+                                                          onsubmit="return confirm('Yakin ingin menghapus jadwal ini?')">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                            class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600"
-                                                            title="Hapus">
-                                                            <i class="ph ph-trash-simple"></i>
+                                                            class="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded hover:bg-red-100 hover:text-red-700 transition-colors">
+                                                            <i class="ph ph-trash mr-1"></i>
+                                                            Hapus
                                                         </button>
-                                                    </form> --}}
+                                                    </form>
                                                 </div>
-                                            </td>
+                                            </x-table.table-td>
                                         @endif
                                     </tr>
                                 @endforeach
@@ -288,34 +358,31 @@
                         </table>
 
                         {{-- Pagination --}}
-                        <div class="w-full">
+                        <div class="w-full mt-4">
                             {{ $jadwal->links() }}
                         </div>
                     @else
-                        {{-- Pesan jika tidak ada data --}}
-                        <div class="w-full text-center py-12 bg-white rounded-lg shadow">
-                            <i class="ph ph-calendar-blank text-6xl text-gray-300 mb-4"></i>
-                            @if (request('search') || request('hari') || request('prodi'))
-                                <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada hasil yang ditemukan</h3>
-                                <p class="text-gray-500 mb-4">
-                                    Tidak ditemukan jadwal yang sesuai dengan filter atau pencarian
+                        {{-- No data message --}}
+                        <div class="w-full bg-white rounded-lg shadow">
+                            <div class="flex flex-col items-center justify-center py-12">
+                                <i class="ph ph-calendar-x text-gray-400 text-6xl mb-4"></i>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada jadwal ditemukan</h3>
+                                <p class="text-gray-500 text-center max-w-md">
+                                    @if (request('search') || request('hari') || request('prodi'))
+                                        Tidak ada jadwal yang sesuai dengan kriteria pencarian atau filter Anda.
+                                        <br>
+                                        <a href="{{ route('jadwal.index') }}" class="text-blue-600 hover:text-blue-800 underline mt-2 inline-block">
+                                            Hapus filter dan lihat semua jadwal
+                                        </a>
+                                    @else
+                                        @if (auth()->user()->hasRole('dosen'))
+                                            Anda belum memiliki jadwal mengajar yang terdaftar.
+                                        @else
+                                            Belum ada jadwal yang terdaftar dalam sistem.
+                                        @endif
+                                    @endif
                                 </p>
-                                <a href="{{ route('jadwal.index') }}"
-                                    class="inline-flex items-center px-4 py-2 bg-brand-600 text-white text-sm rounded-md hover:bg-brand-700 transition-colors duration-200">
-                                    <i class="ph ph-arrow-left mr-2"></i>
-                                    Lihat Semua Jadwal
-                                </a>
-                            @else
-                                <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada jadwal</h3>
-                                <p class="text-gray-500 mb-4">Mulai dengan menambahkan jadwal pertama</p>
-                                @if (auth()->user()->role === 'admin')
-                                    <a href="{{ route('jadwal.create') }}"
-                                        class="inline-flex items-center px-4 py-2 bg-brand-600 text-white text-sm rounded-md hover:bg-brand-700 transition-colors duration-200">
-                                        <i class="ph ph-plus mr-2"></i>
-                                        Tambah Jadwal
-                                    </a>
-                                @endif
-                            @endif
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -323,87 +390,64 @@
         </div>
     </div>
 
-    {{-- JavaScript untuk menangani form submissions --}}
+    {{-- JavaScript untuk Filter --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Hari filter dropdown elements
-            const hariFilterButton = document.getElementById('hariFilterButton');
-            const hariFilterDropdown = document.getElementById('hariFilterDropdown');
-            const hariFilters = document.querySelectorAll('.hari-filter');
-            const clearHariAllBtn = document.getElementById('clearHariAll');
-            const applyHariFilterBtn = document.getElementById('applyHariFilter');
-            const filterForm = document.getElementById('filterForm');
-
-            // Toggle hari dropdown
-            if (hariFilterButton) {
-                hariFilterButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    hariFilterDropdown.classList.toggle('hidden');
-                });
-            }
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(event) {
-                if (hariFilterButton && hariFilterDropdown && 
-                    !hariFilterButton.contains(event.target) && 
-                    !hariFilterDropdown.contains(event.target)) {
-                    hariFilterDropdown.classList.add('hidden');
-                }
-            });
-
-            // Close hari filter function
-            window.closeHariFilter = function() {
-                if (hariFilterDropdown) {
-                    hariFilterDropdown.classList.add('hidden');
-                }
-            };
-
-            // Clear all hari filters
-            if (clearHariAllBtn) {
-                clearHariAllBtn.addEventListener('click', function() {
-                    hariFilters.forEach(filter => {
-                        filter.checked = false;
-                    });
-                });
-            }
-
-            // Apply hari filter
-            if (applyHariFilterBtn && filterForm) {
-                applyHariFilterBtn.addEventListener('click', function() {
-                    filterForm.submit();
-                });
-            }
-
-            // Auto submit search form on input change with debounce
-            let searchTimeout;
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(function() {
-                        document.getElementById('searchForm').submit();
-                    }, 500); // 500ms debounce
-                });
-
-                // Handle enter key in search input
-                searchInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        document.getElementById('searchForm').submit();
-                    }
-                });
-            }
-        });
-
-        // Clear search
+        // Search functionality
         function clearSearch() {
             document.getElementById('searchInput').value = '';
             document.getElementById('searchForm').submit();
         }
 
-        // Clear all search and filters
-        function clearAll() {
-            window.location.href = "{{ route('jadwal.index') }}";
+        // Auto submit search after typing (debounced)
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                document.getElementById('searchForm').submit();
+            }, 500);
+        });
+
+        // Filter Hari Dropdown
+        document.getElementById('hariFilterButton').addEventListener('click', function() {
+            const dropdown = document.getElementById('hariFilterDropdown');
+            dropdown.classList.toggle('hidden');
+        });
+
+        function closeHariFilter() {
+            document.getElementById('hariFilterDropdown').classList.add('hidden');
         }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const button = document.getElementById('hariFilterButton');
+            const dropdown = document.getElementById('hariFilterDropdown');
+            
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Clear all hari filters
+        document.getElementById('clearHariAll').addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('.hari-filter');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        });
+
+        // Apply hari filter
+        document.getElementById('applyHariFilter').addEventListener('click', function() {
+            document.getElementById('filterForm').submit();
+        });
+
+        // Auto-submit on checkbox change
+        document.querySelectorAll('.hari-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                // Auto submit after short delay to allow multiple selections
+                setTimeout(() => {
+                    document.getElementById('filterForm').submit();
+                }, 300);
+            });
+        });
     </script>
 @endsection
