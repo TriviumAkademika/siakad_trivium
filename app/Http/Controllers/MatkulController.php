@@ -9,6 +9,7 @@ class MatkulController extends Controller
 {
     public function index(Request $request)
     {
+        $totalMatkul = Matkul::count();
         $query = Matkul::query();
 
         // Search functionality
@@ -16,8 +17,8 @@ class MatkulController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('nama_matkul', 'LIKE', "%{$search}%")
-                  ->orWhere('jenis', 'LIKE', "%{$search}%")
-                  ->orWhere('sks', 'LIKE', "%{$search}%");
+                    ->orWhere('jenis', 'LIKE', "%{$search}%")
+                    ->orWhere('sks', 'LIKE', "%{$search}%");
             });
         }
 

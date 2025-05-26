@@ -172,5 +172,7 @@ Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-
 Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
 Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
 // Route::resource('users', UserController::class);
+Route::get('/nilai/update-nilai/{id_mahasiswa}/{id_matkul}', [App\Http\Controllers\NilaiController::class, 'updateNilaiForm'])->name('nilai.updateNilaiForm');
+Route::post('/nilai/update-nilai', [App\Http\Controllers\NilaiController::class, 'updateNilai'])->name('nilai.updateNilai');
 
 require __DIR__ . '/auth.php';
