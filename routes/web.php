@@ -154,17 +154,20 @@ Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
 
 });
 
-
 /// PERMISSION ROLE MAHASISWA
 Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
-    
+    Route::get('/nilai-mahasiswa', [NilaiController::class, 'nilaiMahasiswa'])->name('nilai-mahasiswa');
 });
 
 
-
-Route::get('/nilai-mhs', [App\Http\Controllers\NilaiController::class, 'nilaiMhs'])->name('nilai-mhs');
-
-Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
+/// PERMISSION ROLE MAHASISWA
+Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
+    // Nilai Mahasiswa
+    Route::get('/nilai-mahasiswa', [App\Http\Controllers\NilaiController::class, 'nilaiMhs'])->name('nilai-mahasiswa');
+    
+    // Detail FRS
+    Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
+});
 Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
 Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
 Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');

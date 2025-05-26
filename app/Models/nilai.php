@@ -18,6 +18,6 @@ class nilai extends Model
     {
         return $this->belongsTo(\App\Models\Matkul::class, 'matakuliah_id', 'id_matkul');
     }
-
-    // Removed matkuls() relationship as it's not needed and was causing issues
+    
+    // Removed frs relationship as it's not needed and was causing issues
 }

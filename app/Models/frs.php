@@ -31,4 +31,11 @@ class Frs extends Model
     {
         return $this->hasMany(DetailFrs::class, 'id_frs');
     }
+    
+    public function nilai()
+    {
+        return $this->belongsToMany(\App\Models\nilai::class, 'detail_frs', 'id_frs', 'id_nilai')
+            ->withPivot('status')
+            ->withTimestamps();
+    }
 }
