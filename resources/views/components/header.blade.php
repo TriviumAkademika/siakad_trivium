@@ -9,12 +9,14 @@
             // Tentukan page title berdasarkan path
             $pageTitle = match ($currentRouteName) {
                 'dashboard' => 'Selamat Datang',
+                'users.index', 'users.index' => 'Data Pengguna',
+                'dosen.index', 'dosen.index' => 'Data Dosen',
+                'dosen.index', 'dosen.show' => 'Detail Dosen',
+                'mahasiswa.index', 'mahasiswa.show' => 'Data Mahasiswa',
                 'frs.index', 'frs.index' => 'Data FRS',
                 'frs.edit', 'frs.show' => 'Data Detail FRS',
                 'detail-frs.index', 'detail-frs.show' => 'Data Detail FRS',
                 'jadwal.index', 'jadwal.show' => 'Data Jadwal',
-                'mahasiswa.index', 'mahasiswa.show' => 'Data Mahasiswa',
-                'dosen.index', 'dosen.show' => 'Data Dosen',
                 default => 'Dashboard',
             };
 

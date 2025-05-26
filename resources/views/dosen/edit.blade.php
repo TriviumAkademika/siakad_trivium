@@ -73,7 +73,8 @@
 
                     {{-- Nama Dosen --}}
                     <div>
-                        <x-form.text-field label="Nama Dosen" name="nama_dosen" value="{{ old('nama_dosen', $dosen->nama_dosen) }}" placeholder="Masukkan nama lengkap dosen" />
+                        <x-form.text-field label="Nama Dosen" name="nama_dosen"
+                            value="{{ old('nama_dosen', $dosen->nama_dosen) }}" placeholder="Masukkan nama lengkap dosen" />
                         @error('nama_dosen')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -81,7 +82,8 @@
 
                     {{-- NIP --}}
                     <div>
-                        <x-form.text-number label="NIP" name="nip" value="{{ old('nip', $dosen->nip) }}" placeholder="Contoh: 198501012010011001" />
+                        <x-form.text-number label="NIP" name="nip" value="{{ old('nip', $dosen->nip) }}"
+                            placeholder="Contoh: 198501012010011001" />
                         @error('nip')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -89,7 +91,8 @@
 
                     {{-- Alamat --}}
                     <div>
-                        <x-form.textarea-field label="Alamat" name="alamat" value="{{ old('alamat', $dosen->alamat) }}" placeholder="Masukkan alamat lengkap" />
+                        <x-form.textarea-field label="Alamat" name="alamat" value="{{ old('alamat', $dosen->alamat) }}"
+                            placeholder="Masukkan alamat lengkap" />
                         @error('alamat')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -97,7 +100,8 @@
 
                     {{-- No HP --}}
                     <div>
-                        <x-form.text-number label="No HP" name="no_hp" value="{{ old('no_hp', $dosen->no_hp) }}" placeholder="Contoh: 081234567890" />
+                        <x-form.text-number label="No HP" name="no_hp" value="{{ old('no_hp', $dosen->no_hp) }}"
+                            placeholder="Contoh: 081234567890" />
                         @error('no_hp')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -105,16 +109,13 @@
 
                     {{-- Status --}}
                     <div>
-                        <x-form.dropdown-field label="Status" name="status" 
-                            :options="[
-                                ['value' => 'AKTIF', 'label' => 'Aktif'],
-                                ['value' => 'CUTI', 'label' => 'Cuti'],
-                                ['value' => 'PENSIUN', 'label' => 'Pensiun'],
-                                ['value' => 'NONAKTIF', 'label' => 'Non Aktif']
-                            ]" 
-                            valueField="value" 
-                            labelFields="label" 
-                            selected="{{ old('status', $dosen->status) }}" />
+                        <x-form.dropdown-field label="Status" name="status" :options="[
+                            ['value' => 'AKTIF', 'label' => 'Aktif'],
+                            ['value' => 'CUTI', 'label' => 'Cuti'],
+                            ['value' => 'PENSIUN', 'label' => 'Pensiun'],
+                            ['value' => 'NONAKTIF', 'label' => 'Non Aktif'],
+                        ]" valueField="value"
+                            labelFields="label" selected="{{ old('status', $dosen->status) }}" />
                         @error('status')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -122,7 +123,8 @@
 
                     {{-- Button Update --}}
                     <div class="flex justify-end gap-x-1">
-                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/dosen';">
+                        <x-button.cancel icon="ph ph-x"
+                            onConfirm="window.location.href='{{ route('dosen.show', $dosen->id_dosen) }}';">
                             Batal
                         </x-button.cancel>
                         <x-button.submit icon="ph ph-floppy-disk">

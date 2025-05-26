@@ -14,7 +14,7 @@
             <div class="flex flex-col px-6 pb-6">
                 {{-- Form --}}
                 <form action="{{ route('users.store') }}" method="POST"
-                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4 bg-white">
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4 bg-putih">
                     @csrf
 
                     {{-- Success Message --}}
@@ -136,7 +136,10 @@
                     </div>
 
                     {{-- Button Simpan --}}
-                    <div class="flex justify-end">
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/users';">
+                            Batal
+                        </x-button.cancel>
                         <x-button.submit icon="ph ph-floppy-disk">
                             Simpan
                         </x-button.submit>
