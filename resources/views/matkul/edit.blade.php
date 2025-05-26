@@ -48,7 +48,7 @@
                             Batal
                         </x-button.cancel>
                         <x-button.submit icon="ph ph-floppy-disk">
-                            Update
+                            Perbarui
                         </x-button.submit>
                     </div>
                 </form>

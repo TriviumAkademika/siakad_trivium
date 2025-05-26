@@ -147,7 +147,6 @@
                                         <i class="ph ph-list mr-2"></i>
                                         Kembali ke Daftar
                                     </a>
-
                                     <x-button.submit type="link" href="{{ route('dosen.edit', $dosen->id_dosen) }}"
                                         icon="ph ph-pencil-simple">
                                         Edit Dosen
