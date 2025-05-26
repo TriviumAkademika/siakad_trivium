@@ -8,6 +8,8 @@ use App\Models\Matkul;
 use App\Models\Dosen;
 use App\Models\Waktu;
 use App\Models\Ruangan;
+use App\Models\DetailFrs;
+use App\Models\Frs;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +22,8 @@ class JadwalController extends Controller
 
         // Auto-filter berdasarkan role user yang login
         $user = Auth::user();
-        $isDosenRole = $user->hasRole('dosen'); // Menggunakan Spatie Permission
+        $isDosenRole = $user->hasRole('dosen');
+        $isMahasiswaRole = $user->hasRole('mahasiswa');
         
         // Jika user adalah dosen, filter otomatis berdasarkan ID dosen
         if ($isDosenRole && $user->id_dosen) {
@@ -28,6 +31,25 @@ class JadwalController extends Controller
                 $q->where('id_dosen', $user->id_dosen)
                   ->orWhere('id_dosen_2', $user->id_dosen);
             });
+        }
+        
+        // Jika user adalah mahasiswa, filter berdasarkan jadwal dari detail FRS yang disetujui
+        if ($isMahasiswaRole && $user->id_mahasiswa) {
+            // Ambil ID jadwal dari detail FRS yang sudah disetujui untuk mahasiswa ini
+            // Menggunakan JOIN dengan tabel FRS karena id_mahasiswa ada di tabel FRS
+            $approvedJadwalIds = DetailFrs::join('frs', 'detail_frs.id_frs', '=', 'frs.id_frs')
+                ->where('frs.id_mahasiswa', $user->id_mahasiswa)
+                ->where('detail_frs.status', true) // status = true berarti disetujui
+                ->pluck('detail_frs.id_jadwal')
+                ->toArray();
+            
+            // Filter jadwal berdasarkan ID yang sudah disetujui
+            if (!empty($approvedJadwalIds)) {
+                $query->whereIn('id_jadwal', $approvedJadwalIds);
+            } else {
+                // Jika tidak ada jadwal yang disetujui, tampilkan hasil kosong
+                $query->whereRaw('1 = 0'); // kondisi yang selalu false
+            }
         }
 
         // Search functionality
@@ -63,8 +85,8 @@ class JadwalController extends Controller
             });
         }
 
-        // Filter by prodi (hanya untuk admin atau jika tidak ada filter dosen)
-        if ($request->filled('prodi') && (!$isDosenRole || !$user->id_dosen)) {
+        // Filter by prodi (hanya untuk admin atau jika tidak ada filter dosen/mahasiswa)
+        if ($request->filled('prodi') && (!$isDosenRole || !$user->id_dosen) && (!$isMahasiswaRole || !$user->id_mahasiswa)) {
             $query->whereHas('kelas', function ($q) use ($request) {
                 $q->where('prodi', $request->prodi);
             });
@@ -74,8 +96,8 @@ class JadwalController extends Controller
         $jadwal = $query->paginate(10)->withQueryString();
 
         // Get unique prodi for filter dropdown
-        // Jika dosen, ambil prodi dari kelas yang dia ajar
         if ($isDosenRole && $user->id_dosen) {
+            // Jika dosen, ambil prodi dari kelas yang dia ajar
             $prodiList = Jadwal::where(function ($q) use ($user) {
                 $q->where('id_dosen', $user->id_dosen)
                   ->orWhere('id_dosen_2', $user->id_dosen);
@@ -86,6 +108,25 @@ class JadwalController extends Controller
             ->unique()
             ->sort()
             ->values();
+        } elseif ($isMahasiswaRole && $user->id_mahasiswa) {
+            // Jika mahasiswa, ambil prodi dari jadwal yang sudah disetujui
+            $approvedJadwalIds = DetailFrs::join('frs', 'detail_frs.id_frs', '=', 'frs.id_frs')
+                ->where('frs.id_mahasiswa', $user->id_mahasiswa)
+                ->where('detail_frs.status', true)
+                ->pluck('detail_frs.id_jadwal')
+                ->toArray();
+                
+            if (!empty($approvedJadwalIds)) {
+                $prodiList = Jadwal::whereIn('id_jadwal', $approvedJadwalIds)
+                    ->with('kelas')
+                    ->get()
+                    ->pluck('kelas.prodi')
+                    ->unique()
+                    ->sort()
+                    ->values();
+            } else {
+                $prodiList = collect(); // collection kosong
+            }
         } else {
             // Untuk admin, tampilkan semua prodi
             $prodiList = Kelas::distinct()->pluck('prodi')->sort()->values();
