@@ -32,7 +32,8 @@
         @endphp
 
         <h2 class="text-2xl text-hitam">
-            {{ $pageTitle }}@if (Request::is('dashboard')), {{ Auth::user()->display_name }}!
+            {{ $pageTitle }}@if (Request::is('dashboard'))
+                , {{ Auth::user()->display_name }}!
             @endif
         </h2>
 
@@ -57,14 +58,15 @@
                             </button>
                         </form>
                     </li> --}}
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                    <li class="cursor-pointer hover:bg-red-50 transition-colors duration-200"
+                        onclick="document.getElementById('logout-form').submit();">
+                        <form method="POST" action="{{ route('logout') }}" id="logout-form" class="hidden">
                             @csrf
-                            <button type="submit" class="w-full text-left text-base text-red-600 flex items-center gap-2">
-                                <i class="ph ph-sign-out text-lg"></i>
-                                Logout
-                            </button>
                         </form>
+                        <div class="w-full text-left text-base text-red-600 flex items-center gap-2 p-3 rounded-lg">
+                            <i class="ph ph-sign-out text-lg"></i>
+                            Logout
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -76,13 +78,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             const logoutForm = document.getElementById('logout-form');
             const profileForm = document.getElementById('profile-form');
-            
+
             if (logoutForm) {
                 logoutForm.addEventListener('submit', function(e) {
                     console.log('Logout form submitted');
                 });
             }
-            
+
             if (profileForm) {
                 profileForm.addEventListener('submit', function(e) {
                     console.log('Profile form submitted');

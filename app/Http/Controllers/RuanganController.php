@@ -9,21 +9,22 @@ class RuanganController extends Controller
 {
     public function index(Request $request)
     {
+        $totalRuangan = Ruangan::count();
         $query = Ruangan::query();
 
         // Handle search
         if ($request->has('search') && $request->search != '') {
             $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('nama_ruangan', 'LIKE', '%' . $searchTerm . '%')
-                  ->orWhere('nama_gedung', 'LIKE', '%' . $searchTerm . '%')
-                  ->orWhere('kode_ruangan', 'LIKE', '%' . $searchTerm . '%');
+                    ->orWhere('nama_gedung', 'LIKE', '%' . $searchTerm . '%')
+                    ->orWhere('kode_ruangan', 'LIKE', '%' . $searchTerm . '%');
             });
         }
 
         // Paginate results (10 items per page)
         $ruangan = $query->paginate(10);
-        
+
         // Append search parameter to pagination links
         $ruangan->appends($request->query());
 

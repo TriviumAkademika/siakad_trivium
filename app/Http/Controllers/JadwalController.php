@@ -15,6 +15,7 @@ class JadwalController extends Controller
 {
     public function index(Request $request)
     {
+              $totalJadwal = Jadwal::count();
         $query = Jadwal::with(['kelas', 'matkul', 'dosen', 'dosen2', 'waktu', 'ruangan']);
 
         // Search functionality

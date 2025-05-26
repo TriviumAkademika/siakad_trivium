@@ -10,11 +10,14 @@ use Illuminate\Validation\Rule;
 
 class KelasController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+        $totalkelas = Kelas::count();
+
         $query = Kelas::with('dosen');
 
         // Handle search
