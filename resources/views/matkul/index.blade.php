@@ -216,7 +216,7 @@
                                                     {{-- Button Hapus --}}
                                                     <form action="{{ route('matkul.destroy', $m->id_matkul) }}"
                                                         method="POST"
-                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')"
+                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini?')"
                                                         class="inline">
                                                         @csrf
                                                         @method('DELETE')
