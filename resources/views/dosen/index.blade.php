@@ -240,11 +240,13 @@
                                                     <i class="ph ph-eye"></i>
                                                 </a>
                                                 {{-- Button Edit --}}
-                                                <a href="{{ route('dosen.edit', $d->id_dosen) }}"
+                                                @if (auth()->user()->role === 'admin')
+                                                    <a href="{{ route('dosen.edit', $d->id_dosen) }}"
                                                     class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700"
                                                     title="Edit">
                                                     <i class="ph ph-pencil-simple"></i>
                                                 </a>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
