@@ -15,6 +15,7 @@ class UserController extends Controller
     // Tampilkan semua user
     public function index(Request $request)
     {
+        $totalUser = User::count();
         // Validate request parameters
         $validator = Validator::make($request->all(), [
             'search' => 'nullable|string|max:255|regex:/^[a-zA-Z0-9\s\-\+\(\)@\.]+$/',
@@ -38,19 +39,19 @@ class UserController extends Controller
             if ($request->filled('search')) {
                 $searchTerm = trim($request->search);
                 $searchTerm = preg_replace('/[^a-zA-Z0-9\s\-\+\(\)@\.]/', '', $searchTerm);
-                
+
                 if (!empty($searchTerm)) {
                     $query->where(function ($q) use ($searchTerm) {
                         $q->where('email', 'LIKE', "%{$searchTerm}%")
-                          ->orWhere('name', 'LIKE', "%{$searchTerm}%")
-                          ->orWhereHas('mahasiswa', function ($subQuery) use ($searchTerm) {
-                              $subQuery->where('nama', 'LIKE', "%{$searchTerm}%")
-                                       ->orWhere('nrp', 'LIKE', "%{$searchTerm}%");
-                          })
-                          ->orWhereHas('dosen', function ($subQuery) use ($searchTerm) {
-                              $subQuery->where('nama_dosen', 'LIKE', "%{$searchTerm}%")
-                                       ->orWhere('nip', 'LIKE', "%{$searchTerm}%");
-                          });
+                            ->orWhere('name', 'LIKE', "%{$searchTerm}%")
+                            ->orWhereHas('mahasiswa', function ($subQuery) use ($searchTerm) {
+                                $subQuery->where('nama', 'LIKE', "%{$searchTerm}%")
+                                    ->orWhere('nrp', 'LIKE', "%{$searchTerm}%");
+                            })
+                            ->orWhereHas('dosen', function ($subQuery) use ($searchTerm) {
+                                $subQuery->where('nama_dosen', 'LIKE', "%{$searchTerm}%")
+                                    ->orWhere('nip', 'LIKE', "%{$searchTerm}%");
+                            });
                     });
                 }
             }
@@ -59,7 +60,7 @@ class UserController extends Controller
             if ($request->filled('roles')) {
                 $roleFilters = is_array($request->roles) ? $request->roles : [$request->roles];
                 $validRoles = array_intersect($roleFilters, ['admin', 'dosen', 'mahasiswa']);
-                
+
                 if (!empty($validRoles)) {
                     $query->whereHas('roles', function ($q) use ($validRoles) {
                         $q->whereIn('name', $validRoles);
@@ -73,14 +74,13 @@ class UserController extends Controller
             // Paginate with validation
             $perPage = $request->input('per_page', 10);
             $perPage = max(1, min(100, (int)$perPage)); // Ensure between 1-100
-            
+
             $users = $query->paginate($perPage);
 
             // Append query parameters to pagination links
             $users->appends($request->query());
 
             return view('users.index', compact('users'));
-
         } catch (\Exception $e) {
             return redirect()->route('users.index')
                 ->with('error', 'Terjadi kesalahan saat memuat data user!');
@@ -200,25 +200,25 @@ class UserController extends Controller
             'email.email' => 'Format email tidak valid.',
             'email.max' => 'Email maksimal 255 karakter.',
             'email.unique' => 'Email sudah digunakan oleh user lain.',
-            
+
             'password.required' => 'Password wajib diisi.',
             'password.min' => 'Password harus minimal 6 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak sesuai.',
             'password.regex' => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
-            
+
             'role.required' => 'Role wajib dipilih.',
             'role.in' => 'Role yang dipilih tidak valid.',
-            
+
             'id_mahasiswa.required' => 'Mahasiswa wajib dipilih.',
             'id_mahasiswa.integer' => 'ID mahasiswa harus berupa angka.',
             'id_mahasiswa.exists' => 'Mahasiswa yang dipilih tidak ditemukan.',
             'id_mahasiswa.unique' => 'Mahasiswa sudah memiliki akun user.',
-            
+
             'id_dosen.required' => 'Dosen wajib dipilih.',
             'id_dosen.integer' => 'ID dosen harus berupa angka.',
             'id_dosen.exists' => 'Dosen yang dipilih tidak ditemukan.',
             'id_dosen.unique' => 'Dosen sudah memiliki akun user.',
-            
+
             'nama_user.required' => 'Nama user wajib diisi.',
             'nama_user.min' => 'Nama user harus minimal 2 karakter.',
             'nama_user.max' => 'Nama user maksimal 255 karakter.',
@@ -259,7 +259,6 @@ class UserController extends Controller
 
             return redirect()->route('users.index')
                 ->with('success', 'Data user berhasil ditambahkan!');
-
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
@@ -278,7 +277,7 @@ class UserController extends Controller
 
         try {
             $user = User::with(['mahasiswa', 'dosen', 'roles'])->findOrFail($id);
-            
+
             // Ambil mahasiswa dan dosen yang belum memiliki user (kecuali yang sedang diedit)
             $mahasiswa = Mahasiswa::doesntHave('user')
                 ->orWhere('id_mahasiswa', $user->id_mahasiswa)
@@ -286,7 +285,7 @@ class UserController extends Controller
             $dosen = Dosen::doesntHave('user')
                 ->orWhere('id_dosen', $user->id_dosen)
                 ->get();
-                
+
             return view('users.edit', compact('user', 'mahasiswa', 'dosen'));
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return redirect()->route('users.index')
@@ -359,11 +358,11 @@ class UserController extends Controller
             'email.email' => 'Format email tidak valid.',
             'email.max' => 'Email maksimal 255 karakter.',
             'email.unique' => 'Email sudah digunakan oleh user lain.',
-            
+
             'password.min' => 'Password harus minimal 6 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak sesuai.',
             'password.regex' => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
-            
+
             'nama_user.required' => 'Nama user wajib diisi.',
             'nama_user.min' => 'Nama user harus minimal 2 karakter.',
             'nama_user.max' => 'Nama user maksimal 255 karakter.',
@@ -396,7 +395,6 @@ class UserController extends Controller
 
             return redirect()->route('users.index')
                 ->with('success', 'Data user berhasil diperbarui!');
-
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
@@ -415,15 +413,14 @@ class UserController extends Controller
 
         try {
             $user = User::findOrFail($id);
-            
+
             // Hapus semua role yang terkait dengan user
             $user->removeRole($user->getRoleNames()->first());
-            
+
             $user->delete();
 
             return redirect()->route('users.index')
                 ->with('success', 'Data user berhasil dihapus!');
-
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return redirect()->route('users.index')
                 ->with('error', 'Data user tidak ditemukan!');

@@ -9,6 +9,7 @@ class WaktuController extends Controller
 {
     public function index(Request $request)
     {
+                  $totalWaktu = Waktu::count();
         $query = Waktu::query();
 
         // Handle day filter

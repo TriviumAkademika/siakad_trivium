@@ -22,10 +22,56 @@ class DetailFrsSeeder extends Seeder
                 'status' => false,
             ],
             [
+                'id_jadwal' => 1,
+                'id_frs' => 2,
+                'status' => true,
+            ],
+            [
+                'id_jadwal' => 2,
+                'id_frs' => 2,
+                'status' => true,
+            ],
+            [
                 'id_jadwal' => 3,
                 'id_frs' => 2,
                 'status' => true,
             ],
+            [
+                'id_jadwal' => 4,
+                'id_frs' => 2,
+                'status' => true,
+            ],
+            [
+                'id_jadwal' => 5,
+                'id_frs' => 2,
+                'status' => true,
+            ],
+            [
+                'id_jadwal' => 6,
+                'id_frs' => 2,
+                'status' => true,
+            ],
+            [
+                'id_jadwal' => 7,
+                'id_frs' => 2,
+                'status' => true,
+            ],
+            [
+                'id_jadwal' => 8,
+                'id_frs' => 2,
+                'status' => true,
+            ],
+            [
+                'id_jadwal' => 9,
+                'id_frs' => 2,
+                'status' => true,
+            ],
+            [
+                'id_jadwal' => 10,
+                'id_frs' => 2,
+                'status' => true,
+            ],
+
             // tambahkan data lainnya sesuai kebutuhan
         ];
 

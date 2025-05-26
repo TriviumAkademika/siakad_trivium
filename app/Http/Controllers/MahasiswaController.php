@@ -16,6 +16,8 @@ class MahasiswaController extends Controller
     {
         $query = Mahasiswa::with(['kelas']);
 
+        $totalMahasiswa = Mahasiswa::count();
+
         // Search functionality
         if ($request->filled('search')) {
             $searchTerm = $request->search;

@@ -20,6 +20,26 @@ class WaktuSeeder extends Seeder
             ['hari' => 'Kamis', 'jam_mulai' => '08:00', 'jam_selesai' => '09:40'],
             ['hari' => 'Kamis', 'jam_mulai' => '13:00', 'jam_selesai' => '15:30'],
             ['hari' => 'Jumat', 'jam_mulai' => '08:00', 'jam_selesai' => '09:40'],
+
+            // Tambahan waktu
+            ['hari' => 'Senin', 'jam_mulai' => '08:00', 'jam_selesai' => '09:40'],
+            ['hari' => 'Senin', 'jam_mulai' => '15:30', 'jam_selesai' => '17:00'],
+
+            ['hari' => 'Selasa', 'jam_mulai' => '08:00', 'jam_selesai' => '09:40'],
+            ['hari' => 'Selasa', 'jam_mulai' => '09:40', 'jam_selesai' => '11:20'],
+            ['hari' => 'Selasa', 'jam_mulai' => '16:20', 'jam_selesai' => '17:50'],
+
+            ['hari' => 'Rabu', 'jam_mulai' => '08:00', 'jam_selesai' => '10:30'],
+            ['hari' => 'Rabu', 'jam_mulai' => '10:30', 'jam_selesai' => '13:00'],
+            ['hari' => 'Rabu', 'jam_mulai' => '16:20', 'jam_selesai' => '17:50'],
+
+            ['hari' => 'Kamis', 'jam_mulai' => '09:40', 'jam_selesai' => '11:20'],
+            ['hari' => 'Kamis', 'jam_mulai' => '11:20', 'jam_selesai' => '13:00'],
+            ['hari' => 'Kamis', 'jam_mulai' => '15:30', 'jam_selesai' => '17:00'],
+
+            ['hari' => 'Jumat', 'jam_mulai' => '09:40', 'jam_selesai' => '11:20'],
+            ['hari' => 'Jumat', 'jam_mulai' => '13:00', 'jam_selesai' => '15:30'],
+            ['hari' => 'Jumat', 'jam_mulai' => '15:30', 'jam_selesai' => '17:00'],
         ];
 
         foreach ($waktus as $waktu) {

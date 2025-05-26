@@ -12,6 +12,7 @@ class DosenController extends Controller
 {
     public function index(Request $request)
     {
+        $totalDosen = Dosen::count();
         // Validate request parameters
         $validator = Validator::make($request->all(), [
             'search' => 'nullable|string|max:255|regex:/^[a-zA-Z0-9\s\-\+\(\)]+$/',
@@ -35,13 +36,13 @@ class DosenController extends Controller
             if ($request->filled('search')) {
                 $searchTerm = trim($request->search);
                 $searchTerm = preg_replace('/[^a-zA-Z0-9\s\-\+\(\)]/', '', $searchTerm);
-                
+
                 if (!empty($searchTerm)) {
-                    $query->where(function($q) use ($searchTerm) {
+                    $query->where(function ($q) use ($searchTerm) {
                         $q->where('nama_dosen', 'LIKE', '%' . $searchTerm . '%')
-                          ->orWhere('nip', 'LIKE', '%' . $searchTerm . '%')
-                          ->orWhere('alamat', 'LIKE', '%' . $searchTerm . '%')
-                          ->orWhere('no_hp', 'LIKE', '%' . $searchTerm . '%');
+                            ->orWhere('nip', 'LIKE', '%' . $searchTerm . '%')
+                            ->orWhere('alamat', 'LIKE', '%' . $searchTerm . '%')
+                            ->orWhere('no_hp', 'LIKE', '%' . $searchTerm . '%');
                     });
                 }
             }
@@ -50,7 +51,7 @@ class DosenController extends Controller
             if ($request->filled('status')) {
                 $statusFilters = is_array($request->status) ? $request->status : [$request->status];
                 $validStatuses = array_intersect($statusFilters, ['AKTIF', 'CUTI', 'PENSIUN', 'NONAKTIF']);
-                
+
                 if (!empty($validStatuses)) {
                     $query->whereIn('status', $validStatuses);
                 }
@@ -62,14 +63,13 @@ class DosenController extends Controller
             // Paginate with validation
             $perPage = $request->input('per_page', 10);
             $perPage = max(1, min(100, (int)$perPage)); // Ensure between 1-100
-            
+
             $dosen = $query->paginate($perPage);
 
             // Append query parameters to pagination links
             $dosen->appends($request->query());
 
             return view('dosen.index', compact('dosen'));
-
         } catch (\Exception $e) {
             return redirect()->route('dosen.index')
                 ->with('error', 'Terjadi kesalahan saat memuat data dosen!');
@@ -141,22 +141,22 @@ class DosenController extends Controller
             'nama_dosen.min' => 'Nama dosen harus minimal 2 karakter.',
             'nama_dosen.max' => 'Nama dosen maksimal 255 karakter.',
             'nama_dosen.regex' => 'Nama dosen hanya boleh berisi huruf, spasi, titik, koma, tanda hubung, dan apostrof.',
-            
+
             'nip.required' => 'NIP wajib diisi.',
             'nip.min' => 'NIP harus minimal 8 digit.',
             'nip.max' => 'NIP maksimal 50 karakter.',
             'nip.regex' => 'NIP hanya boleh berisi angka.',
             'nip.unique' => 'NIP sudah digunakan oleh dosen lain.',
-            
+
             'alamat.required' => 'Alamat wajib diisi.',
             'alamat.min' => 'Alamat harus minimal 10 karakter.',
             'alamat.max' => 'Alamat maksimal 500 karakter.',
-            
+
             'no_hp.required' => 'Nomor HP wajib diisi.',
             'no_hp.min' => 'Nomor HP harus minimal 10 karakter.',
             'no_hp.max' => 'Nomor HP maksimal 20 karakter.',
             'no_hp.regex' => 'Format nomor HP tidak valid. Gunakan format Indonesia (contoh: 081234567890).',
-            
+
             'status.required' => 'Status wajib dipilih.',
             'status.in' => 'Status yang dipilih tidak valid.',
         ]);
@@ -180,7 +180,6 @@ class DosenController extends Controller
 
             return redirect()->route('dosen.index')
                 ->with('success', 'Data dosen berhasil ditambahkan!');
-
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
@@ -290,8 +289,8 @@ class DosenController extends Controller
                 function ($attribute, $value, $fail) use ($id) {
                     // Check if phone number already exists (excluding current record)
                     $exists = Dosen::where('no_hp', $value)
-                                   ->where('id_dosen', '!=', $id)
-                                   ->exists();
+                        ->where('id_dosen', '!=', $id)
+                        ->exists();
                     if ($exists) {
                         $fail('Nomor HP sudah digunakan oleh dosen lain.');
                     }
@@ -303,22 +302,22 @@ class DosenController extends Controller
             'nama_dosen.min' => 'Nama dosen harus minimal 2 karakter.',
             'nama_dosen.max' => 'Nama dosen maksimal 255 karakter.',
             'nama_dosen.regex' => 'Nama dosen hanya boleh berisi huruf, spasi, titik, koma, tanda hubung, dan apostrof.',
-            
+
             'nip.required' => 'NIP wajib diisi.',
             'nip.min' => 'NIP harus minimal 8 digit.',
             'nip.max' => 'NIP maksimal 50 karakter.',
             'nip.regex' => 'NIP hanya boleh berisi angka.',
             'nip.unique' => 'NIP sudah digunakan oleh dosen lain.',
-            
+
             'alamat.required' => 'Alamat wajib diisi.',
             'alamat.min' => 'Alamat harus minimal 10 karakter.',
             'alamat.max' => 'Alamat maksimal 500 karakter.',
-            
+
             'no_hp.required' => 'Nomor HP wajib diisi.',
             'no_hp.min' => 'Nomor HP harus minimal 10 karakter.',
             'no_hp.max' => 'Nomor HP maksimal 20 karakter.',
             'no_hp.regex' => 'Format nomor HP tidak valid. Gunakan format Indonesia (contoh: 081234567890).',
-            
+
             'status.required' => 'Status wajib dipilih.',
             'status.in' => 'Status yang dipilih tidak valid.',
         ]);
@@ -342,7 +341,6 @@ class DosenController extends Controller
 
             return redirect()->route('dosen.index')
                 ->with('success', 'Data dosen berhasil diperbarui!');
-
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
@@ -360,7 +358,7 @@ class DosenController extends Controller
 
         try {
             $dosen = Dosen::findOrFail($id);
-            
+
             // Check if dosen has related data (if applicable)
             // Example: Check if dosen is assigned to any classes, subjects, etc.
             // if ($dosen->classes()->exists() || $dosen->subjects()->exists()) {
@@ -372,7 +370,6 @@ class DosenController extends Controller
 
             return redirect()->route('dosen.index')
                 ->with('success', 'Data dosen berhasil dihapus!');
-
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return redirect()->route('dosen.index')
                 ->with('error', 'Data dosen tidak ditemukan!');
