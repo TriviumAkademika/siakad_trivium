@@ -29,10 +29,10 @@
                         placeholder="Pilih Jenis Mata Kuliah"/>
 
                     {{-- SKS --}}
-                    <x-form.text-number label="SKS" name="sks" placeholder="Contoh: 2, 3, 4"/>
+                    <x-form.text-number label="SKS" name="sks" min="0" placeholder="Contoh: 2, 3, 4"/>
 
                     {{-- Kapasitas Kelas --}}
-                    <x-form.text-number label="Kapasitas Kelas" name="kapasitas_kelas" placeholder="Contoh: 30, 35, 40"/>
+                    <x-form.text-number label="Kapasitas Kelas" name="kapasitas_kelas" min="0" placeholder="Contoh: 30, 35, 40"/>
 
                     {{-- Button Simpan --}}
                     <div class="flex justify-end gap-x-1">

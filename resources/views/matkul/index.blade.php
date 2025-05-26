@@ -46,59 +46,67 @@
                             </form>
 
                             {{-- Jenis Filter --}}
-                            <form method="GET" action="{{ route('matkul.index') }}" id="filterForm" class="flex items-center gap-3">
+                            <form method="GET" action="{{ route('matkul.index') }}" id="filterForm"
+                                class="flex items-center gap-3">
                                 {{-- Preserve search query --}}
                                 @if (request('search'))
                                     <input type="hidden" name="search" value="{{ request('search') }}">
                                 @endif
-                                
+
                                 {{-- Filter Jenis --}}
                                 <div class="relative">
-                                    <button id="filterButton" type="button" 
+                                    <button id="filterButton" type="button"
                                         class="inline-flex items-center px-3 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                         <i class="ph ph-funnel mr-2 text-sm"></i>
                                         Filter Jenis
-                                        @if(request('jenis'))
+                                        @if (request('jenis'))
                                             <span class="ml-2 bg-blue-500 text-white px-1.5 py-0.5 rounded-full text-xs">
                                                 {{ is_array(request('jenis')) ? count(request('jenis')) : 1 }}
                                             </span>
                                         @endif
                                         <i class="ph ph-caret-down ml-1 text-xs"></i>
                                     </button>
-                                    
+
                                     {{-- Dropdown Filter --}}
-                                    <div id="filterDropdown" class="hidden absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                    <div id="filterDropdown"
+                                        class="hidden absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                         <div class="p-4">
                                             <h4 class="text-sm font-medium text-gray-900 mb-3">Pilih Jenis Mata Kuliah</h4>
                                             <div class="space-y-3">
                                                 <div class="flex items-center">
-                                                    <input type="checkbox" name="jenis[]" id="wajib" value="Wajib" 
+                                                    <input type="checkbox" name="jenis[]" id="wajib" value="Wajib"
                                                         {{ is_array(request('jenis')) && in_array('Wajib', request('jenis')) ? 'checked' : '' }}
                                                         class="jenis-filter w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
                                                     <label for="wajib" class="ml-3 flex items-center">
                                                         <span class="text-sm font-medium text-gray-900">Wajib</span>
-                                                        <span class="ml-2 text-xs font-medium text-blue-800 bg-blue-100 px-2 py-0.5 rounded">WAJIB</span>
+                                                        <span
+                                                            class="ml-2 text-xs font-medium text-blue-800 bg-blue-100 px-2 py-0.5 rounded">WAJIB</span>
                                                     </label>
                                                 </div>
                                                 <div class="flex items-center">
-                                                    <input type="checkbox" name="jenis[]" id="pilihan" value="Pilihan" 
+                                                    <input type="checkbox" name="jenis[]" id="pilihan" value="Pilihan"
                                                         {{ is_array(request('jenis')) && in_array('Pilihan', request('jenis')) ? 'checked' : '' }}
                                                         class="jenis-filter w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500">
                                                     <label for="pilihan" class="ml-3 flex items-center">
                                                         <span class="text-sm font-medium text-gray-900">Pilihan</span>
-                                                        <span class="ml-2 text-xs font-medium text-green-800 bg-green-100 px-2 py-0.5 rounded">PILIHAN</span>
+                                                        <span
+                                                            class="ml-2 text-xs font-medium text-green-800 bg-green-100 px-2 py-0.5 rounded">PILIHAN</span>
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="flex justify-between items-center mt-4 pt-3 border-t border-gray-200">
-                                                <button id="clearAll" type="button" class="text-sm text-gray-500 hover:text-gray-700">
+                                            <div
+                                                class="flex justify-between items-center mt-4 pt-3 border-t border-gray-200">
+                                                <button id="clearAll" type="button"
+                                                    class="text-sm text-gray-500 hover:text-gray-700">
                                                     Clear All
                                                 </button>
                                                 <div class="flex gap-2">
-                                                    <button type="button" onclick="closeFilter()" class="px-3 py-1.5 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
+                                                    <button type="button" onclick="closeFilter()"
+                                                        class="px-3 py-1.5 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50">
                                                         Cancel
                                                     </button>
-                                                    <button id="applyFilter" type="button" class="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+                                                    <button id="applyFilter" type="button"
+                                                        class="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
                                                         Apply
                                                     </button>
                                                 </div>
@@ -107,7 +115,7 @@
                                     </div>
                                 </div>
                             </form>
-                        </div>  
+                        </div>
 
                         {{-- Tombol Tambah Mata Kuliah --}}
                         <a href="{{ route('matkul.create') }}">
@@ -123,10 +131,11 @@
                             <div class="flex items-center">
                                 <i class="ph ph-info text-blue-500 mr-2"></i>
                                 <span class="text-blue-700 text-sm">
-                                    Menampilkan hasil pencarian untuk "<strong>{{ request('search') }}</strong>" 
+                                    Menampilkan hasil pencarian untuk "<strong>{{ request('search') }}</strong>"
                                     ({{ $matkul->total() ?? count($matkul) }} data ditemukan)
                                 </span>
-                                <a href="{{ route('matkul.index') }}" class="ml-2 text-blue-600 hover:text-blue-800 text-sm underline">
+                                <a href="{{ route('matkul.index') }}"
+                                    class="ml-2 text-blue-600 hover:text-blue-800 text-sm underline">
                                     Hapus Pencarian
                                 </a>
                             </div>
@@ -134,26 +143,27 @@
                     @endif
 
                     {{-- Active Filters Display --}}
-                    @if(request('jenis'))
+                    @if (request('jenis'))
                         <div class="flex items-center flex-wrap gap-2 w-full">
                             <span class="text-sm text-gray-600">Filter aktif:</span>
-                            @foreach((array)request('jenis') as $jenis)
+                            @foreach ((array) request('jenis') as $jenis)
                                 @php
                                     $jenisColors = [
                                         'Wajib' => 'bg-blue-100 text-blue-800',
-                                        'Pilihan' => 'bg-green-100 text-green-800'
+                                        'Pilihan' => 'bg-green-100 text-green-800',
                                     ];
                                 @endphp
-                                <span class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full {{ $jenisColors[$jenis] ?? 'bg-gray-100 text-gray-800' }}">
+                                <span
+                                    class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full {{ $jenisColors[$jenis] ?? 'bg-gray-100 text-gray-800' }}">
                                     {{ $jenis }}
-                                    <a href="{{ request()->fullUrlWithQuery(['jenis' => array_diff((array)request('jenis'), [$jenis])]) }}" 
-                                       class="ml-1.5 text-current hover:text-gray-600">
+                                    <a href="{{ request()->fullUrlWithQuery(['jenis' => array_diff((array) request('jenis'), [$jenis])]) }}"
+                                        class="ml-1.5 text-current hover:text-gray-600">
                                         <i class="ph ph-x text-xs"></i>
                                     </a>
                                 </span>
                             @endforeach
-                            <a href="{{ route('matkul.index', array_diff_key(request()->query(), ['jenis' => ''])) }}" 
-                               class="text-sm text-blue-600 hover:text-blue-800 underline">
+                            <a href="{{ route('matkul.index', array_diff_key(request()->query(), ['jenis' => ''])) }}"
+                                class="text-sm text-blue-600 hover:text-blue-800 underline">
                                 Hapus Semua
                             </a>
                         </div>
@@ -203,6 +213,19 @@
                                                         title="Edit">
                                                         <i class="ph ph-pencil-simple"></i>
                                                     </a>
+                                                    {{-- Button Hapus --}}
+                                                    <form action="{{ route('matkul.destroy', $m->id_matkul) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')"
+                                                        class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="inline-flex items-center justify-center w-8 h-8 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                                                            title="Hapus">
+                                                            <i class="ph ph-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 @endif
                                             </div>
                                         </td>
@@ -212,7 +235,7 @@
                         </table>
 
                         {{-- Pagination --}}
-                        @if(method_exists($matkul, 'links'))
+                        @if (method_exists($matkul, 'links'))
                             <div class="w-full">
                                 {{ $matkul->links() }}
                             </div>

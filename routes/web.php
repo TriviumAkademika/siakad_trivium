@@ -126,7 +126,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::post('/matkul', [MatkulController::class, 'store'])->name('matkul.store');
     Route::get('/matkul/{id}/edit', [MatkulController::class, 'edit'])->name('matkul.edit');
     Route::put('/matkul/{id}', [MatkulController::class, 'update'])->name('matkul.update');
-    // Route::delete('/matkul/{id}', [MatkulController::class, 'destroy'])->name('matkul.destroy');
+    Route::delete('/matkul/{id}', [MatkulController::class, 'destroy'])->name('matkul.destroy');
 
     // Tabel Kelas CRU
     Route::get('/kelas', [KelasController::class, 'index'])->name('kelas.index');
