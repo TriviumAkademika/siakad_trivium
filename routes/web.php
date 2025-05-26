@@ -63,9 +63,7 @@ Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
 });
 
 /// PERMISSION ROLE DOSEN, MAHASISWA
-Route::middleware(['auth', 'verified', 'role:dosen|mahasiswa'])->group(function () {
-    // Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai.index');
-});
+Route::middleware(['auth', 'verified', 'role:dosen|mahasiswa'])->group(function () {});
 
 /// PERMISSION ROLE ADMIN, MAHASISWA
 Route::middleware(['auth', 'verified', 'role:admin|mahasiswa'])->group(function () {
@@ -73,14 +71,7 @@ Route::middleware(['auth', 'verified', 'role:admin|mahasiswa'])->group(function 
 });
 
 /// PERMISSIONS ROLE ADMIN
-Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
-    // Rute Nilai Dosen
-    Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
-    
-    // Rute untuk mengedit nilai
-    Route::get('/nilai/{id_mahasiswa}/edit', [NilaiController::class, 'edit'])->name('nilai.edit');
-    Route::put('/nilai/{id_mahasiswa}', [NilaiController::class, 'update'])->name('nilai.update');
-    
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     // Tabel Mahasiswa CRU
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
     Route::get('/mahasiswa/{id}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
@@ -152,24 +143,25 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
 
 
 /// PERMISSION ROLE DOSEN
-Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
-
-});
+Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {});
 
 
 /// PERMISSION ROLE MAHASISWA
-Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
-    
-});
+Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {});
 
 
 
 Route::get('/nilai-mhs', [App\Http\Controllers\NilaiController::class, 'nilaiMhs'])->name('nilai-mhs');
 
-Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
-Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
-Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
-Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
+Route::get('/nilai-mhs', function () {
+    return view('nilai.nilai-mhs');
+});
+
+Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
+Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
+Route::resource('nilai', NilaiController::class);
 // Route::resource('users', UserController::class);
+Route::get('/nilai/update-nilai/{id_mahasiswa}/{id_matkul}', [App\Http\Controllers\NilaiController::class, 'updateNilaiForm'])->name('nilai.updateNilaiForm');
+Route::post('/nilai/update-nilai', [App\Http\Controllers\NilaiController::class, 'updateNilai'])->name('nilai.updateNilai');
 
 require __DIR__ . '/auth.php';
