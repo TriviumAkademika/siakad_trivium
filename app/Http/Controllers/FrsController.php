@@ -15,7 +15,7 @@ class FrsController extends Controller
         return view('frs.index', compact('frs'));
     }
 
-    z
+    
     public function store(Request $request)
     {
         $validatedData = $request->validate([
