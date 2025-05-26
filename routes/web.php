@@ -119,7 +119,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::post('/ruangan', [RuanganController::class, 'store'])->name('ruangan.store');
     Route::get('/ruangan/{id}/edit', [RuanganController::class, 'edit'])->name('ruangan.edit');
     Route::put('/ruangan/{id}', [RuanganController::class, 'update'])->name('ruangan.update');
-    // Route::delete('/ruangan/{id}', [RuanganController::class, 'destroy'])->name('ruangan.destroy');
+    Route::delete('/ruangan/{id}', [RuanganController::class, 'destroy'])->name('ruangan.destroy');
 
     // Tabel Mata Kuliah CRU
     Route::get('/matkul/create', [MatkulController::class, 'create'])->name('matkul.create');
