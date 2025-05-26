@@ -81,7 +81,7 @@
 
                     {{-- Tahun Masuk --}}
                     <div>
-                        <x-form.text-number label="Tahun Masuk" name="tahun_masuk" value="{{ old('tahun_masuk') }}" 
+                        <x-form.text-number label="Tahun Masuk" name="tahun_masuk" value="{{ old('tahun_masuk') }}" min="0"
                             placeholder="{{ date('Y') }}" />
                         @error('tahun_masuk')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>

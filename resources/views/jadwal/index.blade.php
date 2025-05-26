@@ -160,7 +160,7 @@
                                 @if ($prodiList->count() > 1 || auth()->user()->hasRole('admin'))
                                     <div class="relative">
                                         <select name="prodi" id="prodiFilter"
-                                            class="inline-flex items-center px-3 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            class="inline-flex items-center px-6 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             onchange="this.form.submit()">
                                             <option value="">
                                                 @if (auth()->user()->hasRole('dosen'))
@@ -274,7 +274,7 @@
                                     <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Waktu</th>
                                     <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Ruangan</th>
                                     @if (auth()->user()->hasRole('admin'))
-                                        <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Action</th>
+                                        <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
                                     @endif
                                 </tr>
                             </thead>

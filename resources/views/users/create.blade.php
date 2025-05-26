@@ -69,7 +69,7 @@
 
                 {{-- Form --}}
                 <form action="{{ route('users.store') }}" method="POST"
-                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4 bg-white">
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4 bg-putih">
                     @csrf
 
                     {{-- Role --}}
@@ -83,7 +83,8 @@
                                 class="w-full px-4 py-2 border-abu rounded-lg focus:outline-none focus:ring-1 focus:ring-biru-700 font-normal"
                                 required>
                                 <option value="">-- Pilih Role --</option>
-                                <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
+                                <option value="mahasiswa" {{ old('role') == 'mahasiswa' ? 'selected' : '' }}>Mahasiswa
+                                </option>
                                 <option value="dosen" {{ old('role') == 'dosen' ? 'selected' : '' }}>Dosen</option>
                                 <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                             </select>
@@ -95,12 +96,12 @@
 
                     {{-- Email --}}
                     <div>
-                        <div class="flex w-full">
+                        <div class="flex w-full items-start">
                             <label for="email" class="flex items-center w-1/4 text-base font-medium text-hitam">
                                 Email
                                 <span class="pl-1 text-error">*</span>
                             </label>
-                            <div class="w-full">
+                            <div class="flex flex-col w-full gap-y-1">
                                 <input type="email" name="email" id="email"
                                     class="w-full px-4 py-2 border-abu rounded-lg focus:outline-none focus:ring-1 focus:ring-biru-700 font-normal"
                                     value="{{ old('email') }}" placeholder="Masukkan alamat email" required>
@@ -116,14 +117,18 @@
 
                     {{-- Password --}}
                     <div>
-                        <div class="flex w-full">
+                        <div class="flex w-full items-start">
                             <label for="password" class="flex items-center w-1/4 text-base font-medium text-hitam">
                                 Password
                                 <span class="pl-1 text-error">*</span>
                             </label>
-                            <input type="password" name="password" id="password"
-                                class="w-full px-4 py-2 border-abu rounded-lg focus:outline-none focus:ring-1 focus:ring-biru-700 font-normal"
-                                placeholder="Minimal 6 karakter" required>
+                            <div class="flex flex-col w-full gap-y-1">
+                                <input type="password" name="password" id="password"
+                                    class="w-full px-4 py-2 border-abu rounded-lg focus:outline-none focus:ring-1 focus:ring-biru-700 font-normal"
+                                    placeholder="Minimal 6 karakter" required>
+                                {{-- Validasi minimal 6 karakter dan kosongkan jika tidak ingin mengubah --}}
+                                <p class="text-xs text-gray-500">Minimal 6 karakter</p>
+                            </div>
                         </div>
                         @error('password')
                             <p class="mt-1 ml-[25%] text-xs text-red-600">{{ $message }}</p>
@@ -169,8 +174,7 @@
                     <div id="mahasiswa-fields" class="{{ old('role') != 'mahasiswa' ? 'hidden' : '' }}">
                         <div>
                             <div class="flex w-full">
-                                <label for="id_mahasiswa"
-                                    class="flex items-center w-1/4 text-base font-medium text-hitam">
+                                <label for="id_mahasiswa" class="flex items-center w-1/4 text-base font-medium text-hitam">
                                     Pilih Mahasiswa
                                     <span class="pl-1 text-error">*</span>
                                 </label>
@@ -195,8 +199,7 @@
                     <div id="dosen-fields" class="{{ old('role') != 'dosen' ? 'hidden' : '' }}">
                         <div>
                             <div class="flex w-full">
-                                <label for="id_dosen"
-                                    class="flex items-center w-1/4 text-base font-medium text-hitam">
+                                <label for="id_dosen" class="flex items-center w-1/4 text-base font-medium text-hitam">
                                     Pilih Dosen
                                     <span class="pl-1 text-error">*</span>
                                 </label>
@@ -271,11 +274,11 @@
         function validateEmailDomain() {
             const role = roleSelect.value;
             const email = emailInput.value;
-            
+
             if (!role || !email) return;
 
             let expectedDomain = '';
-            switch(role) {
+            switch (role) {
                 case 'admin':
                     expectedDomain = '@trivium.ac.id';
                     break;
@@ -295,7 +298,7 @@
         }
 
         // Event listeners
-        roleSelect.addEventListener('change', function () {
+        roleSelect.addEventListener('change', function() {
             toggleFields(this.value);
             validateEmailDomain();
         });
@@ -304,7 +307,7 @@
         emailInput.addEventListener('blur', validateEmailDomain);
 
         // Initialize on page load
-        window.addEventListener('DOMContentLoaded', function () {
+        window.addEventListener('DOMContentLoaded', function() {
             toggleFields(roleSelect.value);
         });
     </script>

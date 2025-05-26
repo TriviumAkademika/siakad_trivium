@@ -94,6 +94,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
     // Tabel Dosen CU SHOW
@@ -109,6 +110,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::post('/waktu', [WaktuController::class, 'store'])->name('waktu.store');
     Route::get('/waktu/{id}/edit', [WaktuController::class, 'edit'])->name('waktu.edit');
     Route::put('/waktu/{id}', [WaktuController::class, 'update'])->name('waktu.update');
+    Route::delete('/waktu/{id}', [WaktuController::class, 'destroy'])->name('waktu.destroy');
 
     // Tabel Ruangan CRU
     Route::get('/ruangan', [RuanganController::class, 'index'])->name('ruangan.index');
@@ -116,12 +118,14 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::post('/ruangan', [RuanganController::class, 'store'])->name('ruangan.store');
     Route::get('/ruangan/{id}/edit', [RuanganController::class, 'edit'])->name('ruangan.edit');
     Route::put('/ruangan/{id}', [RuanganController::class, 'update'])->name('ruangan.update');
+    Route::delete('/ruangan/{id}', [RuanganController::class, 'destroy'])->name('ruangan.destroy');
 
     // Tabel Mata Kuliah CRU
     Route::get('/matkul/create', [MatkulController::class, 'create'])->name('matkul.create');
     Route::post('/matkul', [MatkulController::class, 'store'])->name('matkul.store');
     Route::get('/matkul/{id}/edit', [MatkulController::class, 'edit'])->name('matkul.edit');
     Route::put('/matkul/{id}', [MatkulController::class, 'update'])->name('matkul.update');
+    Route::delete('/matkul/{id}', [MatkulController::class, 'destroy'])->name('matkul.destroy');
 
     // Tabel Kelas CRU
     Route::get('/kelas', [KelasController::class, 'index'])->name('kelas.index');
@@ -129,12 +133,14 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::post('/kelas', [KelasController::class, 'store'])->name('kelas.store');
     Route::get('/kelas/{id}/edit', [KelasController::class, 'edit'])->name('kelas.edit');
     Route::put('/kelas/{id}', [KelasController::class, 'update'])->name('kelas.update');
+    Route::delete('/kelas/{id}', [KelasController::class, 'destroy'])->name('kelas.destroy');
 
     //Tabel Jadwal CRU
     Route::get('/jadwal/create', [JadwalController::class, 'create'])->name('jadwal.create');
     Route::post('/jadwal', [JadwalController::class, 'store'])->name('jadwal.store');
     Route::get('/jadwal/{id}/edit', [JadwalController::class, 'edit'])->name('jadwal.edit');
     Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
+    Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
 
     // Tabel FRS CRU - Admin bisa membuat, edit, dan delete FRS
     Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');

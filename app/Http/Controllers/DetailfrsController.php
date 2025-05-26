@@ -107,7 +107,7 @@ class DetailFrsController extends Controller
             $dataInsert[] = [
                 'id_frs' => $id_frs,
                 'id_jadwal' => $id_jadwal,
-                'status' => true,
+                'status' => false, // Default status tidak diterima
             ];
         }
 
