@@ -49,7 +49,10 @@
             Matakuliah
           </div>
           <div class="flex items-center justify-center flex-none w-60 h-6 p-2">
-            Nilai
+            UTS
+          </div>
+          <div class="flex items-center justify-center flex-none w-60 h-6 p-2">
+            UAS
           </div>
         </div>
         {{-- sub header --}}
@@ -57,11 +60,13 @@
           <div class="flex-none w-32 h-6 p-2"></div> {{--kode mk--}}
           <div class="flex-grow h-6 p-2"></div> {{--mk--}}
           <div class="flex w-60 h-6">
-            <div class="flex items-center justify-center w-1/2 border-r border-white">
+            <div class="flex items-center justify-center w-full">
               Nilai Huruf
             </div>
-            <div class="flex items-center justify-center w-1/2">
-              Nilai Numerik
+          </div>
+          <div class="flex w-60 h-6">
+            <div class="flex items-center justify-center w-full">
+              Nilai Huruf
             </div>
           </div>
         </div>
@@ -74,16 +79,14 @@
           <div class="flex items-center justify-center flex-none w-32 h-6 p-2">
             {{ $nilai->matkul->id_matkul ?? '-' }}
           </div>
-          <div class="flex items-center justify-center flex-grow h-6 p-2">
+          <div class="flex items-center justify-start flex-grow h-6 p-2">
             {{ $nilai->matkul->nama_matkul ?? '-' }}
           </div>
-          <div class="flex w-60 h-6">
-            <div class="flex items-center justify-center w-1/2">
-              {{ $nilai->nilai }}
-            </div>
-            <div class="flex items-center justify-center w-1/2">
-              {{-- Mapping nilai huruf ke numerik jika ingin --}}
-            </div>
+          <div class="flex items-center justify-center flex-none w-60 h-6 p-2">
+            {{ $nilai->jenis_nilai === 'UTS' ? $nilai->nilai : '-' }}
+          </div>
+          <div class="flex items-center justify-center flex-none w-60 h-6 p-2">
+            {{ $nilai->jenis_nilai === 'UAS' ? $nilai->nilai : '-' }}
           </div>
         </div>
         @endforeach
