@@ -81,7 +81,7 @@
 
                     {{-- NRP --}}
                     <div>
-                        <x-form.text-number label="NRP" name="nrp" value="{{ old('nrp', $mahasiswa->nrp) }}" placeholder="Contoh: 5025221234" />
+                        <x-form.text-number label="NRP" name="nrp" value="{{ old('nrp', $mahasiswa->nrp) }}" min="0" placeholder="Contoh: 5025221234" />
                         @error('nrp')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror
@@ -98,7 +98,7 @@
 
                     {{-- Semester --}}
                     <div>
-                        <x-form.text-number label="Semester" name="semester" value="{{ old('semester', $mahasiswa->semester) }}" placeholder="Contoh: 1" />
+                        <x-form.text-number label="Semester" name="semester" value="{{ old('semester', $mahasiswa->semester) }}" min="1" placeholder="Contoh: 1" />
                         @error('semester')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror

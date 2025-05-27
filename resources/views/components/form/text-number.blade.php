@@ -20,5 +20,5 @@
     </label>
     <input type="{{ $type }}" name="{{ $name }}" id="{{ $name }}" value="{{ old($name, $value) }}" placeholder="{{ $placeholder }}"
         class="w-full px-4 py-2 border-abu focus:outline-none focus:ring-1 focus:ring-biru-700 rounded-lg font-normal"
-        {{ $isRequired }}>
+        {{ $isRequired }} {{ $attributes }}>
 </div>

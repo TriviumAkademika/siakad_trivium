@@ -74,6 +74,16 @@ class UserSeeder extends Seeder
             $user->assignRole('dosen');
         }
 
+        $dsn3 = Dosen::find(15);
+        if ($dsn3) {
+            $user = User::create([
+                'email' => 'adam@lecture.trivium.ac.id',
+                'password' => Hash::make('adam123'),
+                'id_dosen' => $dsn3->id_dosen,
+            ]);
+            $user->assignRole('dosen');
+        }
+
         // ==== ADMIN ====
         $admin1 = User::create([
             'email' => 'adminnisa@trivium.ac.id',

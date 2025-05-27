@@ -196,17 +196,18 @@
                                                         <i class="ph ph-pencil-simple"></i>
                                                     </a>
                                                     {{-- Button Delete --}}
-                                                    {{-- <form action="{{ route('kelas.destroy', $k->id_kelas) }}" method="POST"
-                                                    class="inline-block"
-                                                    onsubmit="return confirm('Anda yakin ingin menghapus data ini?');">
+                                                    <form action="{{ route('kelas.destroy', $k->id_kelas) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus kelas ini?')"
+                                                    class="inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
-                                                        class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600"
+                                                        class="inline-flex items-center justify-center w-8 h-8 bg-red-600 text-white text-sm rounded hover:bg-red-700"
                                                         title="Hapus">
-                                                        <i class="ph ph-trash-simple"></i>
+                                                        <i class="ph ph-trash"></i>
                                                     </button>
-                                                </form> --}}
+                                                </form>
                                                 </div>
                                             </td>
                                         @endif

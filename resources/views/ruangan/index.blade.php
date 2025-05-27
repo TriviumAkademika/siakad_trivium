@@ -46,10 +46,11 @@
                             <div class="flex items-center">
                                 <i class="ph ph-info text-blue-500 mr-2"></i>
                                 <span class="text-blue-700 text-sm">
-                                    Menampilkan hasil pencarian untuk "<strong>{{ request('search') }}</strong>" 
+                                    Menampilkan hasil pencarian untuk "<strong>{{ request('search') }}</strong>"
                                     ({{ $ruangan->total() }} data ditemukan)
                                 </span>
-                                <a href="{{ route('ruangan.index') }}" class="ml-2 text-blue-600 hover:text-blue-800 text-sm underline">
+                                <a href="{{ route('ruangan.index') }}"
+                                    class="ml-2 text-blue-600 hover:text-blue-800 text-sm underline">
                                     Hapus filter
                                 </a>
                             </div>
@@ -89,24 +90,24 @@
                                                     </a>
 
                                                     {{-- Button Delete --}}
-                                                    {{-- <form action="{{ route('ruangan.destroy', $room->id_ruangan) }}" method="POST"
-                                                        class="inline-block"
+                                                    <form action="{{ route('ruangan.destroy', $room->id_ruangan) }}"
+                                                        method="POST" class="inline-block"
                                                         onsubmit="return confirm('Anda yakin ingin menghapus ruangan {{ $room->nama_ruangan }}?');">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                            class="inline-flex items-center justify-center w-8 h-8 bg-merah-500 text-white text-sm rounded hover:bg-merah-600 transition-colors duration-200"
+                                                            class="inline-flex items-center justify-center w-8 h-8 bg-red-600 text-white text-sm rounded hover:bg-red-700"
                                                             title="Hapus">
-                                                            <i class="ph ph-trash-simple"></i>
+                                                            <i class="ph ph-trash"></i>
                                                         </button>
-                                                    </form> --}}
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
-                            
+
                             {{-- Pagination --}}
                             <div class="w-full mt-4">
                                 {{ $ruangan->links() }}

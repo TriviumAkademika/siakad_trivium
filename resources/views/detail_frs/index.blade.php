@@ -25,14 +25,11 @@
                         <x-form.card-information label="Total SKS" :value="$frs->total_sks ?? 0" />
                     </section>
 
-                    {{-- Modal FRS Component --}}
-                    <x-modal.frs :frs="$frs" :jadwals="$jadwals" :formAction="route('detail-frs.store')" />
-
-                    {{-- Total SKS --}}
-                    {{-- <div class="w-full flex justify-end mb-2">
-                        <span class="font-semibold">Total SKS: </span>
-                        <span class="ml-2">{{ $frs->total_sks ?? 0 }}</span>
-                    </div> --}}
+                    {{-- Modal FRS Component - Hanya tampil untuk Mahasiswa --}}
+                    @if (auth()->user()->hasRole('mahasiswa'))
+                        {{-- Modal FRS Component --}}
+                        <x-modal.frs :frs="$frs" :jadwals="$jadwals" :formAction="route('detail-frs.store')" />
+                    @endif
 
                     {{-- Tabel Data Detail FRS --}}
                     <table class="min-w-full divide-y divide-hitam bg-putih shadow rounded-lg">
@@ -43,8 +40,16 @@
                                 <th class="w-40 px-4 py-3 text-sm font-semibold text-center text-hitam">Dosen</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Ruangan</th>
                                 <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Waktu</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Status</th>
-                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Aksi</th>
+                                {{-- Status Dropdown hanya untuk Dosen --}}
+                                @if (auth()->user()->hasRole('dosen'))
+                                    <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Status Control</th>
+                                @endif
+
+                                {{-- Aksi hanya untuk Mahasiswa --}}
+                                @if (auth()->user()->hasRole('mahasiswa'))
+                                    <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Status</th>
+                                    <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="bg-putih divide-y divide-gray-100">
@@ -60,19 +65,42 @@
                                         <p>{{ substr($detail->jadwal->waktu->jam_mulai, 0, 5) }} -
                                             {{ substr($detail->jadwal->waktu->jam_selesai, 0, 5) }}</p>
                                     </x-table.table-td>
-                                    {{-- Status Dropdown Component --}}
-                                    <x-table.table-td class="text-center">
-                                        <x-form.status-frs :detailId="$detail->id_detail_frs" :currentStatus="$detail->status" />
-                                    </x-table.table-td>
-                                    {{-- Button Delete --}}
-                                    <x-table.table-td class="text-center">
-                                        <x-button.delete :deleteId="$detail->id_detail_frs" :deleteRoute="route('detail-frs.destroy', $detail->id_detail_frs)" :itemName="$detail->jadwal->matkul->nama_matkul"
-                                            title="Hapus Jadwal dari FRS?" />
-                                    </x-table.table-td>
+
+                                    {{-- Status Dropdown Component - Hanya untuk Dosen --}}
+                                    @if (auth()->user()->hasRole('dosen'))
+                                        <x-table.table-td class="text-center">
+                                            <x-form.status-frs :detailId="$detail->id_detail_frs" :currentStatus="$detail->status" />
+                                        </x-table.table-td>
+                                    @endif
+
+                                    {{-- Status Text - Untuk semua role --}}
+
+
+                                    {{-- Button Delete - Hanya untuk Mahasiswa --}}
+                                    @if (auth()->user()->hasRole('mahasiswa'))
+                                        <x-table.table-td class="text-center">
+                                            @if ($detail->status)
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    Disetujui
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    Menunggu Persetujuan
+                                                </span>
+                                            @endif
+                                        </x-table.table-td>
+                                        <x-table.table-td class="text-center">
+                                            <x-button.delete :deleteId="$detail->id_detail_frs" :deleteRoute="route('detail-frs.destroy', $detail->id_detail_frs)" :itemName="$detail->jadwal->matkul->nama_matkul"
+                                                title="Hapus Jadwal dari FRS?" />
+                                        </x-table.table-td>
+                                    @endif
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center py-4 text-gray-400">Belum ada FRS diambil.</td>
+                                    <td colspan="{{ auth()->user()->hasRole('dosen') ? '8' : (auth()->user()->hasRole('mahasiswa') ? '7' : '6') }}"
+                                        class="text-center py-4 text-gray-400">Belum ada FRS diambil.</td>
                                 </tr>
                             @endforelse
                         </tbody>

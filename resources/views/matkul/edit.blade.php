@@ -33,12 +33,12 @@
                         :selected="old('jenis', $matkul->jenis)"/>
 
                     {{-- SKS --}}
-                    <x-form.text-number label="SKS" name="sks" 
+                    <x-form.text-number label="SKS" name="sks" min="0"
                         value="{{ old('sks', $matkul->sks) }}" 
                         placeholder="Contoh: 2, 3, 4"/>
 
                     {{-- Kapasitas Kelas --}}
-                    <x-form.text-number label="Kapasitas Kelas" name="kapasitas_kelas" 
+                    <x-form.text-number label="Kapasitas Kelas" name="kapasitas_kelas" min="0"
                         value="{{ old('kapasitas_kelas', $matkul->kapasitas_kelas) }}" 
                         placeholder="Contoh: 30, 35, 40"/>
 
@@ -48,7 +48,7 @@
                             Batal
                         </x-button.cancel>
                         <x-button.submit icon="ph ph-floppy-disk">
-                            Update
+                            Perbarui
                         </x-button.submit>
                     </div>
                 </form>

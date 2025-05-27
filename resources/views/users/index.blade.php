@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('title', 'User')
+@section('title', 'Pengguna')
 
 @section('content')
     <div class="flex w-full grow">
@@ -226,6 +226,9 @@
                                     <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Email</th>
                                     <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Role</th>
                                     <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Nama User</th>
+                                    @if (auth()->user()->hasRole('admin'))
+                                        <th class="px-4 py-3 text-center text-sm font-medium text-hitam">Aksi</th>
+                                    @endif
                                 </tr>
                             </thead>
 
@@ -257,6 +260,29 @@
                                                 -
                                             @endif
                                         </x-table.table-td>
+                                        <td class="p-2 text-sm text-hitam">
+                                            <div class="flex justify-center items-center space-x-1">
+                                                {{-- Button Edit --}}
+                                                <a href="{{ route('users.edit', $user->id_user) }}"
+                                                    class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700"
+                                                    title="Edit">
+                                                    <i class="ph ph-pencil-simple"></i>
+                                                </a>
+                                                {{-- Button Hapus --}}
+                                                <form action="{{ route('user.destroy', $user->id_user) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')"
+                                                    class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="inline-flex items-center justify-center w-8 h-8 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                                                        title="Hapus">
+                                                        <i class="ph ph-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -397,7 +423,7 @@
 
                     // Check search criteria
                     const matchesSearch = currentSearchTerm === '' || searchData.includes(
-                    currentSearchTerm);
+                        currentSearchTerm);
 
                     // Check role filter
                     const matchesRole = currentActiveFilters.length === 0 || currentActiveFilters.includes(

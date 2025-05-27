@@ -72,7 +72,7 @@
 
                     {{-- Nama Dosen --}}
                     <div>
-                        <x-form.text-field label="Nama Dosen" name="nama_dosen" value="{{ old('nama_dosen') }}" placeholder="Masukkan nama lengkap dosen" />
+                        <x-form.text-field label="Nama Dosen" name="nama_dosen" value="{{ old('nama_dosen') }}" placeholder="Masukkan nama lengkap tanpa gelar" />
                         @error('nama_dosen')
                             <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                         @enderror

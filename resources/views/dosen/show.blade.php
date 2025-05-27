@@ -17,7 +17,7 @@
             {{-- Content --}}
             <div class="flex flex-col px-6 pb-6">
                 {{-- Header dengan tombol kembali --}}
-                <div class="flex items-center justify-between mb-6">
+                {{-- <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-4">
                         <a href="{{ route('dosen.index') }}" 
                            class="inline-flex items-center justify-center w-10 h-10 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors">
@@ -25,7 +25,7 @@
                         </a>
                         <h2 class="text-2xl font-semibold text-hitam">Detail Dosen</h2>
                     </div>
-                </div>
+                </div> --}}
 
                 {{-- Card Detail Dosen --}}
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -41,14 +41,14 @@
                                     <p class="text-gray-600">NIP: {{ $dosen->nip }}</p>
                                 </div>
                             </div>
-                            
+
                             {{-- Status Badge --}}
-                            <span class="px-3 py-1 text-sm font-medium rounded-full
-                                @if($dosen->status == 'AKTIF') bg-green-100 text-green-800
+                            <span
+                                class="px-3 py-1 text-sm font-medium rounded-full
+                                @if ($dosen->status == 'AKTIF') bg-green-100 text-green-800
                                 @elseif($dosen->status == 'CUTI') bg-yellow-100 text-yellow-800
                                 @elseif($dosen->status == 'PENSIUN') bg-blue-100 text-blue-800
-                                @else bg-red-100 text-red-800
-                                @endif">
+                                @else bg-red-100 text-red-800 @endif">
                                 {{ $dosen->status }}
                             </span>
                         </div>
@@ -62,7 +62,7 @@
                                 <h4 class="text-lg font-semibold text-hitam border-b border-gray-200 pb-2">
                                     Informasi Personal
                                 </h4>
-                                
+
                                 <div class="space-y-3">
                                     <div class="flex items-start gap-3">
                                         <div class="w-6 h-6 flex items-center justify-center mt-0.5">
@@ -101,7 +101,7 @@
                                 <h4 class="text-lg font-semibold text-hitam border-b border-gray-200 pb-2">
                                     Informasi Alamat & Status
                                 </h4>
-                                
+
                                 <div class="space-y-3">
                                     <div class="flex items-start gap-3">
                                         <div class="w-6 h-6 flex items-center justify-center mt-0.5">
@@ -119,12 +119,12 @@
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700">Status</label>
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium
-                                                @if($dosen->status == 'AKTIF') bg-green-100 text-green-800
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium
+                                                @if ($dosen->status == 'AKTIF') bg-green-100 text-green-800
                                                 @elseif($dosen->status == 'CUTI') bg-yellow-100 text-yellow-800
                                                 @elseif($dosen->status == 'PENSIUN') bg-blue-100 text-blue-800
-                                                @else bg-red-100 text-red-800
-                                                @endif">
+                                                @else bg-red-100 text-red-800 @endif">
                                                 {{ $dosen->status }}
                                             </span>
                                         </div>
@@ -140,19 +140,17 @@
                                     <i class="ph ph-info mr-1"></i>
                                     Data dosen dapat diubah melalui tombol edit di samping
                                 </div>
-                                
+
                                 <div class="flex gap-2">
-                                    <a href="{{ route('dosen.index') }}" 
-                                       class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-biru-500">
+                                    <a href="{{ route('dosen.index') }}"
+                                        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-biru-500">
                                         <i class="ph ph-list mr-2"></i>
                                         Kembali ke Daftar
                                     </a>
-                                    
-                                    <a href="{{ route('dosen.edit', $dosen->id_dosen) }}"
-                                       class="inline-flex items-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-biru-600 hover:bg-biru-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-biru-500">
-                                        <i class="ph ph-pencil-simple mr-2"></i>
+                                    <x-button.submit type="link" href="{{ route('dosen.edit', $dosen->id_dosen) }}"
+                                        icon="ph ph-pencil-simple">
                                         Edit Dosen
-                                    </a>
+                                    </x-button.submit>
                                 </div>
                             </div>
                         </div>

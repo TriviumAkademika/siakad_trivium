@@ -7,23 +7,14 @@
         {{-- Sidebar --}}
         @include('components.sidebar')
         <div class="flex flex-col w-full bg-putih">
-            {{-- Header --}}
-            {{-- @include('components.header') --}}
+            <h2 class="p-6 text-2xl text-hitam">Edit Jadwal</h2>
 
             {{-- Toast Notification --}}
             <x-notification.toast-notification />
 
-            <div class="px-6 pb-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl text-hitam">Edit Jadwal</h2>
-                    <div class="flex items-center text-sm text-gray-600">
-                        <i class="ph ph-calendar mr-2"></i>
-                        <span>ID: {{ $jadwal->id_jadwal }}</span>
-                    </div>
-                </div>
-                
+            <div class="px-6 pb-6">               
                 {{-- Current Schedule Info --}}
-                <div class="bg-gray-50 border border-gray-200 rounded-md p-4 mb-6">
+                {{-- <div class="bg-gray-50 border border-gray-200 rounded-md p-4 mb-6">
                     <h3 class="text-sm font-medium text-gray-900 mb-3">Jadwal Saat Ini:</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                         <div>
@@ -43,7 +34,7 @@
                             <span class="font-medium ml-1">{{ $jadwal->waktu->hari }}, {{ substr($jadwal->waktu->jam_mulai, 0, 5) }}-{{ substr($jadwal->waktu->jam_selesai, 0, 5) }}</span>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 
                 {{-- Form --}}
                 <form action="{{ route('jadwal.update', $jadwal->id_jadwal) }}" method="POST" id="jadwalEditForm"
