@@ -55,6 +55,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Route untuk FRS (Form Rencana Studi)
     Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
+    Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
     
     // Hanya mahasiswa yang bisa membuat FRS
     Route::middleware(['role:mahasiswa'])->group(function() {
@@ -209,6 +210,7 @@ Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
     Route::get('/nilai-mahasiswa', [NilaiController::class, 'nilaiMhs'])->name('nilai-mahasiswa');
     
     // Detail FRS
+    Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
     Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
     Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
     Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
