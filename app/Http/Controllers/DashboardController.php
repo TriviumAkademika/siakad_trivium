@@ -66,7 +66,7 @@ class DashboardController extends Controller
     public function show(string $id)
     {
         $mahasiswa = Mahasiswa::find($id);
-        return view('pages.dashboard-mahasiswa', compact('mahasiswa'));
+        return view('dashboard', compact('mahasiswa'));
     }
 
     /**
