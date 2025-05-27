@@ -1,4 +1,3 @@
-{{-- resources/views/components/jadwal-hari.blade.php --}}
 @props(['hari', 'mataKuliah'])
 
 <div class="flex flex-col p-4 rounded-2xl space-y-2 bg-brand-50">

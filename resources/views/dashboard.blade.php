@@ -34,37 +34,51 @@
                             <h3 class="text-xl text-hitam">Jadwal Kuliah</h3>
                             <hr class="border-abu w-full">
                             <div class="flex flex-col w-full rounded-2xl space-y-2">
-                                {{-- Card Jadwal Kuliah per Hari --}}
-                                {{-- Senin --}}
-                                <x-jadwal-hari hari="Senin" :mataKuliah="[
-                                    [
-                                        'nama' => 'Workshop Desain Pengalaman Pengguna',
-                                        'dosen' => ['Desy Intan Permatasari', 'Nailussa’ada'],
-                                        'ruangan' => 'C 106',
-                                        'waktu' => '09:40-12.10',
-                                    ],
-                                    [
-                                        'nama' => 'Workshop Pemrograman Perangkat Bergerak',
-                                        'dosen' => ['Prasetyo Wibowo', 'Fadilah Fahrul Hardiansyah'],
-                                        'ruangan' => 'C 206',
-                                        'waktu' => '13:00 - 15:30',
-                                    ],
-                                ]" />
-                                {{-- Selasa --}}
-                                <x-jadwal-hari hari="Selasa" :mataKuliah="[
-                                    [
-                                        'nama' => 'Workshop Pemrograman Framework',
-                                        'dosen' => ['Yanuar Risah Prayogi'],
-                                        'ruangan' => 'C 303',
-                                        'waktu' => '10:30-13.50',
-                                    ],
-                                    [
-                                        'nama' => 'Workshop Administrasi Jaringan',
-                                        'dosen' => ['Idris Winarno'],
-                                        'ruangan' => 'C 307',
-                                        'waktu' => '13:50 - 15:30',
-                                    ],
-                                ]" />
+                                @if (auth()->user()->role === 'dosen')
+                                    {{-- Card Jadwal Kuliah Statis --}}
+                                    <div class="flex flex-col items-center p-8 rounded-2xl space-y-2 bg-brand-50">
+                                        <i class="ph ph-calendar-x text-6xl text-hitam"></i>
+                                        <h3 class="text-lg font-medium text-gray-900">
+                                            Belum ada jadwal mengajar
+                                        </h3>
+                                        <p class="text-hitam">
+                                            Anda belum memiliki jadwal mengajar yang terdaftar.
+                                        </p>
+                                    </div>
+                                @endif
+                                @if (auth()->user()->role === 'mahasiswa')
+                                    {{-- Card Jadwal Kuliah Statis --}}
+                                    {{-- Senin --}}
+                                    <div class="flex flex-col p-4 rounded-2xl space-y-2 bg-brand-50">
+                                        <h4 class="text-base text-hitam font-semibold">Senin</h4>
+                                        {{-- Mata Kuliah 1 --}}
+                                        <div class="flex flex-row justify-between">
+                                            <div class="flex flex-col pl-4 border-biru">
+                                                <h4 class="text-base text-hitam">Workshop Desain Pengalaman Pengguna</h4>
+                                                <p class="text-xs text-hitam">Desy Intan Permatasari</p>
+                                            </div>
+                                            <div
+                                                class="flex flex-col w-24 p-2 rounded-lg items-center justify-center bg-brand-200">
+                                                <p class="text-xs text-hitam">C106</p>
+                                                <p class="text-xs text-hitam">09:40-12.10</p>
+                                            </div>
+                                        </div>
+                                        {{-- Mata Kuliah 2 --}}
+                                        <div class="flex flex-row justify-between">
+                                            <div class="flex flex-col pl-4 border-biru">
+                                                <h4 class="text-base text-hitam">Workshop Pemrograman Perangkat Bergerak
+                                                </h4>
+                                                <p class="text-xs text-hitam">Prasetyo Wibowo</p>
+                                                <p class="text-xs text-hitam">Fadilah Fahrul Hardiansyah</p>
+                                            </div>
+                                            <div
+                                                class="flex flex-col w-24 p-2 rounded-lg items-center justify-center bg-brand-200">
+                                                <p class="text-xs text-hitam">C206</p>
+                                                <p class="text-xs text-hitam">13:00 - 15:30</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
