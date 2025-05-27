@@ -10,7 +10,7 @@
         <div class="flex flex-col w-full bg-putih">
             {{-- Profil User di Header --}}
             @include('components.header')
-            {{-- Content Mahasiswa dan Dosen --}}
+            {{-- CONTENT MAHASISWA DAN DOSEN --}}
             @if (auth()->user()->role === 'mahasiswa|dosen')
                 <div class="flex flex-row px-6 pb-6 space-x-6">
 
@@ -200,55 +200,66 @@
                 </div>
             @endif
 
-
-            {{-- Content admin --}}
+            {{-- CONTENT ADMIN --}}
             @if (auth()->user()->role === 'admin')
                 <div class="flex flex-col px-6 pb-6 space-y-6">
 
                     {{-- Toast Notification --}}
                     <x-notification.toast-notification />
 
-                    {{-- Stastistik --}}
-                    <div class="flex flex-col space-y-4">
-                        {{-- <h3 class="text-xl text-hitam font-medium">Statistik Akademik</h3> --}}
-                        <div class="flex">
-                            {{-- Card User --}}
-                            <x-card.stat-card title="Total User" value="{{ $totalUser }}" description="User Aktif" />
+                    {{-- Stastistik Pengguna --}}
+                    <div class="flex flex-col space-y-6">
+                        {{-- Header --}}
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-2xl text-hitam font-semibold">Statistik Pengguna</h3>
+                            <div class="text-sm text-gray-500">Data terkini</div>
                         </div>
-                        <div class="flex flex-row space-x-4">
-                            {{-- Card Mahasiswa --}}
-                            <x-card.stat-card title="Total Mahasiswa" value="{{ $totalMahasiswa }}"
-                                description="Mahasiswa Aktif" />
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                            <!-- Card User -->
+                            <x-card.stat-card title="Total User" value="{{ $totalUser }}" description="User Aktif"
+                                variant="gradient" />
 
-                            {{-- Card Dosen --}}
-                            <x-card.stat-card title="Total Dosen" value="{{ $totalDosen }}" description="Dosen Aktif" />
+                            <!-- Card Mahasiswa -->
+                            <x-card.stat-card title="Total Mahasiswa" value="{{ $totalMahasiswa }}"
+                                description="Mahasiswa Aktif" variant="gradient" />
+
+                            <!-- Card Dosen -->
+                            <x-card.stat-card title="Total Dosen" value="{{ $totalDosen }}" description="Dosen Aktif"
+                                variant="gradient" />
                         </div>
                     </div>
-                    {{-- Stastistik --}}
-                    <div class="flex flex-col space-y-4">
-                        {{-- <h3 class="text-xl text-hitam font-medium">Statistik Akademik</h3> --}}
-                        <div class="flex flex-row space-x-4">
-                            
+                    {{-- Stastistik Pelengkap --}}
+                    <div class="flex flex-col space-y-6">
+                        {{-- Header --}}
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-2xl text-hitam font-semibold">Statistik Akademik</h3>
+                            <div class="text-sm text-gray-500">Data terkini</div>
+                        </div>
+
+                        {{-- Cards Grid - Responsive Layout --}}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6">
+
                             {{-- Card Jadwal --}}
                             <x-card.stat-card title="Total Jadwal" value="{{ $totalJadwal }}"
-                                description="Perkuliahan Terjadwal" />
-                            
+                                description="Perkuliahan Terjadwal" statusColor="blue" status="Aktif" />
+
                             {{-- Card Mata Kuliah --}}
                             <x-card.stat-card title="Total Mata Kuliah" value="{{ $totalMataKuliah }}"
-                                description="Mata Kuliah Saat Ini" />
+                                description="Mata Kuliah Saat Ini" variant="default" statusColor="green"
+                                status="Tersedia" />
 
                             {{-- Card Kelas --}}
-                            <x-card.stat-card title="Total Kelas" value="{{ $totalKelas }}"
-                                description="Kelas Aktif" />
+                            <x-card.stat-card title="Total Kelas" value="{{ $totalKelas }}" description="Kelas Aktif"
+                                variant="default" statusColor="purple" status="Berjalan" />
 
                             {{-- Card Ruangan --}}
                             <x-card.stat-card title="Total Ruangan" value="{{ $totalRuangan }}"
-                                description="Ruangan Tersedia" />
+                                description="Ruangan Tersedia" statusColor="indigo" status="Siap" />
 
                             {{-- Card Waktu --}}
                             <x-card.stat-card title="Total Waktu" value="{{ $totalWaktu }}"
-                                description="Jam Perkuliah" />
-
+                                description="Jam Perkuliahan" variant="default" statusColor="yellow"
+                                status="Terjadwal" />
                         </div>
                     </div>
                 </div>
