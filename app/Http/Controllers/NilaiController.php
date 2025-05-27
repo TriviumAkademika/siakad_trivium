@@ -15,25 +15,52 @@ class NilaiController extends Controller
      */
     public function index(Request $request)
     {
+        $user = auth()->user();
         $id_matkul = $request->get('id_matkul');
-        $jadwals = Jadwal::with('matkul')->get();
-        $matkuls = Matkul::all();
-
-        // Ambil mahasiswa yang mengambil FRS dan detail_frs pada matkul ini
-        $mahasiswa = collect(); // default kosong
+        
+        // Ambil data dosen yang login
+        $dosen = $user->dosen;
+        
+        if (!$dosen) {
+            return redirect()->back()->with('error', 'Hanya dosen yang dapat mengakses halaman ini');
+        }
+        
+        // Ambil daftar matakuliah yang diajar oleh dosen ini
+        $matkuls = Matkul::whereHas('jadwal', function($q) use ($dosen) {
+            $q->where('id_dosen', $dosen->id_dosen)
+              ->orWhere('id_dosen_2', $dosen->id_dosen);
+        })->get();
+        
+        // Jika ada id_matkul yang dipilih, validasi apakah dosen berhak mengakses matkul tersebut
+        $mahasiswa = collect();
         if ($id_matkul) {
-            $mahasiswa = Mahasiswa::whereHas('frs.detailFrs.jadwal', function($q) use ($id_matkul) {
-                $q->where('id_matkul', $id_matkul);
+            $isValidMatkul = $matkuls->contains('id_matkul', $id_matkul);
+            
+            if (!$isValidMatkul) {
+                return redirect()->route('nilai-dosen')
+                    ->with('error', 'Anda tidak memiliki akses ke matakuliah tersebut');
+            }
+            
+            // Ambil mahasiswa yang mengambil matakuliah ini
+            $mahasiswa = Mahasiswa::whereHas('frs.detailFrs.jadwal', function($q) use ($id_matkul, $dosen) {
+                $q->where('id_matkul', $id_matkul)
+                  ->where(function($query) use ($dosen) {
+                      $query->where('id_dosen', $dosen->id_dosen)
+                            ->orWhere('id_dosen_2', $dosen->id_dosen);
+                  });
             })->with(['nilai' => function($query) use ($id_matkul) {
-                // Load nilai hanya untuk matkul yang sedang dipilih
                 $query->where('matakuliah_id', $id_matkul);
             }])->get();
             
-            // Debug: Tampilkan data yang diambil
             \Log::info('Data mahasiswa dengan nilai:', ['data' => $mahasiswa->toArray()]);
         }
-
-        return view('nilai.nilai-dosen', compact('jadwals', 'id_matkul', 'matkuls', 'mahasiswa'));
+        
+        return view('nilai.nilai-dosen', [
+            'matkuls' => $matkuls,
+            'id_matkul' => $id_matkul,
+            'mahasiswa' => $mahasiswa,
+            'dosen' => $dosen
+        ]);
     }
 
     /**
@@ -199,93 +226,62 @@ class NilaiController extends Controller
 
     public function nilaiMhs(Request $request)
     {
-        // Initialize groupedNilai as an empty array at the start
-        $groupedNilai = [];
+        // Initialize empty collection
+        $nilaiList = collect();
         
         // Get authenticated user and student data
         $user = auth()->user();
         $mahasiswa = $user->mahasiswa;
         
-        // Get filter parameters
+        // Get search parameter
         $search = $request->input('search');
-        $tahunAjaran = $request->input('tahun_ajaran', date('Y') . '/' . (date('Y') + 1));
         
         if ($mahasiswa) {
-            // Get courses taken by the student through FRS
-            $query = \App\Models\Frs::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
-                ->with(['detailFrs.jadwal.matkul', 'detailFrs.nilai' => function($q) use ($mahasiswa) {
-                    $q->where('mahasiswa_id', $mahasiswa->id_mahasiswa);
-                }])
-                ->where('tahun_ajaran', $tahunAjaran);
-            
-            // Apply search filter if provided
-            if ($search) {
-                $query->whereHas('detailFrs.jadwal.matkul', function($q) use ($search) {
-                    $q->where('nama_matkul', 'like', '%' . $search . '%')
-                      ->orWhere('kode_matkul', 'like', '%' . $search . '%');
-                });
-            }
-            
-            $frsList = $query->get();
-            
-            // Process the data for the view
+            // Get all FRS data for the student with proper relations
+            $frsList = \App\Models\Frs::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
+                ->with(['detailFrs.jadwal.matkul'])
+                ->get();
+
+            // Get all nilai data for the student
+            $nilaiData = \App\Models\nilai::where('mahasiswa_id', $mahasiswa->id_mahasiswa)
+                ->whereIn('jenis_nilai', ['UTS', 'UAS'])
+                ->get()
+                ->groupBy(['matakuliah_id', 'jenis_nilai']);
+
+            // Process all FRS records
             foreach ($frsList as $frs) {
                 foreach ($frs->detailFrs as $detail) {
                     if ($detail->jadwal && $detail->jadwal->matkul) {
-                        $matkul = $detail->jadwal->matkul;
-                        $matkulId = $matkul->id_matkul;
+                        // Skip if search term doesn't match
+                        $matkulNama = strtolower($detail->jadwal->matkul->nama_matkul ?? '');
+                        $searchTerm = strtolower($search);
                         
-                        if (!isset($groupedNilai[$matkulId])) {
-                            $groupedNilai[$matkulId] = [
-                                'matkul' => $matkul,
-                                'sks' => $matkul->sks,
-                                'UTS' => null,
-                                'UAS' => null
-                            ];
+                        if ($search && !str_contains($matkulNama, $searchTerm)) {
+                            continue;
                         }
-                        
-                        // Get UTS and UAS scores if they exist
-                        if (isset($detail->nilai)) {
-                            foreach ($detail->nilai as $nilai) {
-                                if ($nilai->jenis_nilai === 'UTS') {
-                                    $groupedNilai[$matkulId]['UTS'] = $nilai->nilai;
-                                } elseif ($nilai->jenis_nilai === 'UAS') {
-                                    $groupedNilai[$matkulId]['UAS'] = $nilai->nilai;
-                                }
-                            }
-                        }
+
+                        // Get nilai for this matakuliah
+                        $matkulId = $detail->jadwal->matkul->id_matkul;
+                        $nilaiUTS = $nilaiData->get($matkulId, collect())->get('UTS', collect())->first();
+                        $nilaiUAS = $nilaiData->get($matkulId, collect())->get('UAS', collect())->first();
+
+                        $nilaiList->push((object)[
+                            'matkul' => $detail->jadwal->matkul,
+                            'sks' => $detail->jadwal->matkul->sks ?? 0,
+                            'nilai_uts' => $nilaiUTS->nilai ?? null,
+                            'nilai_uas' => $nilaiUAS->nilai ?? null,
+                            'is_wajib' => ($detail->jadwal->matkul->jenis ?? '') === 'Wajib',
+                            'tahun_ajaran' => $frs->tahun_ajaran
+                        ]);
                     }
                 }
             }
         }
         
-        // Get distinct academic years for the filter
-        $tahunAjaranOptions = \App\Models\Frs::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
-            ->distinct()
-            ->pluck('tahun_ajaran')
-            ->filter()
-            ->mapWithKeys(function($item) {
-                return [$item => $item];
-            });
-        
-        // Convert groupedNilai to a collection of objects for the view
-        $nilaiList = collect($groupedNilai)->map(function($item) {
-            return (object)$item;
-        });
-        
-        // Generate current academic year if no FRS records exist
-        if ($tahunAjaranOptions->isEmpty()) {
-            $currentYear = (int)date('Y');
-            $tahunAjaran = ($currentYear - 1) . '/' . $currentYear;
-            $tahunAjaranOptions = [$tahunAjaran => $tahunAjaran];
-        }
-        
         return view('nilai.nilai-mhs', [
             'mahasiswa' => $mahasiswa,
             'nilaiList' => $nilaiList,
-            'search' => $search,
-            'tahunAjaran' => $tahunAjaran,
-            'tahunAjaranOptions' => $tahunAjaranOptions
+            'search' => $search
         ]);
     }
 }

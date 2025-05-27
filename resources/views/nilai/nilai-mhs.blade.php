@@ -17,7 +17,7 @@
             {{-- Content --}}
             <div class="flex flex-row px-6 pb-6 space-x-6">
                 <div class="flex flex-col grow items-end space-y-4">
-                    {{-- Search, Filter --}}
+                    {{-- Search --}}
                     <div class="flex justify-between items-center w-full gap-4">
                         <div class="flex items-center gap-4 flex-1">
                             {{-- Search Form --}}
@@ -35,35 +35,6 @@
                                             <i class="ph ph-x text-gray-400 hover:text-gray-600"></i>
                                         </button>
                                     @endif
-                                </div>
-                            </form>
-
-                            {{-- Tahun Ajaran Filter --}}
-                            <form method="GET" action="{{ route('nilai-mahasiswa') }}" id="filterForm" class="flex items-center gap-3">
-                                @if (request('search'))
-                                    <input type="hidden" name="search" value="{{ request('search') }}">
-                                @endif
-                                
-                                <div class="relative">
-                                    <select name="tahun_ajaran" id="tahun_ajaran"
-                                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                        @foreach($tahunAjaranOptions as $value => $label)
-                                            <option value="{{ $value }}" {{ $tahunAjaran == $value ? 'selected' : '' }}>
-                                                {{ $label }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="flex space-x-2">
-                                    <a href="{{ route('nilai-mahasiswa') }}" 
-                                       class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                        Reset
-                                    </a>
-                                    <button type="submit" 
-                                            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                        Terapkan
-                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -91,30 +62,31 @@
                                     @forelse($nilaiList as $nilaiData)
                                         @php
                                             $matkul = $nilaiData->matkul ?? null;
-                                            $isWajib = $matkul && isset($matkul->jenis) && $matkul->jenis === 'Wajib';
+                                            $isWajib = $nilaiData->is_wajib ?? ($matkul && isset($matkul->jenis) && $matkul->jenis === 'Wajib');
                                             $jenisClass = $isWajib ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800';
+                                            $jenisMatkul = $matkul->jenis ?? ($isWajib ? 'Wajib' : 'Pilihan');
                                         @endphp
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 {{ $no++ }}
                                             </td>
                                             <td class="px-4 py-4">
-                                                <div class="text-sm font-medium text-gray-900">{{ $matkul->nama_matkul ?? '-' }}</div>
-                                                <div class="text-xs text-gray-500">{{ $matkul->kode_matkul ?? '-' }}</div>
+                                                <div class="text-sm font-medium text-gray-900">{{ $matkul->nama_matkul ?? 'Mata Kuliah Tidak Ditemukan' }}</div>
+                                                <div class="text-xs text-gray-500">{{ $matkul->kode_matkul ?? 'Kode MK' }}</div>
                                             </td>
                                             <td class="px-4 py-3 whitespace-nowrap text-center">
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $jenisClass }}">
-                                                    {{ $matkul->jenis ?? '-' }}
+                                                    {{ $jenisMatkul }}
                                                 </span>
                                             </td>
                                             <td class="px-4 py-4 whitespace-nowrap text-sm text-center text-gray-500">
-                                                {{ $matkul->sks ?? '-' }}
+                                                {{ $nilaiData->sks ?? ($matkul->sks ?? '0') }}
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-center {{ isset($nilaiData->UTS) && $nilaiData->UTS !== null ? 'text-gray-900 font-medium' : 'text-gray-400' }}">
-                                                {{ isset($nilaiData->UTS) && $nilaiData->UTS !== null ? $nilaiData->UTS : '-' }}
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-center {{ !empty($nilaiData->nilai_uts) ? 'text-gray-900 font-medium' : 'text-gray-400' }}">
+                                                {{ $nilaiData->nilai_uts ?? '-' }}
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-center {{ isset($nilaiData->UAS) && $nilaiData->UAS !== null ? 'text-gray-900 font-medium' : 'text-gray-400' }}">
-                                                {{ isset($nilaiData->UAS) && $nilaiData->UAS !== null ? $nilaiData->UAS : '-' }}
+                                            <td class="px-4 py-4 whitespace-nowrap text-sm text-center {{ !empty($nilaiData->nilai_uas) ? 'text-gray-900 font-medium' : 'text-gray-400' }}">
+                                                {{ $nilaiData->nilai_uas ?? '-' }}
                                             </td>
                                         </tr>
                                     @empty

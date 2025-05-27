@@ -49,29 +49,50 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-/// PERMISSION ROLE ADMIN, DOSEN, MAHASISWA 
-/// PERMISSION ALL ROLE
-/// lihat tabel dosen, matkul, jadwal, detail frs
-Route::middleware(['auth', 'verified', 'role:admin|dosen|mahasiswa'])->group(function () {
+/// ============================================
+/// ROUTE UNTUK SEMUA YANG TELAH LOGIN
+/// ============================================
+
+// Route untuk melihat data umum (bisa diakses oleh semua role yang sudah login)
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Route untuk melihat data dosen
     Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index');
+    
+    // Route untuk melihat data mata kuliah
     Route::get('/matkul', [MatkulController::class, 'index'])->name('matkul.index');
+    
+    // Route untuk melihat jadwal
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+    
+    // Route untuk FRS (Form Rencana Studi)
     Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
     Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
-    Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
-    Route::get('/kelas/create', [KelasController::class, 'create'])->name('kelas.create');
-    Route::get('/mahasiswa/create', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
+    
+    // Hanya mahasiswa yang bisa membuat FRS
+    Route::middleware(['role:mahasiswa'])->group(function() {
+        Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
+    });
 });
 
 
-/// PERMISSION ROLE ADMIN, DOSEN
-Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
+/// ============================================
+/// ROUTE KHUSUS ADMIN & DOSEN
+/// ============================================
+Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
+    // Manajemen Mahasiswa
     Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
+    Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
+    
+    // Manajemen FRS
     Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
     Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
-    Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
+    
+    // Update status FRS
+    Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])
+        ->name('detail-frs.update-status');
+        
+    // Manajemen Kelas
     Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
-    Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
 });
 
 /// PERMISSION ROLE DOSEN, MAHASISWA
@@ -86,12 +107,6 @@ Route::middleware(['auth', 'verified', 'role:admin|mahasiswa'])->group(function 
 
 /// PERMISSIONS ROLE ADMIN
 Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
-    // Rute Nilai Dosen
-    Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
-    
-    // Rute untuk mengedit nilai
-    Route::get('/nilai/{id_mahasiswa}/edit', [NilaiController::class, 'edit'])->name('nilai.edit');
-    Route::put('/nilai/{id_mahasiswa}', [NilaiController::class, 'update'])->name('nilai.update');
     
     // Tabel Mahasiswa CRU
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
@@ -163,28 +178,31 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
 
 /// PERMISSION ROLE DOSEN
 Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
-
+    // Rute Nilai Dosen
+    Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
+    
+    // Rute untuk mengedit nilai
+    Route::get('/nilai/{id_mahasiswa}/edit', [NilaiController::class, 'edit'])->name('nilai.edit');
+    Route::put('/nilai/{id_mahasiswa}', [NilaiController::class, 'update'])->name('nilai.update');
 });
-
-/// PERMISSION ROLE MAHASISWA
-Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
-    Route::get('/nilai-mahasiswa', [NilaiController::class, 'nilaiMahasiswa'])->name('nilai-mahasiswa');
-});
-
 
 /// PERMISSION ROLE MAHASISWA
 Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
     // Nilai Mahasiswa
-    Route::get('/nilai-mahasiswa', [App\Http\Controllers\NilaiController::class, 'nilaiMhs'])->name('nilai-mahasiswa');
+    Route::get('/nilai-mahasiswa', [NilaiController::class, 'nilaiMhs'])->name('nilai-mahasiswa');
     
     // Detail FRS
     Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
+    Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
+    Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
+    Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
 });
-Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
-Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
-Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
-// Route::resource('users', UserController::class);
-Route::get('/nilai/update-nilai/{id_mahasiswa}/{id_matkul}', [App\Http\Controllers\NilaiController::class, 'updateNilaiForm'])->name('nilai.updateNilaiForm');
-Route::post('/nilai/update-nilai', [App\Http\Controllers\NilaiController::class, 'updateNilai'])->name('nilai.updateNilai');
+
+/// ROUTE UNTUK UPDATE NILAI (DAPAT DIAKSES OLEH DOSEN)
+Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
+    Route::get('/nilai/update-nilai/{id_mahasiswa}/{id_matkul}', [NilaiController::class, 'updateNilaiForm'])->name('nilai.updateNilaiForm');
+    Route::post('/nilai/update-nilai', [NilaiController::class, 'updateNilai'])->name('nilai.updateNilai');
+    Route::put('/nilai/{id_mahasiswa}', [NilaiController::class, 'update'])->name('nilai.update');
+});
 
 require __DIR__ . '/auth.php';

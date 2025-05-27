@@ -21,4 +21,9 @@ class DetailFrs extends Model
     {
         return $this->belongsTo(Jadwal::class, 'id_jadwal');
     }
+
+    public function nilai()
+    {
+        return $this->hasMany(\App\Models\nilai::class, 'detail_frs_id', 'id_detail_frs');
+    }
 }
