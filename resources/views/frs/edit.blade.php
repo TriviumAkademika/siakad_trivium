@@ -30,16 +30,16 @@
                         :value="$frs->mahasiswa->semester" readonly />
 
                     {{-- Total SKS --}}
-                    <x-form.text-field label="Total SKS" name="total_sks" type="number" 
-                        value="{{ old('total_sks', $frs->total_sks) }}" />
+                    {{-- <x-form.text-field label="Total SKS" name="total_sks" type="number" 
+                        value="{{ old('total_sks', $frs->total_sks) }}" /> --}}
 
                     {{-- IPS --}}
-                    <x-form.text-field label="IPS" name="ips" type="number" step="0.01" 
-                        value="{{ old('ips', $frs->ips) }}" :required="false" />
+                    {{-- <x-form.text-field label="IPS" name="ips" type="number" step="0.01" 
+                        value="{{ old('ips', $frs->ips) }}" :required="false" /> --}}
 
                     {{-- IPK --}}
-                    <x-form.text-field label="IPK" name="ipk" type="number" step="0.01" 
-                        value="{{ old('ipk', $frs->ipk) }}" :required="false" />
+                    {{-- <x-form.text-field label="IPK" name="ipk" type="number" step="0.01" 
+                        value="{{ old('ipk', $frs->ipk) }}" :required="false" /> --}}
 
                     {{-- Tombol --}}
                     <div class="flex justify-end gap-x-1">

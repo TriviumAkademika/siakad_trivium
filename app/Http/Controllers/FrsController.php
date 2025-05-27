@@ -47,6 +47,32 @@ class FrsController extends Controller
         return view('frs.index', compact('frs'));
     }
 
+    public function create()
+    {
+        // Hanya admin yang bisa mengakses form create FRS
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->back()->with([
+                'message' => 'Anda tidak memiliki akses untuk menambah FRS.',
+                'type' => 'error'
+            ]);
+        }
+
+        // Ambil data mahasiswa untuk dropdown
+        $mahasiswa = Mahasiswa::all();
+        
+        // Generate tahun ajaran list (5 tahun ke belakang dan 2 tahun ke depan)
+        $currentYear = date('Y');
+        $tahunAjaranList = [];
+        
+        for ($i = -5; $i <= 2; $i++) {
+            $year = $currentYear + $i;
+            $nextYear = $year + 1;
+            $tahunAjaranList[] = $year . '/' . $nextYear;
+        }
+        
+        return view('frs.create', compact('mahasiswa', 'tahunAjaranList'));
+    }
+
     public function store(Request $request)
     {
         // Hanya admin yang bisa menambah FRS
@@ -64,6 +90,18 @@ class FrsController extends Controller
             'ips' => 'nullable|numeric|between:0,4.00',
             'ipk' => 'nullable|numeric|between:0,4.00',
         ]);
+
+        // Cek apakah mahasiswa sudah memiliki FRS untuk tahun ajaran yang sama
+        $existingFrs = Frs::where('id_mahasiswa', $validatedData['id_mahasiswa'])
+            ->where('tahun_ajaran', $validatedData['tahun_ajaran'])
+            ->first();
+
+        if ($existingFrs) {
+            return redirect()->back()->withInput()->with([
+                'message' => 'Mahasiswa sudah memiliki FRS untuk tahun ajaran ini.',
+                'type' => 'error'
+            ]);
+        }
 
         // Ambil data mahasiswa untuk mendapatkan semester
         $mahasiswa = Mahasiswa::findOrFail($validatedData['id_mahasiswa']);
@@ -87,143 +125,6 @@ class FrsController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with([
                 'message' => 'Gagal menambahkan FRS. Silakan coba lagi.',
-                'type' => 'error'
-            ]);
-        }
-    }
-
-    public function edit($id)
-    {
-        $user = Auth::user();
-        $frs = Frs::findOrFail($id);
-        
-        // Cek akses berdasarkan role
-        if ($user->role === 'admin') {
-            // Admin bisa edit semua FRS
-        } elseif ($user->role === 'dosen') {
-            // Dosen hanya bisa edit FRS mahasiswa walinya
-            $dosenId = $user->id_dosen;
-            
-            if (!$dosenId) {
-                return redirect()->back()->with([
-                    'message' => 'Data dosen tidak ditemukan untuk user ini.',
-                    'type' => 'error'
-                ]);
-            }
-            
-            // Cek apakah FRS ini milik mahasiswa wali dosen
-            $isMahasiswaWali = Frs::select('frs.*')
-                ->join('mahasiswa as m', 'frs.id_mahasiswa', '=', 'm.id_mahasiswa')
-                ->join('kelas as k', 'm.id_kelas', '=', 'k.id_kelas')
-                ->where('k.id_dosen', $dosenId)
-                ->where('frs.id_frs', $id)
-                ->exists();
-                
-            if (!$isMahasiswaWali) {
-                return redirect()->back()->with([
-                    'message' => 'Anda tidak memiliki akses untuk mengedit FRS ini.',
-                    'type' => 'error'
-                ]);
-            }
-        } else {
-            return redirect()->back()->with([
-                'message' => 'Anda tidak memiliki akses ke halaman ini.',
-                'type' => 'error'
-            ]);
-        }
-        
-        $mahasiswa = Mahasiswa::all();
-        return view('frs.edit', compact('frs', 'mahasiswa'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $user = Auth::user();
-        $frs = Frs::findOrFail($id);
-        
-        // Cek akses berdasarkan role (sama seperti edit)
-        if ($user->role === 'admin') {
-            // Admin bisa update semua FRS
-        } elseif ($user->role === 'dosen') {
-            $dosenId = $user->id_dosen;
-            
-            if (!$dosenId) {
-                return redirect()->back()->with([
-                    'message' => 'Data dosen tidak ditemukan untuk user ini.',
-                    'type' => 'error'
-                ]);
-            }
-            
-            $isMahasiswaWali = Frs::select('frs.*')
-                ->join('mahasiswa as m', 'frs.id_mahasiswa', '=', 'm.id_mahasiswa')
-                ->join('kelas as k', 'm.id_kelas', '=', 'k.id_kelas')
-                ->where('k.id_dosen', $dosenId)
-                ->where('frs.id_frs', $id)
-                ->exists();
-                
-            if (!$isMahasiswaWali) {
-                return redirect()->back()->with([
-                    'message' => 'Anda tidak memiliki akses untuk mengupdate FRS ini.',
-                    'type' => 'error'
-                ]);
-            }
-        } else {
-            return redirect()->back()->with([
-                'message' => 'Anda tidak memiliki akses ke halaman ini.',
-                'type' => 'error'
-            ]);
-        }
-
-        $validatedData = $request->validate([
-            'id_mahasiswa' => 'required|exists:mahasiswa,id_mahasiswa',
-            'tahun_ajaran' => 'required|string|max:255',
-            'total_sks' => 'nullable|integer|min:0',
-            'ips' => 'nullable|numeric|between:0,4.00',
-            'ipk' => 'nullable|numeric|between:0,4.00',
-        ]);
-
-        // Ambil data mahasiswa untuk mendapatkan semester
-        $mahasiswa = Mahasiswa::findOrFail($validatedData['id_mahasiswa']);
-        $validatedData['semester'] = $mahasiswa->semester;
-        $validatedData['tgl_perubahan'] = now();
-
-        try {
-            $frs->update($validatedData);
-
-            return redirect()->route('frs.index')->with([
-                'message' => 'FRS berhasil diperbarui!',
-                'type' => 'success'
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with([
-                'message' => 'Gagal memperbarui FRS. Silakan coba lagi.',
-                'type' => 'error'
-            ]);
-        }
-    }
-
-    public function destroy($id)
-    {
-        // Hanya admin yang bisa menghapus FRS
-        if (Auth::user()->role !== 'admin') {
-            return redirect()->back()->with([
-                'message' => 'Anda tidak memiliki akses untuk menghapus FRS.',
-                'type' => 'error'
-            ]);
-        }
-
-        try {
-            $frs = Frs::findOrFail($id);
-            $frs->detailFrs()->delete();
-            $frs->delete();
-
-            return redirect()->route('frs.index')->with([
-                'message' => 'FRS berhasil dihapus!',
-                'type' => 'warning'
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->back()->with([
-                'message' => 'Gagal menghapus FRS. Pastikan tidak ada data terkait.',
                 'type' => 'error'
             ]);
         }
@@ -281,6 +182,171 @@ class FrsController extends Controller
             ->get();
 
         return view('detail_frs.index', compact('frs', 'jadwals'));
+    }
+
+    public function edit($id)
+    {
+        $user = Auth::user();
+        $frs = Frs::findOrFail($id);
+        
+        // Cek akses berdasarkan role
+        if ($user->role === 'admin') {
+            // Admin bisa edit semua FRS
+        } elseif ($user->role === 'dosen') {
+            // Dosen hanya bisa edit FRS mahasiswa walinya
+            $dosenId = $user->id_dosen;
+            
+            if (!$dosenId) {
+                return redirect()->back()->with([
+                    'message' => 'Data dosen tidak ditemukan untuk user ini.',
+                    'type' => 'error'
+                ]);
+            }
+            
+            // Cek apakah FRS ini milik mahasiswa wali dosen
+            $isMahasiswaWali = Frs::select('frs.*')
+                ->join('mahasiswa as m', 'frs.id_mahasiswa', '=', 'm.id_mahasiswa')
+                ->join('kelas as k', 'm.id_kelas', '=', 'k.id_kelas')
+                ->where('k.id_dosen', $dosenId)
+                ->where('frs.id_frs', $id)
+                ->exists();
+                
+            if (!$isMahasiswaWali) {
+                return redirect()->back()->with([
+                    'message' => 'Anda tidak memiliki akses untuk mengedit FRS ini.',
+                    'type' => 'error'
+                ]);
+            }
+        } else {
+            return redirect()->back()->with([
+                'message' => 'Anda tidak memiliki akses ke halaman ini.',
+                'type' => 'error'
+            ]);
+        }
+        
+        $mahasiswa = Mahasiswa::all();
+        
+        // Generate tahun ajaran list (5 tahun ke belakang dan 2 tahun ke depan)
+        $currentYear = date('Y');
+        $tahunAjaranList = [];
+        
+        for ($i = -5; $i <= 2; $i++) {
+            $year = $currentYear + $i;
+            $nextYear = $year + 1;
+            $tahunAjaranList[] = $year . '/' . $nextYear;
+        }
+        
+        return view('frs.edit', compact('frs', 'mahasiswa', 'tahunAjaranList'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = Auth::user();
+        $frs = Frs::findOrFail($id);
+        
+        // Cek akses berdasarkan role (sama seperti edit)
+        if ($user->role === 'admin') {
+            // Admin bisa update semua FRS
+        } elseif ($user->role === 'dosen') {
+            $dosenId = $user->id_dosen;
+            
+            if (!$dosenId) {
+                return redirect()->back()->with([
+                    'message' => 'Data dosen tidak ditemukan untuk user ini.',
+                    'type' => 'error'
+                ]);
+            }
+            
+            $isMahasiswaWali = Frs::select('frs.*')
+                ->join('mahasiswa as m', 'frs.id_mahasiswa', '=', 'm.id_mahasiswa')
+                ->join('kelas as k', 'm.id_kelas', '=', 'k.id_kelas')
+                ->where('k.id_dosen', $dosenId)
+                ->where('frs.id_frs', $id)
+                ->exists();
+                
+            if (!$isMahasiswaWali) {
+                return redirect()->back()->with([
+                    'message' => 'Anda tidak memiliki akses untuk mengupdate FRS ini.',
+                    'type' => 'error'
+                ]);
+            }
+        } else {
+            return redirect()->back()->with([
+                'message' => 'Anda tidak memiliki akses ke halaman ini.',
+                'type' => 'error'
+            ]);
+        }
+
+        $validatedData = $request->validate([
+            'id_mahasiswa' => 'required|exists:mahasiswa,id_mahasiswa',
+            'tahun_ajaran' => 'required|string|max:255',
+            'total_sks' => 'nullable|integer|min:0',
+            'ips' => 'nullable|numeric|between:0,4.00',
+            'ipk' => 'nullable|numeric|between:0,4.00',
+        ]);
+
+        // Cek apakah mahasiswa sudah memiliki FRS untuk tahun ajaran yang sama (kecuali FRS ini sendiri)
+        $existingFrs = Frs::where('id_mahasiswa', $validatedData['id_mahasiswa'])
+            ->where('tahun_ajaran', $validatedData['tahun_ajaran'])
+            ->where('id_frs', '!=', $id)
+            ->first();
+
+        if ($existingFrs) {
+            return redirect()->back()->withInput()->with([
+                'message' => 'Mahasiswa sudah memiliki FRS untuk tahun ajaran ini.',
+                'type' => 'error'
+            ]);
+        }
+
+        // Ambil data mahasiswa untuk mendapatkan semester
+        $mahasiswa = Mahasiswa::findOrFail($validatedData['id_mahasiswa']);
+        $validatedData['semester'] = $mahasiswa->semester;
+        $validatedData['tgl_perubahan'] = now();
+
+        try {
+            $frs->update($validatedData);
+
+            return redirect()->route('frs.index')->with([
+                'message' => 'FRS berhasil diperbarui!',
+                'type' => 'success'
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with([
+                'message' => 'Gagal memperbarui FRS. Silakan coba lagi.',
+                'type' => 'error'
+            ]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        // Hanya admin yang bisa menghapus FRS
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->back()->with([
+                'message' => 'Anda tidak memiliki akses untuk menghapus FRS.',
+                'type' => 'error'
+            ]);
+        }
+
+        try {
+            $frs = Frs::findOrFail($id);
+            
+            // Hapus detail FRS terlebih dahulu
+            $frs->detailFrs()->delete();
+            
+            // Kemudian hapus FRS
+            $frs->delete();
+
+            return redirect()->route('frs.index')->with([
+                'message' => 'FRS berhasil dihapus!',
+                'type' => 'warning'
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'message' => 'Gagal menghapus FRS. Pastikan tidak ada data terkait.',
+                'type' => 'error'
+            ]);
+        }
     }
 
     public function drop($id)
@@ -388,6 +454,12 @@ class FrsController extends Controller
             $frs->update([
                 'tgl_drop' => null,
                 'tgl_perubahan' => now()
+            ]);
+
+            // Reactivate detail FRS juga
+            $frs->detailFrs()->update([
+                'status' => true,
+                'tgl_drop' => null
             ]);
 
             return redirect()->route('frs.index')->with([

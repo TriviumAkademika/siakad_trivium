@@ -13,7 +13,7 @@ class FrsSeeder extends Seeder
             [
                 'id_mahasiswa' => 1,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,
@@ -24,7 +24,7 @@ class FrsSeeder extends Seeder
             [
                 'id_mahasiswa' => 2,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,
@@ -35,7 +35,7 @@ class FrsSeeder extends Seeder
             [
                 'id_mahasiswa' => 3,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,
@@ -46,7 +46,7 @@ class FrsSeeder extends Seeder
                         [
                 'id_mahasiswa' => 4,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,
@@ -57,7 +57,7 @@ class FrsSeeder extends Seeder
                         [
                 'id_mahasiswa' => 5,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,
@@ -68,7 +68,7 @@ class FrsSeeder extends Seeder
                         [
                 'id_mahasiswa' => 6,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,
@@ -79,7 +79,7 @@ class FrsSeeder extends Seeder
                         [
                 'id_mahasiswa' => 7,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,
@@ -90,7 +90,7 @@ class FrsSeeder extends Seeder
                         [
                 'id_mahasiswa' => 8,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,
@@ -101,7 +101,7 @@ class FrsSeeder extends Seeder
                         [
                 'id_mahasiswa' => 9,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,
@@ -112,7 +112,7 @@ class FrsSeeder extends Seeder
                         [
                 'id_mahasiswa' => 10,
                 'tahun_ajaran' => '2024/2025',
-                'semester' => 'Genap',
+                'semester' => '4',
                 'total_sks' => 20,
                 'ips' => 3.5,
                 'ipk' => 3.7,

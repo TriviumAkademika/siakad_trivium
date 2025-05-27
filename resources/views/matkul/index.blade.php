@@ -118,11 +118,13 @@
                         </div>
 
                         {{-- Tombol Tambah Mata Kuliah --}}
-                        <a href="{{ route('matkul.create') }}">
-                            <x-button.submit icon="ph ph-plus">
-                                Tambah Mata Kuliah
-                            </x-button.submit>
-                        </a>
+                        @if (auth()->user()->role === 'admin')
+                            <a href="{{ route('matkul.create') }}">
+                                <x-button.submit icon="ph ph-plus">
+                                    Tambah Mata Kuliah
+                                </x-button.submit>
+                            </a>
+                        @endif
                     </div>
 
                     {{-- Info hasil pencarian --}}

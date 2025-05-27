@@ -100,11 +100,13 @@
             </div>
 
             {{-- Kelas --}}
-            <a href="{{ route('kelas.index') }}"
-                class="flex items-center gap-2 {{ request()->routeIs('kelas.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
-                <i class="ph ph-chalkboard text-xl text-hitam"></i>
-                <span class="text-base text-hitam">Kelas</span>
-            </a>
+            @if (auth()->user()->role === 'admin')
+                <a href="{{ route('kelas.index') }}"
+                    class="flex items-center gap-2 {{ request()->routeIs('kelas.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
+                    <i class="ph ph-chalkboard text-xl text-hitam"></i>
+                    <span class="text-base text-hitam">Kelas</span>
+                </a>
+            @endif
 
             {{-- FRS --}}
             <a href="{{ route('frs.index') }}"
@@ -138,7 +140,8 @@
                     <span class="text-base text-hitam">Nilai</span>
                 </a>
             @elseif(auth()->user()->role === 'mahasiswa')
-                <a href="{{ route('nilai-mhs') }}" class="flex items-center gap-2 {{ request()->routeIs('nilai-mahasiswa.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
+                <a href="{{ route('nilai-mhs') }}"
+                    class="flex items-center gap-2 {{ request()->routeIs('nilai-mahasiswa.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
                     <i class="ph ph-ranking text-xl text-hitam"></i>
                     <span class="text-base text-hitam">Nilai</span>
                 </a>
