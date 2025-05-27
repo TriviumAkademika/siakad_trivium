@@ -211,28 +211,35 @@
                     {{-- Stastistik --}}
                     <div class="flex flex-col space-y-4">
                         {{-- <h3 class="text-xl text-hitam font-medium">Statistik Akademik</h3> --}}
+                        <div class="flex">
+                            {{-- Card User --}}
+                            <x-card.stat-card title="Total User" value="{{ $totalUser }}" description="User Aktif" />
+                        </div>
                         <div class="flex flex-row space-x-4">
-
                             {{-- Card Mahasiswa --}}
                             <x-card.stat-card title="Total Mahasiswa" value="{{ $totalMahasiswa }}"
                                 description="Mahasiswa Aktif" />
 
                             {{-- Card Dosen --}}
                             <x-card.stat-card title="Total Dosen" value="{{ $totalDosen }}" description="Dosen Aktif" />
-
-                            {{-- Card User --}}
-                            <x-card.stat-card title="Total User" value="{{ $totalUser }}" description="User Aktif" />
-
-                            {{-- Card Kelas --}}
-                            <x-card.stat-card title="Total Kelas" value="{{ $totalKelas }}"
-                                description="Kelas Aktif" />
-
                         </div>
                     </div>
                     {{-- Stastistik --}}
                     <div class="flex flex-col space-y-4">
                         {{-- <h3 class="text-xl text-hitam font-medium">Statistik Akademik</h3> --}}
                         <div class="flex flex-row space-x-4">
+                            
+                            {{-- Card Jadwal --}}
+                            <x-card.stat-card title="Total Jadwal" value="{{ $totalJadwal }}"
+                                description="Perkuliahan Terjadwal" />
+                            
+                            {{-- Card Mata Kuliah --}}
+                            <x-card.stat-card title="Total Mata Kuliah" value="{{ $totalMataKuliah }}"
+                                description="Mata Kuliah Saat Ini" />
+
+                            {{-- Card Kelas --}}
+                            <x-card.stat-card title="Total Kelas" value="{{ $totalKelas }}"
+                                description="Kelas Aktif" />
 
                             {{-- Card Ruangan --}}
                             <x-card.stat-card title="Total Ruangan" value="{{ $totalRuangan }}"
@@ -242,19 +249,10 @@
                             <x-card.stat-card title="Total Waktu" value="{{ $totalWaktu }}"
                                 description="Jam Perkuliah" />
 
-                            {{-- Card Mata Kuliah --}}
-                            <x-card.stat-card title="Total Mata Kuliah" value="{{ $totalMataKuliah }}"
-                                description="Mata Kuliah Saat Ini" />
-
-                            {{-- Card Jadwal --}}
-                            <x-card.stat-card title="Total Jadwal" value="{{ $totalJadwal }}"
-                                description="Perkuliahan Terjadwal" />
-
                         </div>
                     </div>
                 </div>
             @endif
-
         </div>
     </div>
 @endsection

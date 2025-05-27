@@ -11,7 +11,7 @@
 @php
     // Define status badge colors
     $statusColors = [
-        'blue' => 'bg-blue-100 text-blue-800',
+        'blue' => 'bg-brand-100 text-brand-900',
         'green' => 'bg-green-100 text-green-800',
         'yellow' => 'bg-yellow-100 text-yellow-800',
         'red' => 'bg-red-100 text-red-800',
@@ -24,7 +24,10 @@
     $badgeClass = $statusColors[$statusColor] ?? $statusColors['blue'];
 @endphp
 
-<div class="flex flex-col w-1/4 p-4 bg-brand-50 rounded-3xl border border-brand-200">
+{{-- <div class="flex flex-row w-full p-4">
+
+</div> --}}
+<div class="flex flex-col w-full p-4 bg-brand-50 rounded-3xl border border-brand-200">
     <div class="flex justify-between items-start mb-2">
         <h4 class="text-base text-hitam">{{ $title }}</h4>
         
