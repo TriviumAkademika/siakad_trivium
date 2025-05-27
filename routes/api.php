@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\FrsApiController;
 use App\Http\Controllers\Api\JadwalApiController;
 use App\Http\Controllers\Api\DetailFrsApiController;
 use App\Http\Controllers\Api\UserApiController;
+use App\Http\Controllers\Api\NilaiApiController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -24,3 +25,4 @@ Route::apiResource('frs', FrsApiController::class);
 Route::apiResource('jadwal', JadwalApiController::class);
 Route::apiResource('detail-frs', DetailFrsApiController::class);
 Route::apiResource('user', UserApiController::class);
+Route::apiResource('nilai', NilaiApiController::class);
