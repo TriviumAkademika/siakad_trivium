@@ -138,11 +138,13 @@
                         </div>
 
                         {{-- Tombol Tambah Dosen --}}
-                        <a href="{{ route('dosen.create') }}">
-                            <x-button.submit icon="ph ph-plus">
-                                Tambah Dosen
-                            </x-button.submit>
-                        </a>
+                        @if (auth()->user()->role === 'admin')
+                            <a href="{{ route('dosen.create') }}">
+                                <x-button.submit icon="ph ph-plus">
+                                    Tambah Dosen
+                                </x-button.submit>
+                            </a>
+                        @endif
                     </div>
 
                     {{-- Info hasil pencarian --}}

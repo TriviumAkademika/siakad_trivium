@@ -46,54 +46,26 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route untuk melihat data dosen
     Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index');
-    
+
     // Route untuk melihat data mata kuliah
     Route::get('/matkul', [MatkulController::class, 'index'])->name('matkul.index');
-    
+
     // Route untuk melihat jadwal
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
-    
+
     // Route untuk FRS (Form Rencana Studi)
     Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
-    
+
     // Hanya mahasiswa yang bisa membuat FRS
-    Route::middleware(['role:mahasiswa'])->group(function() {
+    Route::middleware(['role:mahasiswa'])->group(function () {
         Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
     });
 });
 
 
-/// ============================================
-/// ROUTE KHUSUS ADMIN & DOSEN
-/// ============================================
-Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
-    // Manajemen Mahasiswa
-    Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
-    Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
-    
-    // Manajemen FRS
-    Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
-    Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
-    
-    // Update status FRS
-    Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])
-        ->name('detail-frs.update-status');
-        
-    // Manajemen Kelas
-    Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
-    Route::get('/kelas/create', [KelasController::class, 'create'])->name('kelas.create');
-    Route::get('/mahasiswa/create', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
-});
 
-/// PERMISSION ROLE ADMIN, DOSEN
-Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
-    Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
-    Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
-    Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
 
-    // FRS - Admin dan Dosen bisa melihat daftar FRS
-    Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
-});
+
 
 /// PERMISSION ROLE DOSEN, MAHASISWA
 Route::middleware(['auth', 'verified', 'role:dosen|mahasiswa'])->group(function () {
@@ -119,12 +91,15 @@ Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
 });
 
 /// PERMISSIONS ROLE ADMIN
-Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
-    
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+
     // Tabel Mahasiswa CRU
+    Route::get('/mahasiswa/create', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
     Route::get('/mahasiswa/{id}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
     Route::put('/mahasiswa/{id}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
+    Route::delete('/mahasiswa/{id}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
+
 
     // Tabel User CR
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -134,6 +109,8 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+
 
     // Tabel Dosen CU SHOW
     Route::get('/dosen/create', [DosenController::class, 'create'])->name('dosen.create');
@@ -189,12 +166,43 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
     Route::delete('/frs/{id}', [FrsController::class, 'destroy'])->name('frs.destroy');
 });
 
+/// PERMISSION ROLE ADMIN, DOSEN
+Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
+    Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
+    Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
+    Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
+
+    // FRS - Admin dan Dosen bisa melihat daftar FRS
+    Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
+});
+
+/// ============================================
+/// ROUTE KHUSUS ADMIN & DOSEN
+/// ============================================
+Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
+    // Manajemen Mahasiswa
+    Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
+    Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
+
+    // Manajemen FRS
+    Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
+    Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
+
+    // Update status FRS
+    Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])
+        ->name('detail-frs.update-status');
+
+    // Manajemen Kelas
+    Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
+    Route::get('/kelas/create', [KelasController::class, 'create'])->name('kelas.create');
+});
+
 
 /// PERMISSION ROLE DOSEN
 Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
     // Rute Nilai Dosen
     Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
-    
+
     // Rute untuk mengedit nilai
     Route::get('/nilai/{id_mahasiswa}/edit', [NilaiController::class, 'edit'])
         ->name('nilai.edit')
@@ -208,7 +216,7 @@ Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
 Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
     // Nilai Mahasiswa
     Route::get('/nilai-mahasiswa', [NilaiController::class, 'nilaiMhs'])->name('nilai-mahasiswa');
-    
+
     // Detail FRS
     Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
     Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
@@ -226,24 +234,24 @@ Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Nilai Mahasiswa
     Route::get('/nilai-mhs', [NilaiController::class, 'nilaiMhs'])->name('nilai-mhs');
-    
+
     // Nilai Dosen
     Route::prefix('nilai-dosen')->group(function () {
         Route::get('/', [NilaiController::class, 'index'])->name('nilai-dosen');
-        
+
         // Routes for managing grades
         Route::get('/{id_mahasiswa}/edit', [NilaiController::class, 'edit'])
             ->name('nilai.edit')
             ->where(['id_mahasiswa' => '[0-9]+']);
-            
+
         Route::put('/{id_mahasiswa}', [NilaiController::class, 'update'])
             ->name('nilai.update')
             ->where(['id_mahasiswa' => '[0-9]+']);
     });
-    
+
     // Resource routes for nilai (exclude create and store as they're handled separately)
     Route::resource('nilai', NilaiController::class)->except(['create', 'store', 'edit', 'update']);
-    
+
     // Additional custom routes
     Route::get('/nilai/update-nilai/{id_mahasiswa}/{id_matkul}', [NilaiController::class, 'updateNilaiForm'])
         ->name('nilai.updateNilaiForm');

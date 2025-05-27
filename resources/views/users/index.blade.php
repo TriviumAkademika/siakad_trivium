@@ -269,7 +269,7 @@
                                                     <i class="ph ph-pencil-simple"></i>
                                                 </a>
                                                 {{-- Button Hapus --}}
-                                                <form action="{{ route('user.destroy', $user->id_user) }}"
+                                                <form action="{{ route('users.destroy', $user->id_user) }}"
                                                     method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')"
                                                     class="inline">
