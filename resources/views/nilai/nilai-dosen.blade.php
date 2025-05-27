@@ -80,7 +80,7 @@
                                 </td>
                                 <td class="px-4 py-2 text-center text-sm text-hitam">
                                     <div class="flex justify-center items-center space-x-1">
-                                        <a href="{{ route('nilai.edit', ['id_mahasiswa' => $mhs->id_mahasiswa, 'id_matkul' => request('id_matkul')]) }}" class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
+                                        <a href="{{ route('nilai.edit', ['id_mahasiswa' => $mhs->id_mahasiswa]) }}?id_matkul={{ request('id_matkul') }}" class="inline-flex items-center justify-center w-8 h-8 bg-biru-600 text-white text-sm rounded hover:bg-biru-700">
                                             <i class="ph ph-pencil text-xl"></i>
                                         </a>
                                     </div>
