@@ -236,11 +236,14 @@
                                         <td class="px-2 py-2 text-sm text-hitam">
                                             <div class="flex justify-center items-center space-x-1">
                                                 {{-- Button Show --}}
-                                                <a href="{{ route('dosen.show', $d->id_dosen) }}"
+                                                @if (auth()->user()->role === 'admin')
+                                                  <a href="{{ route('dosen.show', $d->id_dosen) }}"
                                                     class="inline-flex items-center justify-center w-8 h-8 bg-green-600 text-white text-sm rounded hover:bg-green-700"
                                                     title="Lihat Detail">
                                                     <i class="ph ph-eye"></i>
-                                                </a>
+                                                </a>  
+                                                @endif
+                                                
                                                 {{-- Button Edit --}}
                                                 @if (auth()->user()->role === 'admin')
                                                     <a href="{{ route('dosen.edit', $d->id_dosen) }}"

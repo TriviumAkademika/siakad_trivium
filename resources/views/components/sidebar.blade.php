@@ -48,11 +48,14 @@
                         <span class="text-base text-hitam">Dosen</span>
                     </a>
                     {{-- Mahasiswa --}}
+                    @if (auth()->user()->role === 'admin' || auth()->user()->role === 'dosen')
                     <a href="{{ route('mahasiswa.index') }}"
                         class="flex items-center gap-2 {{ request()->routeIs('mahasiswa.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
                         <i class="ph ph-student text-xl text-hitam"></i>
                         <span class="text-base text-hitam">Mahasiswa</span>
-                    </a>
+                    </a>  
+                    @endif
+                    
                 </div>
             </div>
 
@@ -75,11 +78,14 @@
                         <span class="text-base text-hitam">Jadwal</span>
                     </a>
                     {{-- Matkul --}}
-                    <a href="{{ route('matkul.index') }}"
+                    @if (auth()->user()->role === 'admin')
+                       <a href="{{ route('matkul.index') }}"
                         class="flex items-center gap-2 {{ request()->routeIs('matkul.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
                         <i class="ph ph-book-open text-xl text-hitam"></i>
                         <span class="text-base text-hitam">Matkul</span>
-                    </a>
+                    </a> 
+                    @endif
+                    
                     {{-- Ruangan cuma diakses Admin --}}
                     @if (auth()->user()->role === 'admin')
                         <a href="{{ route('ruangan.index') }}"
@@ -109,11 +115,14 @@
             @endif
 
             {{-- FRS --}}
+        @if (auth()->user()->role === 'admin' || auth()->user()->role === 'dosen')
             <a href="{{ route('frs.index') }}"
                 class="flex items-center gap-2 {{ request()->routeIs('frs.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
                 <i class="ph ph-clipboard-text text-xl text-hitam"></i>
                 <span class="text-base text-hitam">FRS</span>
             </a>
+            @endif
+            
 
             {{-- FRS untuk Mahasiswa - otomatis ke FRS mereka sendiri --}}
             @if (auth()->user()->role === 'mahasiswa')
