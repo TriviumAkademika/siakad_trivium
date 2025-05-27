@@ -189,8 +189,7 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
     Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
 
     // Update status FRS
-    Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])
-        ->name('detail-frs.update-status');
+    Route::patch('detail-frs/{id}/update-status', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
 
     // Manajemen Kelas
     Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');

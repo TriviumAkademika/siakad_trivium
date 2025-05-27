@@ -47,7 +47,7 @@
                             // Bersihin class ganda
                             selectElement.className = selectElement.className.replace(/\s+/g, ' ').trim();
 
-                            // Set session flash untuk toast via AJAX
+                            // Set session flash untuk toast via AJAX (tanpa reload)
                             fetch(`{{ route('detail-frs.set-session') }}`, {
                                 method: 'POST',
                                 headers: {
@@ -58,27 +58,28 @@
                                     message: data.message,
                                     type: 'success'
                                 })
-                            }).then(() => location.reload());
+                            });
                         } else {
                             throw new Error('Gagal mengupdate status'); // Tangani error jika update gagal
                         }
                     })
-                    .catch(error => { /
+                    .catch(error => {
                         console.error('Error:', error);
-                        // Reset dropdown ke status sebelumnya
-                        selectElement.value = status == '1' ? '0' : '1'; // Kembalikan ke status sebelumnya
+                        
+                        // Jangan reset dropdown, biarkan user tahu ada error
+                        // selectElement.value = status == '1' ? '0' : '1';
 
-                        fetch(`{{ route('detail-frs.set-session') }}`, { // Set session flash untuk error
+                        fetch(`{{ route('detail-frs.set-session') }}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
                             body: JSON.stringify({
-                                message: 'Terjadi kesalahan!',
+                                message: 'Terjadi kesalahan saat mengubah status: ' + error.message,
                                 type: 'error'
                             })
-                        }).then(() => location.reload()); // Reload halaman untuk menampilkan pesan error
+                        });
                     })
                     .finally(() => {
                         selectElement.disabled = false; // Aktifkan kembali dropdown

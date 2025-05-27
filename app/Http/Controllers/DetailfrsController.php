@@ -7,6 +7,7 @@ use App\Models\Frs;
 use App\Models\Jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DetailFrsController extends Controller
 {
@@ -125,12 +126,36 @@ class DetailFrsController extends Controller
     public function updateStatus(Request $request, $id)
     {
         try {
+            // Log untuk debugging
+            Log::info('UpdateStatus called', [
+                'id' => $id,
+                'request_data' => $request->all(),
+                'user_role' => Auth::user()->role ?? 'unknown'
+            ]);
+
+            // Validasi input
+            $request->validate([
+                'status' => 'required|in:0,1,true,false'
+            ]);
+
             $detail = DetailFrs::findOrFail($id);
+            
+            // Log detail yang ditemukan
+            Log::info('DetailFrs found', [
+                'detail_id' => $detail->id_detail_frs,
+                'current_status' => $detail->status,
+                'frs_id' => $detail->id_frs
+            ]);
 
             // Jika mahasiswa, pastikan FRS adalah miliknya
             if (Auth::user()->role === 'mahasiswa') {
                 $frs = Frs::findOrFail($detail->id_frs);
                 if ($frs->id_mahasiswa !== Auth::user()->mahasiswa->id_mahasiswa) {
+                    Log::warning('Access denied for mahasiswa', [
+                        'user_id' => Auth::id(),
+                        'frs_mahasiswa_id' => $frs->id_mahasiswa,
+                        'user_mahasiswa_id' => Auth::user()->mahasiswa->id_mahasiswa ?? 'null'
+                    ]);
                     return response()->json([
                         'success' => false,
                         'message' => 'Akses ditolak.'
@@ -138,27 +163,93 @@ class DetailFrsController extends Controller
                 }
             }
 
-            if ($request->has('status')) {
-                // status dari string '0' atau '1' jadi boolean
-                $detail->status = filter_var($request->status, FILTER_VALIDATE_BOOLEAN);
-            } else {
-                $detail->status = !$detail->status; // toggle jika tidak ada input
+            // Konversi status dengan lebih robust
+            $statusInput = $request->input('status');
+            $newStatus = false; // default
+
+            if (is_string($statusInput)) {
+                $newStatus = in_array($statusInput, ['1', 'true', 'on'], true);
+            } elseif (is_bool($statusInput)) {
+                $newStatus = $statusInput;
+            } elseif (is_numeric($statusInput)) {
+                $newStatus = (int)$statusInput === 1;
             }
 
-            $detail->save();
+            Log::info('Status conversion', [
+                'input' => $statusInput,
+                'converted' => $newStatus,
+                'input_type' => gettype($statusInput)
+            ]);
 
+            // Update status
+            $oldStatus = $detail->status;
+            $detail->status = $newStatus;
+            
+            // Pastikan save berhasil
+            $saved = $detail->save();
+
+            Log::info('Save result', [
+                'saved' => $saved,
+                'old_status' => $oldStatus,
+                'new_status' => $detail->status,
+                'fresh_from_db' => DetailFrs::find($id)->status ?? 'not_found'
+            ]);
+
+            if (!$saved) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal menyimpan perubahan status ke database.'
+                ], 500);
+            }
+
+            // Refresh dari database untuk memastikan
+            $detail->refresh();
+            
             // Update total SKS setelah mengubah status
             $this->updateTotalSks($detail->id_frs);
 
+            Log::info('Status updated successfully', [
+                'final_status' => $detail->status,
+                'status_text' => $detail->status ? 'Diterima' : 'Tidak Diterima'
+            ]);
+
             return response()->json([
                 'success' => true,
-                'message' => 'Status berhasil diperbarui.',
-                'status' => $detail->status
+                'message' => 'Status berhasil diperbarui menjadi ' . ($detail->status ? 'Diterima' : 'Tidak Diterima'),
+                'status' => (bool)$detail->status,
+                'status_text' => $detail->status ? 'Diterima' : 'Tidak Diterima'
             ]);
-        } catch (\Exception $e) {
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation error in updateStatus', [
+                'errors' => $e->errors(),
+                'input' => $request->all()
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memperbarui status.'
+                'message' => 'Data input tidak valid: ' . implode(', ', $e->errors()['status'] ?? ['Unknown validation error'])
+            ], 422);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            Log::error('DetailFrs not found', ['id' => $id]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Data FRS tidak ditemukan.'
+            ], 404);
+
+        } catch (\Exception $e) {
+            Log::error('Error updating status', [
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'id' => $id,
+                'request' => $request->all()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memperbarui status: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -168,7 +259,7 @@ class DetailFrsController extends Controller
         try {
             $detail = DetailFrs::findOrFail($id);
             $id_frs = $detail->id_frs;
-            
+
             // Jika mahasiswa, pastikan FRS adalah miliknya
             if (Auth::user()->role === 'mahasiswa') {
                 $frs = Frs::findOrFail($id_frs);
@@ -178,7 +269,7 @@ class DetailFrsController extends Controller
                         ->with('type', 'error');
                 }
             }
-            
+
             $detail->delete();
 
             // Update total SKS setelah menghapus

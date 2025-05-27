@@ -55,7 +55,7 @@
                                 @endif
                                 
                                 {{-- Kolom Aksi untuk Admin dan Dosen --}}
-                                @if (auth()->user()->role === 'admin' || auth()->user()->role === 'dosen')
+                                @if (auth()->user()->role === 'admin')
                                     <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Aksi</th>
                                 @endif
                             </tr>
