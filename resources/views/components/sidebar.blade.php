@@ -132,7 +132,7 @@
             @endif
 
             {{-- Nilai tampilan dosen --}}
-            @if(auth()->user()->role === 'dosen' || auth()->user()->role === 'admin')
+            @if(auth()->user()->role === 'dosen')
                 <a href="{{ route('nilai-dosen') }}" class="flex items-center gap-2 {{ request()->routeIs('nilai-dosen') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
                     <i class="ph ph-ranking text-xl text-hitam"></i>
                     <span class="text-base text-hitam">Nilai</span>
