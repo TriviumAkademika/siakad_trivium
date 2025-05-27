@@ -24,9 +24,7 @@
     $badgeClass = $statusColors[$statusColor] ?? $statusColors['blue'];
 @endphp
 
-{{-- <div class="flex flex-row w-full p-4">
-
-</div> --}}
+{{-- <div class="flex flex-row w-full p-4"></div> --}}
 <div class="flex flex-col w-full p-4 bg-brand-50 rounded-3xl border border-brand-200">
     <div class="flex justify-between items-start mb-2">
         <h4 class="text-base text-hitam">{{ $title }}</h4>
