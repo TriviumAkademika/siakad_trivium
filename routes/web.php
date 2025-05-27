@@ -38,52 +38,57 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-/// PERMISSION ROLE ADMIN, DOSEN, MAHASISWA 
-/// PERMISSION ALL ROLE
-/// lihat tabel dosen, matkul, jadwal, detail frs
-Route::middleware(['auth', 'verified', 'role:admin|dosen|mahasiswa'])->group(function () {
+/// ============================================
+/// ROUTE UNTUK SEMUA YANG TELAH LOGIN
+/// ============================================
+
+// Route untuk melihat data umum (bisa diakses oleh semua role yang sudah login)
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Route untuk melihat data dosen
     Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index');
+    
+    // Route untuk melihat data mata kuliah
     Route::get('/matkul', [MatkulController::class, 'index'])->name('matkul.index');
+    
+    // Route untuk melihat jadwal
     Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
     Route::get('/kelas/create', [KelasController::class, 'create'])->name('kelas.create');
     Route::get('/mahasiswa/create', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
+    
+    // Route untuk FRS (Form Rencana Studi)
+    Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
+    Route::get('/detail-frs/{id_frs}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
+    
+    // Hanya mahasiswa yang bisa membuat FRS
+    Route::middleware(['role:mahasiswa'])->group(function() {
+        Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
+    });
 });
 
-/// PERMISSION ROLE ADMIN, DOSEN
-Route::middleware(['auth', 'verified', 'role:dosen|admin'])->group(function () {
+/// ============================================
+/// ROUTE KHUSUS ADMIN & DOSEN
+/// ============================================
+Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
+    // Manajemen Mahasiswa
     Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
+    Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
+    Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
+    Route::patch('/detail-frs/update-status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
     Route::get('/kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
     Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
-
-    // FRS - Admin dan Dosen bisa melihat daftar FRS
-    Route::get('/frs', [FrsController::class, 'index'])->name('frs.index');
 });
 
 /// PERMISSION ROLE DOSEN, MAHASISWA
-Route::middleware(['auth', 'verified', 'role:dosen|mahasiswa'])->group(function () {
-    // FRS - Dosen dan Mahasiswa bisa melihat detail FRS
-    Route::get('/frs/{id}', [FrsController::class, 'show'])->name('frs.show');
+Route::middleware(['auth', 'verified', 'role:dosen|mahasiswa'])->group(function () {});
 
-    // Detail FRS - Mahasiswa dan Dosen bisa melihat detail FRS
-    Route::get('/detail-frs/{id}', [DetailFrsController::class, 'index'])->name('detail-frs.index');
-});
-
-/// PERMISSION ROLE MAHASISWA
-Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {
-    // Detail FRS - Mahasiswa bisa menambah mata kuliah ke FRS dan menghapus
-    Route::post('/detail-frs', [DetailFrsController::class, 'store'])->name('detail-frs.store');
-    Route::delete('/detail-frs/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
-});
-
-/// PERMISSION ROLE DOSEN
-Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {
-    // FIXED: Detail FRS - Dosen bisa mengubah status (parameter harus id_detail_frs)
-    Route::patch('/detail-frs/status/{id}', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
-    Route::post('/detail-frs/set-session', [DetailFrsController::class, 'setSession'])->name('detail-frs.set-session');
+/// PERMISSION ROLE ADMIN, MAHASISWA
+Route::middleware(['auth', 'verified', 'role:admin|mahasiswa'])->group(function () {
+    Route::delete('/detail-frs/delete/{id}', [DetailFrsController::class, 'destroy'])->name('detail-frs.destroy');
 });
 
 /// PERMISSIONS ROLE ADMIN
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
+    
     // Tabel Mahasiswa CRU
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
     Route::get('/mahasiswa/{id}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
@@ -94,8 +99,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    // Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
     // Tabel Dosen CU SHOW
     Route::get('/dosen/create', [DosenController::class, 'create'])->name('dosen.create');
@@ -145,18 +150,36 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     // Tabel FRS CRU - Admin bisa membuat, edit, dan delete FRS
     Route::get('/frs/create', [FrsController::class, 'create'])->name('frs.create');
     Route::post('/frs', [FrsController::class, 'store'])->name('frs.store');
-    Route::get('/frs/{id}/edit', [FrsController::class, 'edit'])->name('frs.edit');
-    Route::put('/frs/{id}', [FrsController::class, 'update'])->name('frs.update');
-    Route::delete('/frs/{id}', [FrsController::class, 'destroy'])->name('frs.destroy');
+    // Route::get('/frs/{id}/edit', [FrsController::class, 'edit'])->name('frs.edit');
+    // Route::put('/frs/{id}', [FrsController::class, 'update'])->name('frs.update');
+    // Route::delete('/frs/{id}', [FrsController::class, 'destroy'])->name('frs.destroy');
+
+    // Tabel Detail FRS CRUD
+    Route::patch('/detail-frs/{id}/update-status', [DetailFrsController::class, 'updateStatus'])->name('detail-frs.update-status');
+    Route::post('/detail-frs/set-session', [DetailFrsController::class, 'setSession'])->name('detail-frs.set-session');
 });
 
-// Nilai Routes - CLEANED UP
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/nilai-mhs', [NilaiController::class, 'nilaiMhs'])->name('nilai-mhs');
-    Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
-    Route::resource('nilai', NilaiController::class);
-    Route::get('/nilai/update-nilai/{id_mahasiswa}/{id_matkul}', [NilaiController::class, 'updateNilaiForm'])->name('nilai.updateNilaiForm');
-    Route::post('/nilai/update-nilai', [NilaiController::class, 'updateNilai'])->name('nilai.updateNilai');
+
+/// PERMISSION ROLE DOSEN
+Route::middleware(['auth', 'verified', 'role:dosen'])->group(function () {});
+
+
+/// PERMISSION ROLE MAHASISWA
+Route::middleware(['auth', 'verified', 'role:mahasiswa'])->group(function () {});
+
+
+
+Route::get('/nilai-mhs', [App\Http\Controllers\NilaiController::class, 'nilaiMhs'])->name('nilai-mhs');
+
+Route::get('/nilai-mhs', function () {
+    return view('nilai.nilai-mhs');
 });
+
+Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
+Route::get('/nilai-dosen', [NilaiController::class, 'index'])->name('nilai-dosen');
+Route::resource('nilai', NilaiController::class);
+// Route::resource('users', UserController::class);
+Route::get('/nilai/update-nilai/{id_mahasiswa}/{id_matkul}', [App\Http\Controllers\NilaiController::class, 'updateNilaiForm'])->name('nilai.updateNilaiForm');
+Route::post('/nilai/update-nilai', [App\Http\Controllers\NilaiController::class, 'updateNilai'])->name('nilai.updateNilai');
 
 require __DIR__ . '/auth.php';

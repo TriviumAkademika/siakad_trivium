@@ -31,4 +31,16 @@ class Frs extends Model
     {
         return $this->hasMany(DetailFrs::class, 'id_frs');
     }
+    
+    public function nilai()
+    {
+        return $this->hasManyThrough(
+            \App\Models\nilai::class,
+            \App\Models\DetailFrs::class,
+            'id_frs',
+            'detail_frs_id',
+            'id_frs',
+            'id_detail_frs'
+        );
+    }
 }

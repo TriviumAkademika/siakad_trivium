@@ -120,8 +120,11 @@ class DosenSeeder extends Seeder
             ],
         ];
 
-        foreach ($dosens as $dosen) {
-            Dosen::create($dosen);
+        foreach ($dosens as $dosenData) {
+            Dosen::firstOrCreate(
+                ['nip' => $dosenData['nip']], // Kunci untuk mencari
+                $dosenData // Data untuk dibuat jika tidak ditemukan
+            );
         }
     }
 }

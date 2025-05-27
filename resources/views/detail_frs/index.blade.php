@@ -44,10 +44,10 @@
                                 @if (auth()->user()->hasRole('dosen'))
                                     <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Status Control</th>
                                 @endif
-                                {{-- Status Text untuk semua role --}}
-                                <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Status</th>
+
                                 {{-- Aksi hanya untuk Mahasiswa --}}
                                 @if (auth()->user()->hasRole('mahasiswa'))
+                                    <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Status</th>
                                     <th class="px-4 py-3 text-sm font-semibold text-center text-hitam">Aksi</th>
                                 @endif
                             </tr>
@@ -74,22 +74,23 @@
                                     @endif
 
                                     {{-- Status Text - Untuk semua role --}}
-                                    <x-table.table-td class="text-center">
-                                        @if ($detail->status)
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                Disetujui
-                                            </span>
-                                        @else
-                                            <span
-                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                Menunggu Persetujuan
-                                            </span>
-                                        @endif
-                                    </x-table.table-td>
+
 
                                     {{-- Button Delete - Hanya untuk Mahasiswa --}}
                                     @if (auth()->user()->hasRole('mahasiswa'))
+                                        <x-table.table-td class="text-center">
+                                            @if ($detail->status)
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    Disetujui
+                                                </span>
+                                            @else
+                                                <span
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    Menunggu Persetujuan
+                                                </span>
+                                            @endif
+                                        </x-table.table-td>
                                         <x-table.table-td class="text-center">
                                             <x-button.delete :deleteId="$detail->id_detail_frs" :deleteRoute="route('detail-frs.destroy', $detail->id_detail_frs)" :itemName="$detail->jadwal->matkul->nama_matkul"
                                                 title="Hapus Jadwal dari FRS?" />
