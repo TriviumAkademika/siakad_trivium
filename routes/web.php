@@ -142,6 +142,7 @@ Route::middleware(['auth', 'verified', 'role:admin|dosen'])->group(function () {
     Route::post('/dosen', [DosenController::class, 'store'])->name('dosen.store');
     Route::get('/dosen/{id}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
     Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');
+    Route::delete('/dosen/{id}', [DosenController::class, 'destroy'])->name('dosen.destroy');
 
     // Tabel Waktu CRU
     Route::get('/waktu', [WaktuController::class, 'index'])->name('waktu.index');

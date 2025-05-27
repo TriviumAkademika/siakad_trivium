@@ -132,23 +132,17 @@
             @endif
 
             {{-- Nilai tampilan dosen --}}
-            @if (auth()->user()->role === 'dosen')
-                <a href="{{ route('nilai-dosen') }}" class="flex items-center gap-2 p-2 rounded-lg">
+            @if(auth()->user()->role === 'dosen')
+                <a href="{{ route('nilai-dosen') }}" class="flex items-center gap-2 {{ request()->routeIs('nilai-dosen') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
+                    <i class="ph ph-ranking text-xl text-hitam"></i>
+                    <span class="text-base text-hitam">Nilai</span>
+                </a>
+            @elseif(auth()->user()->role === 'mahasiswa')
+                <a href="{{ route('nilai-mhs') }}" class="flex items-center gap-2 {{ request()->routeIs('nilai-mahasiswa.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
                     <i class="ph ph-ranking text-xl text-hitam"></i>
                     <span class="text-base text-hitam">Nilai</span>
                 </a>
             @endif
-            @if(auth()->user()->role === 'dosen' || auth()->user()->role === 'admin')
-    <a href="{{ route('nilai-dosen') }}" class="flex items-center gap-2 {{ request()->routeIs('nilai-dosen') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
-        <i class="ph ph-ranking text-xl text-hitam"></i>
-        <span class="text-base text-hitam">Nilai</span>
-    </a>
-@elseif(auth()->user()->role === 'mahasiswa')
-    <a href="{{ route('nilai-mahasiswa') }}" class="flex items-center gap-2 {{ request()->routeIs('nilai-mahasiswa.*') ? 'bg-brand-200' : '' }} p-2 rounded-lg">
-        <i class="ph ph-ranking text-xl text-hitam"></i>
-        <span class="text-base text-hitam">Nilai</span>
-    </a>
-@endif
         </div>
     </div>
 
