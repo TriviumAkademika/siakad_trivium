@@ -52,6 +52,15 @@ class UserSeeder extends Seeder
             ]);
             $user->assignRole('mahasiswa');
         }
+        $mhs5 = Mahasiswa::find(3);
+        if ($mhs5) {
+            $user = User::create([
+                'email' => 'ghazali@student.trivium.ac.id',
+                'password' => Hash::make('Pw1234'),
+                'id_mahasiswa' => $mhs5->id_mahasiswa,
+            ]);
+            $user->assignRole('mahasiswa');
+        }
 
         // ==== DOSEN ====
         $dsn1 = Dosen::find(1);
@@ -83,6 +92,17 @@ class UserSeeder extends Seeder
             ]);
             $user->assignRole('dosen');
         }
+
+        $dsn4 = Dosen::find(7);
+        if ($dsn4) {
+            $user = User::create([
+                'email' => 'yanuar@lecture.trivium.ac.id',
+                'password' => Hash::make('Pw1234'),
+                'id_dosen' => $dsn4->id_dosen,
+            ]);
+            $user->assignRole('dosen');
+        }
+
 
         // ==== ADMIN ====
         $admin1 = User::create([
