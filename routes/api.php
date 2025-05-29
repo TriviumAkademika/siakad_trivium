@@ -14,10 +14,14 @@ use App\Http\Controllers\Api\DetailFrsApiController;
 use App\Http\Controllers\Api\UserApiController;
 use App\Http\Controllers\Api\NilaiApiController;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
 
+Route::post('/login', [UserApiController::class, 'login']);
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 Route::apiResource('mahasiswa', MahasiswaApiController::class);
 Route::apiResource('dosen', DosenApiController::class);
