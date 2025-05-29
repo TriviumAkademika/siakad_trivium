@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nip', 50)->unique();
             $table->text('alamat');
             $table->string('no_hp', 20);
+            $table->enum('status', ['AKTIF', 'CUTI', 'PENSIUN', 'TIDAK AKTIF'])->default('AKTIF');
             // Tidak pakai timestamps karena di model kamu: public $timestamps = false
         });
     }

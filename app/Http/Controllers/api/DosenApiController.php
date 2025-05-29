@@ -6,13 +6,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen;
 use Illuminate\Http\Request;
+use App\http\Resources\DosenResource;
 
 class DosenApiController extends Controller
 {
     public function index()
     {
-        return response()->json(Dosen::all(), 200);
+        $dosen = Dosen::all();
+        return DosenResource::collection($dosen);
     }
+
 
     public function store(Request $request)
     {

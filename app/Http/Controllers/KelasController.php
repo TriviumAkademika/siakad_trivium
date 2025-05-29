@@ -4,17 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use App\Models\Dosen;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class KelasController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kelas = Kelas::with('dosen')->get(); // Mengambil semua kelas beserta dosen yang terkait
-        return view('kelas.index', compact('kelas')); // Kirim data kelas ke view
+        $totalkelas = Kelas::count();
+
+        $query = Kelas::with('dosen');
+
+        // Handle search
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('tahun_masuk', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('prodi', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('paralel', 'LIKE', "%{$searchTerm}%")
+                    ->orWhereHas('dosen', function ($dosenQuery) use ($searchTerm) {
+                        $dosenQuery->where('nama_dosen', 'LIKE', "%{$searchTerm}%");
+                    });
+            });
+        }
+
+        // Handle status filter
+        if ($request->filled('status')) {
+            $statusFilters = is_array($request->status) ? $request->status : [$request->status];
+            $query->whereIn('status', $statusFilters);
+        }
+
+        // Order by id kelas
+        $query->orderBy('id_kelas', 'asc');
+
+        // Paginate with 10 items per page and preserve query parameters
+        $kelas = $query->paginate(10)->withQueryString();
+
+        return view('kelas.index', compact('kelas'));
     }
 
     /**
@@ -22,8 +53,10 @@ class KelasController extends Controller
      */
     public function create()
     {
-        $dosen = Dosen::all(); // Ambil semua dosen untuk ditampilkan di dropdown
-        return view('kelas.create', compact('dosen')); // Tampilkan form create dengan data dosen
+        $dosen = Dosen::where('status', 'AKTIF')
+            ->orderBy('nama_dosen', 'asc')
+            ->get();
+        return view('kelas.create', compact('dosen'));
     }
 
     /**
@@ -31,24 +64,109 @@ class KelasController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'id_dosen' => 'required|exists:dosen,id_dosen', // Pastikan id_dosen ada dalam tabel dosen
-            'tahun_masuk' => 'required|string|max:4',
-            'prodi' => 'required|string|max:255',
-            'paralel' => 'required|string|max:1',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'id_dosen' => [
+                    'required',
+                    'exists:dosen,id_dosen'
+                ],
+                'tahun_masuk' => [
+                    'required',
+                    'digits:4',                        // ✅ Memastikan tepat 4 digit
+                    'integer',                         // ✅ Memastikan berupa integer
+                    'between:2000,' . (date('Y') + 1)  // ✅ Validasi range yang tepat
+                ],
+                'prodi' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[a-zA-Z0-9\s\-]+$/'
+                ],
+                'paralel' => [
+                    'required',
+                    'string',
+                    'size:1',
+                    'regex:/^[A-Z]$/'
+                ],
+                'status' => [
+                    'required',
+                    'in:AKTIF,LULUS'
+                ],
+            ], [
+                // Custom error messages
+                'id_dosen.required' => 'Wali kelas wajib dipilih.',
+                'id_dosen.exists' => 'Dosen yang dipilih tidak valid.',
 
-        Kelas::create($request->all()); // Simpan data kelas yang diterima
+                'tahun_masuk.required' => 'Tahun masuk wajib diisi.',
+                'tahun_masuk.string' => 'Tahun masuk harus berupa teks.',
+                'tahun_masuk.size' => 'Tahun masuk harus tepat 4 digit.',
+                'tahun_masuk.regex' => 'Tahun masuk hanya boleh berisi angka.',
+                'tahun_masuk.min' => 'Tahun masuk tidak boleh kurang dari 2000.',
+                'tahun_masuk.max' => 'Tahun masuk tidak boleh lebih dari ' . (date('Y') + 1) . '.',
 
-        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil ditambahkan!');
+                'prodi.required' => 'Program studi wajib diisi.',
+                'prodi.string' => 'Program studi harus berupa teks.',
+                'prodi.max' => 'Program studi tidak boleh lebih dari 255 karakter.',
+                'prodi.regex' => 'Program studi hanya boleh berisi huruf, angka, spasi, dan tanda minus.',
+
+                'paralel.required' => 'Paralel wajib diisi.',
+                'paralel.string' => 'Paralel harus berupa teks.',
+                'paralel.size' => 'Paralel harus tepat 1 karakter.',
+                'paralel.regex' => 'Paralel harus berupa huruf kapital (A-Z).',
+
+                'status.required' => 'Status wajib dipilih.',
+                'status.in' => 'Status harus Aktif atau Lulus.',
+            ]);
+
+            // Check for duplicate class (same prodi, tahun_masuk, and paralel)
+            $existingKelas = Kelas::where('prodi', $validatedData['prodi'])
+                ->where('tahun_masuk', $validatedData['tahun_masuk'])
+                ->where('paralel', $validatedData['paralel'])
+                ->first();
+
+            if ($existingKelas) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Kelas dengan program studi, tahun masuk, dan paralel yang sama sudah ada.');
+            }
+
+            Kelas::create($validatedData);
+
+            return redirect()->route('kelas.index')
+                ->with('success', 'Data kelas berhasil ditambahkan.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Gagal menambahkan kelas. Periksa kembali data yang diisi.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Kelas $kelas)
+    public function show($id)
     {
-        //
+        try {
+            // Ambil data kelas dengan relasi dosen
+            $kelas = Kelas::with('dosen')->where('id_kelas', $id)->firstOrFail();
+
+            // Ambil semua mahasiswa dalam kelas tersebut
+            $mahasiswa = Mahasiswa::where('id_kelas', $id)->get();
+
+            // Hitung statistik
+            $totalMahasiswa = $mahasiswa->count();
+            $mahasiswaLaki = $mahasiswa->where('gender', 'L')->count();
+            $mahasiswaPerempuan = $mahasiswa->where('gender', 'P')->count();
+
+            return view('kelas.show', compact('kelas', 'mahasiswa', 'totalMahasiswa', 'mahasiswaLaki', 'mahasiswaPerempuan'));
+        } catch (\Exception $e) {
+            return redirect()->route('kelas.index')->with('error', 'Data kelas tidak ditemukan!');
+        }
     }
 
     /**
@@ -56,9 +174,19 @@ class KelasController extends Controller
      */
     public function edit($id)
     {
-        $kelas = Kelas::findOrFail($id); // Ambil data kelas berdasarkan id
-        $dosen = Dosen::all(); // Ambil semua dosen untuk dropdown
-        return view('kelas.edit', compact('kelas', 'dosen')); // Tampilkan form edit dengan data kelas dan dosen
+        try {
+            $kelas = Kelas::findOrFail($id);
+
+            // Pastikan data dosen diambil dengan benar
+            $dosen = Dosen::where('status', 'AKTIF')
+                ->orderBy('nama_dosen', 'asc')
+                ->get();
+
+            return view('kelas.edit', compact('kelas', 'dosen'));
+        } catch (\Exception $e) {
+            return redirect()->route('kelas.index')
+                ->with('error', 'Data kelas tidak ditemukan.');
+        }
     }
 
     /**
@@ -66,18 +194,89 @@ class KelasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $kelas = Kelas::findOrFail($id);
+        try {
+            $kelas = Kelas::findOrFail($id);
 
-        $request->validate([
-            'id_dosen' => 'required|exists:dosen,id_dosen', // Validasi id_dosen
-            'tahun_masuk' => 'required|string|max:4',
-            'prodi' => 'required|string|max:255',
-            'paralel' => 'required|string|max:1',
-        ]);
+            $validatedData = $request->validate([
+                'id_dosen' => [
+                    'required',
+                    'exists:dosen,id_dosen'
+                ],
+                'tahun_masuk' => [
+                    'required',
+                    'digits:4',                        // ✅ Memastikan tepat 4 digit
+                    'integer',                         // ✅ Memastikan berupa integer
+                    'between:2000,' . (date('Y') + 1)  // ✅ Validasi range yang tepat
+                ],
+                'prodi' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[a-zA-Z0-9\s\-]+$/'
+                ],
+                'paralel' => [
+                    'required',
+                    'string',
+                    'size:1',
+                    'regex:/^[A-Z]$/'
+                ],
+                'status' => [
+                    'required',
+                    'in:AKTIF,LULUS'
+                ],
+            ], [
+                // Custom error messages (same as store method)
+                'id_dosen.required' => 'Wali kelas wajib dipilih.',
+                'id_dosen.exists' => 'Dosen yang dipilih tidak valid.',
 
-        $kelas->update($request->all()); // Update data kelas
+                'tahun_masuk.required' => 'Tahun masuk wajib diisi.',
+                'tahun_masuk.string' => 'Tahun masuk harus berupa teks.',
+                'tahun_masuk.size' => 'Tahun masuk harus tepat 4 digit.',
+                'tahun_masuk.regex' => 'Tahun masuk hanya boleh berisi angka.',
+                'tahun_masuk.min' => 'Tahun masuk tidak boleh kurang dari 2000.',
+                'tahun_masuk.max' => 'Tahun masuk tidak boleh lebih dari ' . (date('Y') + 1) . '.',
 
-        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil diperbarui!');
+                'prodi.required' => 'Program studi wajib diisi.',
+                'prodi.string' => 'Program studi harus berupa teks.',
+                'prodi.max' => 'Program studi tidak boleh lebih dari 255 karakter.',
+                'prodi.regex' => 'Program studi hanya boleh berisi huruf, angka, spasi, dan tanda minus.',
+
+                'paralel.required' => 'Paralel wajib diisi.',
+                'paralel.string' => 'Paralel harus berupa teks.',
+                'paralel.size' => 'Paralel harus tepat 1 karakter.',
+                'paralel.regex' => 'Paralel harus berupa huruf kapital (A-Z).',
+
+                'status.required' => 'Status wajib dipilih.',
+                'status.in' => 'Status harus Aktif atau Lulus.',
+            ]);
+
+            // Check for duplicate class (excluding current record)
+            $existingKelas = Kelas::where('prodi', $validatedData['prodi'])
+                ->where('tahun_masuk', $validatedData['tahun_masuk'])
+                ->where('paralel', $validatedData['paralel'])
+                ->where('id_kelas', '!=', $id)
+                ->first();
+
+            if ($existingKelas) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Kelas dengan program studi, tahun masuk, dan paralel yang sama sudah ada.');
+            }
+
+            $kelas->update($validatedData);
+
+            return redirect()->route('kelas.index')
+                ->with('success', 'Data kelas berhasil diperbarui.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('error', 'Gagal memperbarui kelas. Periksa kembali data yang diisi.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -85,9 +284,25 @@ class KelasController extends Controller
      */
     public function destroy($id)
     {
-        $kelas = Kelas::findOrFail($id);
-        $kelas->delete(); // Hapus data kelas
+        try {
+            $kelas = Kelas::findOrFail($id);
 
-        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus!');
+            // Check if there are students in this class
+            $mahasiswaCount = Mahasiswa::where('id_kelas', $id)->count();
+
+            if ($mahasiswaCount > 0) {
+                return redirect()->route('kelas.index')
+                    ->with('error', "Tidak dapat menghapus kelas karena masih ada {$mahasiswaCount} mahasiswa terdaftar di kelas ini.");
+            }
+
+            $kelasInfo = $kelas->prodi . ' ' . $kelas->tahun_masuk . ' ' . $kelas->paralel;
+            $kelas->delete();
+
+            return redirect()->route('kelas.index')
+                ->with('success', "Data kelas {$kelasInfo} berhasil dihapus.");
+        } catch (\Exception $e) {
+            return redirect()->route('kelas.index')
+                ->with('error', 'Gagal menghapus data kelas: ' . $e->getMessage());
+        }
     }
 }

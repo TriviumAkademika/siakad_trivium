@@ -13,13 +13,11 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // ==== MAHASISWA ====
-
         $mhs1 = Mahasiswa::find(22); // Ganti ID sesuai dengan data Anda
         if ($mhs1) {
             $user = User::create([
                 'email' => 'selviea@student.trivium.ac.id',
                 'password' => Hash::make('selviea123'),
-                'role' => 'mahasiswa',
                 'id_mahasiswa' => $mhs1->id_mahasiswa,
             ]);
             $user->assignRole('mahasiswa');
@@ -30,7 +28,6 @@ class UserSeeder extends Seeder
             $user = User::create([
                 'email' => 'boluea@student.trivium.ac.id',
                 'password' => Hash::make('rikuchan'),
-                'role' => 'mahasiswa',
                 'id_mahasiswa' => $mhs2->id_mahasiswa,
             ]);
             $user->assignRole('mahasiswa');
@@ -41,7 +38,6 @@ class UserSeeder extends Seeder
             $user = User::create([
                 'email' => 'alfian@student.trivium.ac.id',
                 'password' => Hash::make('alfian'),
-                'role' => 'mahasiswa',
                 'id_mahasiswa' => $mhs3->id_mahasiswa,
             ]);
             $user->assignRole('mahasiswa');
@@ -52,20 +48,26 @@ class UserSeeder extends Seeder
             $user = User::create([
                 'email' => 'renata@student.trivium.ac.id',
                 'password' => Hash::make('renata'),
-                'role' => 'mahasiswa',
                 'id_mahasiswa' => $mhs4->id_mahasiswa,
+            ]);
+            $user->assignRole('mahasiswa');
+        }
+        $mhs5 = Mahasiswa::find(3);
+        if ($mhs5) {
+            $user = User::create([
+                'email' => 'ghazali@student.trivium.ac.id',
+                'password' => Hash::make('Pw1234'),
+                'id_mahasiswa' => $mhs5->id_mahasiswa,
             ]);
             $user->assignRole('mahasiswa');
         }
 
         // ==== DOSEN ====
-
         $dsn1 = Dosen::find(1);
         if ($dsn1) {
             $user = User::create([
                 'email' => 'budi@lecture.trivium.ac.id',
                 'password' => Hash::make('budi123'),
-                'role' => 'dosen',
                 'id_dosen' => $dsn1->id_dosen,
             ]);
             $user->assignRole('dosen');
@@ -76,18 +78,36 @@ class UserSeeder extends Seeder
             $user = User::create([
                 'email' => 'siti@lecture.trivium.ac.id',
                 'password' => Hash::make('siti123'),
-                'role' => 'dosen',
                 'id_dosen' => $dsn2->id_dosen,
             ]);
             $user->assignRole('dosen');
         }
 
-        // ==== ADMIN ====
+        $dsn3 = Dosen::find(15);
+        if ($dsn3) {
+            $user = User::create([
+                'email' => 'adam@lecture.trivium.ac.id',
+                'password' => Hash::make('adam123'),
+                'id_dosen' => $dsn3->id_dosen,
+            ]);
+            $user->assignRole('dosen');
+        }
 
+        $dsn4 = Dosen::find(7);
+        if ($dsn4) {
+            $user = User::create([
+                'email' => 'yanuar@lecture.trivium.ac.id',
+                'password' => Hash::make('Pw1234'),
+                'id_dosen' => $dsn4->id_dosen,
+            ]);
+            $user->assignRole('dosen');
+        }
+
+
+        // ==== ADMIN ====
         $admin1 = User::create([
             'email' => 'adminnisa@trivium.ac.id',
             'password' => Hash::make('admin123'),
-            'role' => 'admin',
             'name' => 'Admin Nisa',
         ]);
         $admin1->assignRole('admin');
@@ -95,7 +115,6 @@ class UserSeeder extends Seeder
         $admin2 = User::create([
             'email' => 'adminrahma@trivium.ac.id',
             'password' => Hash::make('admin123'),
-            'role' => 'mahasiswa',
             'name' => 'Admin Rahma',
         ]);
         $admin2->assignRole('admin');
@@ -103,7 +122,6 @@ class UserSeeder extends Seeder
         $admin3 = User::create([
             'email' => 'akaashi@trivium.ac.id',
             'password' => Hash::make('akaashi'),
-            'role' => 'admin',
             'name' => 'Admin Akaashi',
         ]);
         $admin3->assignRole('admin');

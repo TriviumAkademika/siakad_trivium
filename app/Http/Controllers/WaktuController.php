@@ -7,9 +7,45 @@ use Illuminate\Http\Request;
 
 class WaktuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $waktu = Waktu::all();
+                  $totalWaktu = Waktu::count();
+        $query = Waktu::query();
+
+        // Handle day filter
+        if ($request->has('hari') && !empty($request->hari)) {
+            $selectedDays = is_array($request->hari) ? $request->hari : [$request->hari];
+            $query->whereIn('hari', $selectedDays);
+        }
+
+        // Handle sorting
+        $sortBy = $request->get('sort', 'hari');
+        $sortDirection = $request->get('direction', 'asc');
+
+        switch($sortBy) {
+            case 'hari':
+                // Custom sort for days of week
+                $query->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat')");
+                break;
+            case 'id':
+                $query->orderBy('id_waktu', $sortDirection);
+                break;
+            case 'jam_mulai':
+                $query->orderBy('jam_mulai', $sortDirection);
+                break;
+            case 'jam_selesai':
+                $query->orderBy('jam_selesai', $sortDirection);
+                break;
+            default:
+                $query->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat')");
+        }
+
+        // Paginate results
+        $waktu = $query->paginate(10);
+        
+        // Preserve query parameters in pagination links
+        $waktu->appends($request->query());
+
         return view('waktu.index', compact('waktu'));
     }
 

@@ -4,6 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\User;
+use App\Models\Dosen;
+use App\Models\Ruangan;
+use App\Models\Kelas;
+use App\Models\Waktu;
+use App\Models\Matkul;
+use App\Models\Jadwal;
 
 class DashboardController extends Controller
 {
@@ -12,9 +19,30 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $mahasiswa = Mahasiswa::first();
-        return view('pages.dashboard-mahasiswa', compact('mahasiswa'));
+        // Hitung semua statistik untuk admin
+        $totalMahasiswa = Mahasiswa::count();
+        $totalDosen = Dosen::count();
+        $totalUser = User::count();
+        $totalKelas = Kelas::count(); // sesuaikan dengan model kamu
+        $totalRuangan = Ruangan::count();
+        $totalWaktu = Waktu::count(); // sesuaikan dengan model kamu
+        $totalMataKuliah = Matkul::count();
+        $totalJadwal = Jadwal::count();
+
+        return view('dashboard', compact(
+            'totalMahasiswa',
+            'totalDosen',
+            'totalUser',
+            'totalKelas',
+            'totalRuangan',
+            'totalWaktu',
+            'totalMataKuliah',
+            'totalJadwal'
+        ));
     }
+    // $mahasiswa = Mahasiswa::first();
+    // return view('dashboard', compact('mahasiswa'));
+
 
     /**
      * Show the form for creating a new resource.
@@ -38,7 +66,7 @@ class DashboardController extends Controller
     public function show(string $id)
     {
         $mahasiswa = Mahasiswa::find($id);
-        return view('pages.dashboard-mahasiswa', compact('mahasiswa'));
+        return view('dashboard', compact('mahasiswa'));
     }
 
     /**

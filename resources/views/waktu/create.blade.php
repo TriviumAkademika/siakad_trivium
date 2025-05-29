@@ -47,7 +47,10 @@
                     </div>
 
                     {{-- Button Simpan --}}
-                    <div class="flex justify-end">
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='/waktu';">
+                            Batal
+                        </x-button.cancel>
                         <x-button.submit icon="ph ph-floppy-disk">
                             Simpan
                         </x-button.submit>

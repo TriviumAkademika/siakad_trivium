@@ -1,40 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  @vite('resources/css/app.css')
-  <title>Document</title>
-</head>
-<body>
+@extends('master')
 
-<h2>Edit FRS</h2>
-<form action="{{ route('frs.update', $frs->id_frs) }}" method="POST">
-    @csrf @method('PUT')
-    <div class="form-group">
-        <label>Mahasiswa</label>
-        <select name="id_mahasiswa" class="form-control">
-            @foreach($mahasiswa as $m)
-            <option value="{{ $m->id_mahasiswa }}" {{ $frs->id_mahasiswa == $m->id_mahasiswa ? 'selected' : '' }}>{{ $m->nama }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group">
-        <label>Tahun Ajaran</label>
-        <input type="text" name="tahun_ajaran" class="form-control" value="{{ $frs->tahun_ajaran }}">
-    </div>
-    <div class="form-group">
-        <label>Semester</label>
-        <input type="text" name="semester" class="form-control" value="{{ $frs->semester }}">
-    </div>
-    <div class="form-group">
-        <label>Total SKS</label>
-        <input type="number" name="total_sks" class="form-control" value="{{ $frs->total_sks }}">
-    </div>
-    <button class="btn btn-primary">Update</button>
-</form>
+@section('title', 'Edit FRS')
 
+@section('content')
+    <div class="flex w-full grow">
+        {{-- Sidebar --}}
+        @include('components.sidebar')
 
-</body>
-</html>
+        <div class="flex flex-col w-full bg-putih">
+            <h2 class="p-6 text-2xl text-hitam">Edit FRS</h2>
+
+            <div class="flex flex-col px-6 pb-6">
+                {{-- Form --}}
+                <form action="{{ route('frs.update', $frs->id_frs) }}" method="POST"
+                    class="px-6 pt-3 pb-6 border rounded-lg shadow space-y-4">
+                    @csrf
+                    @method('PUT')
+
+                    {{-- Mahasiswa --}}
+                    <x-form.dropdown-field label="Mahasiswa" name="id_mahasiswa" :options="$mahasiswa"
+                        :selected="$frs->id_mahasiswa" valueField="id_mahasiswa" labelFields="nama" />
+
+                    {{-- Tahun Ajaran --}}
+                    <x-form.text-field label="Tahun Ajaran" name="tahun_ajaran" type="text" 
+                        value="{{ old('tahun_ajaran', $frs->tahun_ajaran) }}" />
+
+                    {{-- Semester (readonly, karena ditentukan dari data mahasiswa) --}}
+                    <x-form.text-field label="Semester" name="semester" type="number" 
+                        :value="$frs->mahasiswa->semester" readonly />
+
+                    {{-- Total SKS --}}
+                    {{-- <x-form.text-field label="Total SKS" name="total_sks" type="number" 
+                        value="{{ old('total_sks', $frs->total_sks) }}" /> --}}
+
+                    {{-- IPS --}}
+                    {{-- <x-form.text-field label="IPS" name="ips" type="number" step="0.01" 
+                        value="{{ old('ips', $frs->ips) }}" :required="false" /> --}}
+
+                    {{-- IPK --}}
+                    {{-- <x-form.text-field label="IPK" name="ipk" type="number" step="0.01" 
+                        value="{{ old('ipk', $frs->ipk) }}" :required="false" /> --}}
+
+                    {{-- Tombol --}}
+                    <div class="flex justify-end gap-x-1">
+                        <x-button.cancel icon="ph ph-x" onConfirm="window.location.href='{{ route('frs.index') }}';">
+                            Batal
+                        </x-button.cancel>
+
+                        <x-button.submit icon="ph ph-floppy-disk">
+                            Perbarui
+                        </x-button.submit>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection
