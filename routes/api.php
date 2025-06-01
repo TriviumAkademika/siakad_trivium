@@ -43,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [UserApiController::class, 'logout'])->name('api.logout');
 
+    Route::apiResource('berita', BeritaApiController::class);
+
     // apiResource untuk UserApiController (jika CRUD user memerlukan auth)
     // Jika 'store' (register) user tidak perlu auth, pindahkan rute spesifik itu keluar grup.
     // Namun, biasanya UserApiController untuk manajemen user (index, show, update, delete) memerlukan auth.
