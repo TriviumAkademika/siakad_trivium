@@ -41,6 +41,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileApiController::class, 'show'])->name('api.profile.show');
     Route::put('/profile/password', [ProfileApiController::class, 'updatePassword'])->name('api.profile.updatePassword');
 
+    // Rute untuk DosenApiController
+    Route::get('/dosen', [DosenApiController::class, 'index'])->name('api.dosen.index');
+    Route::get('/dosen/{dosen}', [DosenApiController::class, 'show'])->name('api.dosen.show');
+
+    // Rute untuk NilaiApiController
+    // Endpoint untuk mahasiswa melihat nilainya sendiri
+    Route::get('/mahasiswa/nilai', [NilaiApiController::class, 'getNilaiMahasiswa'])->name('api.mahasiswa.nilai');
+
+    // Endpoint untuk dosen
+    Route::get('/dosen/nilai', [NilaiApiController::class, 'index'])->name('api.dosen.nilai.index'); // List matkul & mahasiswa+nilai per matkul
+    Route::post('/dosen/nilai', [NilaiApiController::class, 'store'])->name('api.dosen.nilai.store'); // Input nilai (mungkin batch)
+    Route::get('/dosen/nilai/mahasiswa/{id_mahasiswa}', [NilaiApiController::class, 'show'])->name('api.dosen.nilai.show'); // Detail nilai mhs utk edit (butuh id_matkul di query)
+    Route::put('/dosen/nilai/mahasiswa/{id_mahasiswa}', [NilaiApiController::class, 'update'])->name('api.dosen.nilai.update'); // Update nilai UTS/UAS
+    Route::delete('/dosen/nilai/{id_nilai}', [NilaiApiController::class, 'destroy'])->name('api.dosen.nilai.destroy'); // Hapus entri nilai tertentu
+
+    // Endpoint statistik (sudah ada di controller-mu, bisa diakses dosen/mahasiswa)
+    Route::get('/nilai/statistik', [NilaiApiController::class, 'getStatistics'])->name('api.nilai.statistik');
+
     // apiResource untuk UserApiController (jika CRUD user memerlukan auth)
     // Jika 'store' (register) user tidak perlu auth, pindahkan rute spesifik itu keluar grup.
     // Namun, biasanya UserApiController untuk manajemen user (index, show, update, delete) memerlukan auth.
@@ -51,7 +69,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rute apiResource lainnya yang memerlukan autentikasi
     Route::apiResource('mahasiswa', MahasiswaApiController::class);
-    Route::apiResource('dosen', DosenApiController::class);
     Route::apiResource('frs', FrsApiController::class);
     Route::apiResource('jadwal', JadwalApiController::class);
     Route::apiResource('detail-frs', DetailFrsApiController::class);
