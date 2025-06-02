@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             DetailFrsSeeder::class,
             RolePermissionSeeder::class,
             UserSeeder::class,
+            BeritaSeeder::class
 
         ]);
     }

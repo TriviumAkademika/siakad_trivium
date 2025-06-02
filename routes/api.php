@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [ProfileApiController::class, 'show'])->name('api.profile.show');
     Route::put('/profile/password', [ProfileApiController::class, 'updatePassword'])->name('api.profile.updatePassword');
 
+<<<<<<< HEAD
     // Rute untuk DosenApiController
     Route::get('/dosen', [DosenApiController::class, 'index'])->name('api.dosen.index');
     Route::get('/dosen/{dosen}', [DosenApiController::class, 'show'])->name('api.dosen.show');
@@ -58,6 +59,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Endpoint statistik (sudah ada di controller-mu, bisa diakses dosen/mahasiswa)
     Route::get('/nilai/statistik', [NilaiApiController::class, 'getStatistics'])->name('api.nilai.statistik');
+=======
+    Route::post('/logout', [UserApiController::class, 'logout'])->name('api.logout');
+
+    Route::apiResource('berita', BeritaApiController::class);
+>>>>>>> bfb60508b2393d1e75042b38e1e0727490a82ed3
 
     // apiResource untuk UserApiController (jika CRUD user memerlukan auth)
     // Jika 'store' (register) user tidak perlu auth, pindahkan rute spesifik itu keluar grup.

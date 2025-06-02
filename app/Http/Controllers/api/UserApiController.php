@@ -116,4 +116,24 @@ class UserApiController extends Controller
             'message' => 'User deleted successfully'
         ]);
     }
+    
+    // --- METHOD BARU UNTUK LOGOUT ---
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(Request $request)
+    {
+        // Menghapus token yang digunakan untuk autentikasi request ini
+        // Ini akan membuat token tersebut tidak valid lagi.
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logout berhasil.'
+        ]);
+    }
+    // --- AKHIR METHOD BARU ---
 }
