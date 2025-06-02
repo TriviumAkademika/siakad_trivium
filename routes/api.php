@@ -44,6 +44,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserApiController::class, 'logout'])->name('api.logout');
 
     Route::apiResource('berita', BeritaApiController::class);
+    Route::get('/mahasiswa/jadwal', [JadwalApiController::class, 'index']);
+    Route::get('/mahasiswa/jadwal/{id_jadwal}', [JadwalApiController::class, 'show']);
 
     // apiResource untuk UserApiController (jika CRUD user memerlukan auth)
     // Jika 'store' (register) user tidak perlu auth, pindahkan rute spesifik itu keluar grup.
@@ -57,7 +59,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('mahasiswa', MahasiswaApiController::class);
     Route::apiResource('dosen', DosenApiController::class);
     Route::apiResource('frs', FrsApiController::class);
-    Route::apiResource('jadwal', JadwalApiController::class);
     Route::apiResource('detail-frs', DetailFrsApiController::class);
     Route::apiResource('nilai', NilaiApiController::class);
 
