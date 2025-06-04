@@ -6,9 +6,35 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserApiController extends Controller
 {
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['message' => 'Email atau password salah'], 401);
+        }
+
+        $user = Auth::user();
+
+        // Cek apakah user punya role mahasiswa
+        if (!$user->hasRole('mahasiswa')) {
+            return response()->json(['message' => 'Hanya mahasiswa yang dapat login.'], 403);
+        }
+
+        // Bikin token Sanctum
+        $token = $user->createToken('mobile')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login berhasil',
+            'token' => $token,
+        ]);
+    }
+
     // Ambil semua user
     public function index()
     {
@@ -90,4 +116,24 @@ class UserApiController extends Controller
             'message' => 'User deleted successfully'
         ]);
     }
+    
+    // --- METHOD BARU UNTUK LOGOUT ---
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(Request $request)
+    {
+        // Menghapus token yang digunakan untuk autentikasi request ini
+        // Ini akan membuat token tersebut tidak valid lagi.
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Logout berhasil.'
+        ]);
+    }
+    // --- AKHIR METHOD BARU ---
 }

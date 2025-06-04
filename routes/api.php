@@ -1,28 +1,90 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API; // Pastikan namespace ini sesuai dengan letak controller Anda
 
-// use App\Http\Controllers\Controller;
+// use App\Http\Controllers\Controller; // Biasanya tidak diperlukan di file routes
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\MahasiswaApiController;
-use App\Http\Controllers\Api\DosenApiController;
-use App\Http\Controllers\Api\FrsApiController;
-use App\Http\Controllers\Api\JadwalApiController;
-use App\Http\Controllers\Api\DetailFrsApiController;
-use App\Http\Controllers\Api\UserApiController;
-use App\Http\Controllers\Api\NilaiApiController;
+// Mengelompokkan 'use' statement agar lebih rapi
+use App\Http\Controllers\API\MahasiswaApiController; // Asumsi namespace API, bukan Api
+use App\Http\Controllers\API\DosenApiController;
+use App\Http\Controllers\API\FrsApiController;
+use App\Http\Controllers\API\JadwalApiController;
+use App\Http\Controllers\API\DetailFrsApiController;
+use App\Http\Controllers\API\UserApiController;
+use App\Http\Controllers\API\NilaiApiController;
+use App\Http\Controllers\API\ProfileApiController; // Controller profil yang baru
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group. Make something great!
+|
+*/
 
+// Rute publik untuk login
+Route::post('/login', [UserApiController::class, 'login']);
 
-Route::apiResource('mahasiswa', MahasiswaApiController::class);
-Route::apiResource('dosen', DosenApiController::class);
-Route::apiResource('frs', FrsApiController::class);
-Route::apiResource('jadwal', JadwalApiController::class);
-Route::apiResource('detail-frs', DetailFrsApiController::class);
-Route::apiResource('user', UserApiController::class);
-Route::apiResource('nilai', NilaiApiController::class);
+// Grup rute yang memerlukan autentikasi Sanctum
+Route::middleware('auth:sanctum')->group(function () {
+    // Endpoint untuk mendapatkan detail user yang sedang login
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Rute untuk ProfileApiController
+    Route::get('/profile', [ProfileApiController::class, 'show'])->name('api.profile.show');
+    Route::put('/profile/password', [ProfileApiController::class, 'updatePassword'])->name('api.profile.updatePassword');
+
+    // Rute untuk DosenApiController
+    Route::get('/dosen', [DosenApiController::class, 'index'])->name('api.dosen.index');
+    Route::get('/dosen/{dosen}', [DosenApiController::class, 'show'])->name('api.dosen.show');
+
+    // Rute untuk NilaiApiController
+    // Endpoint untuk mahasiswa melihat nilainya sendiri
+    Route::get('/mahasiswa/nilai', [NilaiApiController::class, 'getNilaiMahasiswa'])->name('api.mahasiswa.nilai');
+
+    // Endpoint untuk dosen
+    Route::get('/dosen/nilai', [NilaiApiController::class, 'index'])->name('api.dosen.nilai.index'); // List matkul & mahasiswa+nilai per matkul
+    Route::post('/dosen/nilai', [NilaiApiController::class, 'store'])->name('api.dosen.nilai.store'); // Input nilai (mungkin batch)
+    Route::get('/dosen/nilai/mahasiswa/{id_mahasiswa}', [NilaiApiController::class, 'show'])->name('api.dosen.nilai.show'); // Detail nilai mhs utk edit (butuh id_matkul di query)
+    Route::put('/dosen/nilai/mahasiswa/{id_mahasiswa}', [NilaiApiController::class, 'update'])->name('api.dosen.nilai.update'); // Update nilai UTS/UAS
+    Route::delete('/dosen/nilai/{id_nilai}', [NilaiApiController::class, 'destroy'])->name('api.dosen.nilai.destroy'); // Hapus entri nilai tertentu
+
+    // Endpoint statistik (sudah ada di controller-mu, bisa diakses dosen/mahasiswa)
+    Route::get('/nilai/statistik', [NilaiApiController::class, 'getStatistics'])->name('api.nilai.statistik');
+    Route::post('/logout', [UserApiController::class, 'logout'])->name('api.logout');
+
+    Route::apiResource('berita', BeritaApiController::class);
+    Route::get('/mahasiswa/jadwal', [JadwalApiController::class, 'index']);
+    Route::get('/mahasiswa/jadwal/{id_jadwal}', [JadwalApiController::class, 'show']);
+
+    Route::get('/mahasiswa/frs', [DetailFrsApiController::class, 'getFrsDetails'])->name('api.mahasiswa.frs.details');
+    Route::post('/mahasiswa/frs/courses', [DetailFrsApiController::class, 'addCourses'])->name('api.mahasiswa.frs.addCourses');
+    Route::delete('/mahasiswa/frs/courses/{id_detail_frs}', [DetailFrsApiController::class, 'removeCourse'])->name('api.mahasiswa.frs.removeCourse');
+
+    // apiResource untuk UserApiController (jika CRUD user memerlukan auth)
+    // Jika 'store' (register) user tidak perlu auth, pindahkan rute spesifik itu keluar grup.
+    // Namun, biasanya UserApiController untuk manajemen user (index, show, update, delete) memerlukan auth.
+    Route::apiResource('users', UserApiController::class)->except(['store']); // Contoh: store (register) mungkin publik
+    // Jika UserApiController Anda HANYA untuk login dan info user terautentikasi,
+    // maka /user di atas sudah cukup dan apiResource 'user' mungkin tidak diperlukan di sini.
+    // Sesuaikan berdasarkan fungsionalitas UserApiController Anda.
+
+    // Rute apiResource lainnya yang memerlukan autentikasi
+    // Route::apiResource('mahasiswa', MahasiswaApiController::class);
+    // Route::apiResource('frs', FrsApiController::class);
+    // Route::apiResource('detail-frs', DetailFrsApiController::class);
+    // Route::apiResource('nilai', NilaiApiController::class);
+
+    // Anda mungkin ingin menambahkan rute logout di sini juga
+    // Route::post('/logout', [UserApiController::class, 'logout'])->name('api.logout');
+});
+
+// Jika ada rute UserApiController yang publik (misalnya, register user baru tanpa login)
+// Route::post('/users', [UserApiController::class, 'store'])->name('api.users.store.public'); // Contoh

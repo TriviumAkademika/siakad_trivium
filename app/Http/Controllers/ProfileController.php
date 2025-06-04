@@ -2,59 +2,62 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\UpdatePasswordRequest;
+// No need to import Mahasiswa or Dosen models if accessed via User relationship
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; // Keep if used elsewhere, not directly in show/updatePassword with $request->user()
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Display the user's profile form with role-specific data and password change form.
      */
-    public function edit(Request $request): View
+    public function show(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
+        // Use the correct relationship names: 'mahasiswa' and 'dosen'
+        // Eager load 'mahasiswa.kelas' if the user is a mahasiswa
+        $user = $request->user();
+        $role = $user->getRoleAttribute(); // Use the accessor from your User model
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+        if ($role === 'mahasiswa') {
+            $user->loadMissing('mahasiswa.kelas');
+        } elseif ($role === 'dosen') {
+            $user->loadMissing('dosen');
+        }
+        // If there are other roles or general user info to load, you can add them.
+        // For instance, if 'name' and 'email' are directly on $user and always needed, no extra load is required for those.
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $profileData = null;
+
+        if ($role === 'mahasiswa' && $user->mahasiswa) { // Use 'mahasiswa'
+            $profileData = $user->mahasiswa;           // Use 'mahasiswa'
+        } elseif ($role === 'dosen' && $user->dosen) {  // Use 'dosen'
+            $profileData = $user->dosen;              // Use 'dosen'
         }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return view('profile.show', [
+            'user' => $user,
+            'profileData' => $profileData,
+            'role' => $role,
+            'status' => session('status'), // For password update status
+        ]);
     }
 
     /**
-     * Delete the user's account.
+     * Update the user's password.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function updatePassword(UpdatePasswordRequest $request): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+        $validated = $request->validated();
+
+        $request->user()->update([
+            'password' => Hash::make($validated['password']),
         ]);
 
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('profile.show')->with('success', 'Password berhasil diperbarui.'); // Changed to 'success' for toast
     }
 }
