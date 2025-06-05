@@ -55,6 +55,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/mahasiswa/jadwal', [JadwalApiController::class, 'index']);
     Route::get('/mahasiswa/jadwal/{id_jadwal}', [JadwalApiController::class, 'show']);
 
+    Route::get('/mahasiswa/frs', [DetailFrsApiController::class, 'getFrsDetails'])->name('api.mahasiswa.frs.details');
+    Route::post('/mahasiswa/frs/courses', [DetailFrsApiController::class, 'addCourses'])->name('api.mahasiswa.frs.addCourses');
+    Route::delete('/mahasiswa/frs/courses/{id_detail_frs}', [DetailFrsApiController::class, 'removeCourse'])->name('api.mahasiswa.frs.removeCourse');
+
     // apiResource untuk UserApiController (jika CRUD user memerlukan auth)
     // Jika 'store' (register) user tidak perlu auth, pindahkan rute spesifik itu keluar grup.
     // Namun, biasanya UserApiController untuk manajemen user (index, show, update, delete) memerlukan auth.
@@ -64,10 +68,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Sesuaikan berdasarkan fungsionalitas UserApiController Anda.
 
     // Rute apiResource lainnya yang memerlukan autentikasi
-    Route::apiResource('mahasiswa', MahasiswaApiController::class);
-    Route::apiResource('frs', FrsApiController::class);
-    Route::apiResource('detail-frs', DetailFrsApiController::class);
-    Route::apiResource('nilai', NilaiApiController::class);
+    // Route::apiResource('mahasiswa', MahasiswaApiController::class);
+    // Route::apiResource('frs', FrsApiController::class);
+    // Route::apiResource('detail-frs', DetailFrsApiController::class);
+    // Route::apiResource('nilai', NilaiApiController::class);
 
     // Anda mungkin ingin menambahkan rute logout di sini juga
     // Route::post('/logout', [UserApiController::class, 'logout'])->name('api.logout');

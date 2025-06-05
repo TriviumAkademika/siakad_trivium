@@ -19,7 +19,7 @@
 
                     {{-- Mahasiswa --}}
                     <x-form.dropdown-field label="Mahasiswa" name="id_mahasiswa" :options="$mahasiswa" valueField="id_mahasiswa"
-                        labelFields="nama" />
+                        labelFields="nama" defaultOption="Pilih Mahasiswa"/>
 
                     {{-- Tahun Ajaran --}}
                     <x-form.dropdown-field label="Tahun Ajaran" name="tahun_ajaran" :options="$tahunAjaranList" :selected="old('tahun_ajaran', '2024/2025')" />
