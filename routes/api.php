@@ -49,15 +49,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Endpoint untuk mahasiswa melihat nilainya sendiri
     Route::get('/mahasiswa/nilai', [NilaiApiController::class, 'getNilaiMahasiswa'])->name('api.mahasiswa.nilai');
 
-    // Endpoint untuk dosen
-    Route::get('/dosen/nilai', [NilaiApiController::class, 'index'])->name('api.dosen.nilai.index'); // List matkul & mahasiswa+nilai per matkul
-    Route::post('/dosen/nilai', [NilaiApiController::class, 'store'])->name('api.dosen.nilai.store'); // Input nilai (mungkin batch)
-    Route::get('/dosen/nilai/mahasiswa/{id_mahasiswa}', [NilaiApiController::class, 'show'])->name('api.dosen.nilai.show'); // Detail nilai mhs utk edit (butuh id_matkul di query)
-    Route::put('/dosen/nilai/mahasiswa/{id_mahasiswa}', [NilaiApiController::class, 'update'])->name('api.dosen.nilai.update'); // Update nilai UTS/UAS
-    Route::delete('/dosen/nilai/{id_nilai}', [NilaiApiController::class, 'destroy'])->name('api.dosen.nilai.destroy'); // Hapus entri nilai tertentu
-
-    // Endpoint statistik (sudah ada di controller-mu, bisa diakses dosen/mahasiswa)
-    Route::get('/nilai/statistik', [NilaiApiController::class, 'getStatistics'])->name('api.nilai.statistik');
     Route::post('/logout', [UserApiController::class, 'logout'])->name('api.logout');
 
     Route::apiResource('berita', BeritaApiController::class);
