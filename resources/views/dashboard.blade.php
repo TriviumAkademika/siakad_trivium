@@ -33,52 +33,109 @@
                         <div class="flex flex-col w-full space-y-2">
                             <h3 class="text-xl text-hitam">Jadwal Kuliah</h3>
                             <hr class="border-abu w-full">
-                            <div class="flex flex-col w-full rounded-2xl space-y-2">
+                            <div class="flex flex-col w-full rounded-2xl space-y-4">
+
+                                {{-- LOGIKA JADWAL UNTUK DOSEN --}}
                                 @if (auth()->user()->role === 'dosen')
-                                    {{-- Card Jadwal Kuliah Statis --}}
-                                    <div class="flex flex-col items-center p-8 rounded-2xl space-y-2 bg-brand-50">
-                                        <i class="ph ph-calendar-x text-6xl text-hitam"></i>
-                                        <h3 class="text-lg font-medium text-gray-900">
-                                            Belum ada jadwal mengajar
-                                        </h3>
-                                        <p class="text-hitam">
-                                            Anda belum memiliki jadwal mengajar yang terdaftar.
-                                        </p>
-                                    </div>
+                                    @php
+                                        $dosen = auth()->user()->dosen;
+                                        $jadwalDosen = $dosen
+                                            ? \App\Models\Jadwal::with(['matkul', 'ruangan', 'waktu', 'kelas'])
+                                                ->where('id_dosen', $dosen->id_dosen)
+                                                ->get()
+                                                ->groupBy('hari')
+                                            : collect();
+                                    @endphp
+
+                                    @if ($jadwalDosen->isEmpty())
+                                        <div class="flex flex-col items-center p-8 rounded-2xl space-y-2 bg-brand-50">
+                                            <i class="ph ph-calendar-x text-6xl text-hitam"></i>
+                                            <h3 class="text-lg font-medium text-gray-900">Belum ada jadwal mengajar</h3>
+                                            <p class="text-hitam">Anda belum memiliki jadwal mengajar yang terdaftar.</p>
+                                        </div>
+                                    @else
+                                        @foreach ($jadwalDosen as $hari => $daftarJadwal)
+                                            <div class="flex flex-col p-4 rounded-2xl space-y-3 bg-brand-50 mb-2">
+                                                <h4 class="text-base text-hitam font-semibold">{{ ucfirst($hari) }}</h4>
+                                                @foreach ($daftarJadwal as $jadwal)
+                                                    <div
+                                                        class="flex flex-row justify-between items-center border-b border-gray-100 pb-2 last:border-none last:pb-0">
+                                                        <div class="flex flex-col pl-4 border-l-4 border-biru">
+                                                            <h4 class="text-base text-hitam font-medium">
+                                                                {{ $jadwal->matkul->nama_matkul ?? ($jadwal->matkul->nama ?? '-') }}
+                                                            </h4>
+                                                            <p class="text-xs text-gray-500">
+                                                                Kelas:
+                                                                @if (isset($jadwal->kelas))
+                                                                    {{ $jadwal->kelas->prodi }} -
+                                                                    {{ $jadwal->kelas->paralel }}
+                                                                @else
+                                                                    -
+                                                                @endif
+                                                            </p>
+                                                        </div>
+                                                        <div
+                                                            class="flex flex-col w-32 p-2 rounded-lg items-center justify-center bg-brand-200">
+                                                            <p class="text-xs text-hitam font-semibold">
+                                                                {{ $jadwal->ruangan->nama_ruangan ?? ($jadwal->id_ruangan ?? '-') }}
+                                                            </p>
+                                                            <p class="text-xs text-hitam">
+                                                                {{ $jadwal->waktu->jam_mulai ?? '' }} -
+                                                                {{ $jadwal->waktu->jam_selesai ?? '' }}</p>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 @endif
+
+                                {{-- LOGIKA JADWAL UNTUK MAHASISWA --}}
+                                {{-- LOGIKA JADWAL UNTUK MAHASISWA --}}
                                 @if (auth()->user()->role === 'mahasiswa')
-                                    {{-- Card Jadwal Kuliah Statis --}}
-                                    {{-- Senin --}}
-                                    <div class="flex flex-col p-4 rounded-2xl space-y-2 bg-brand-50">
-                                        <h4 class="text-base text-hitam font-semibold">Senin</h4>
-                                        {{-- Mata Kuliah 1 --}}
-                                        <div class="flex flex-row justify-between">
-                                            <div class="flex flex-col pl-4 border-biru">
-                                                <h4 class="text-base text-hitam">Workshop Desain Pengalaman Pengguna</h4>
-                                                <p class="text-xs text-hitam">Desy Intan Permatasari</p>
-                                            </div>
-                                            <div
-                                                class="flex flex-col w-24 p-2 rounded-lg items-center justify-center bg-brand-200">
-                                                <p class="text-xs text-hitam">C106</p>
-                                                <p class="text-xs text-hitam">09:40-12.10</p>
-                                            </div>
+                                    {{-- Kita langsung pakai $jadwalMahasiswa yang dikirim dari DashboardController --}}
+                                    @if (!isset($jadwalMahasiswa) || $jadwalMahasiswa->isEmpty())
+                                        <div class="flex flex-col items-center p-8 rounded-2xl space-y-2 bg-brand-50">
+                                            <i class="ph ph-calendar-x text-6xl text-hitam"></i>
+                                            <h3 class="text-lg font-medium text-gray-900">Belum ada jadwal kuliah</h3>
+                                            <p class="text-hitam">Jadwal kuliah kosong atau FRS belum di-approve oleh Dosen
+                                                Wali.</p>
                                         </div>
-                                        {{-- Mata Kuliah 2 --}}
-                                        <div class="flex flex-row justify-between">
-                                            <div class="flex flex-col pl-4 border-biru">
-                                                <h4 class="text-base text-hitam">Workshop Pemrograman Perangkat Bergerak
-                                                </h4>
-                                                <p class="text-xs text-hitam">Prasetyo Wibowo</p>
-                                                <p class="text-xs text-hitam">Fadilah Fahrul Hardiansyah</p>
+                                    @else
+                                        {{-- Looping Hari --}}
+                                        @foreach ($jadwalMahasiswa as $hari => $daftarJadwal)
+                                            <div class="flex flex-col p-4 rounded-2xl space-y-3 bg-brand-50 mb-4">
+                                                <h4 class="text-base text-hitam font-semibold">{{ ucfirst($hari) }}</h4>
+
+                                                {{-- Looping Jadwal pada hari tersebut --}}
+                                                @foreach ($daftarJadwal as $jadwal)
+                                                    <div
+                                                        class="flex flex-row justify-between items-center border-b border-gray-100 pb-2 last:border-none last:pb-0">
+                                                        <div class="flex flex-col pl-4 border-l-4 border-biru">
+                                                            <h4 class="text-base text-hitam font-medium">
+                                                                {{ $jadwal->matkul->nama_matkul ?? ($jadwal->matkul->nama ?? '-') }}
+                                                            </h4>
+                                                            <p class="text-xs text-gray-500">
+                                                                {{ $jadwal->dosen->nama_dosen ?? 'Dosen Tidak Diketahui' }}
+                                                            </p>
+                                                        </div>
+                                                        <div
+                                                            class="flex flex-col w-32 p-2 rounded-lg items-center justify-center bg-brand-200">
+                                                            <p class="text-xs text-hitam font-semibold">
+                                                                {{ $jadwal->ruangan->nama_ruangan ?? ($jadwal->id_ruangan ?? '-') }}
+                                                            </p>
+                                                            <p class="text-xs text-hitam">
+                                                                {{ $jadwal->waktu->jam_mulai ?? '' }} -
+                                                                {{ $jadwal->waktu->jam_selesai ?? '' }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                            <div
-                                                class="flex flex-col w-24 p-2 rounded-lg items-center justify-center bg-brand-200">
-                                                <p class="text-xs text-hitam">C206</p>
-                                                <p class="text-xs text-hitam">13:00 - 15:30</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        @endforeach
+                                    @endif
                                 @endif
+
                             </div>
                         </div>
                     </div>
@@ -102,15 +159,12 @@
                             <div class="text-sm text-gray-500">Data terkini</div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-                            <!-- Card User -->
                             <x-card.stat-card title="Total User" value="{{ $totalUser }}" description="User Aktif"
                                 variant="gradient" />
 
-                            <!-- Card Mahasiswa -->
                             <x-card.stat-card title="Total Mahasiswa" value="{{ $totalMahasiswa }}"
                                 description="Mahasiswa Aktif" variant="gradient" />
 
-                            <!-- Card Dosen -->
                             <x-card.stat-card title="Total Dosen" value="{{ $totalDosen }}" description="Dosen Aktif"
                                 variant="gradient" />
                         </div>

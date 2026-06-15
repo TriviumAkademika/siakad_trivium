@@ -11,6 +11,8 @@ use App\Models\Kelas;
 use App\Models\Waktu;
 use App\Models\Matkul;
 use App\Models\Jadwal;
+use App\Models\DetailFrs; // 1. PENTING: Tambahkan import ini agar tidak Class Not Found
+use Illuminate\Support\Facades\Auth; // 2. Tambahkan ini untuk mendeteksi user login
 
 class DashboardController extends Controller
 {
@@ -19,16 +21,51 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Hitung semua statistik untuk admin
+        // --- LOGIKA UNTUK ADMIN (STATISTIK) ---
         $totalMahasiswa = Mahasiswa::count();
         $totalDosen = Dosen::count();
         $totalUser = User::count();
-        $totalKelas = Kelas::count(); // sesuaikan dengan model kamu
+        $totalKelas = Kelas::count();
         $totalRuangan = Ruangan::count();
-        $totalWaktu = Waktu::count(); // sesuaikan dengan model kamu
+        $totalWaktu = Waktu::count();
         $totalMataKuliah = Matkul::count();
         $totalJadwal = Jadwal::count();
 
+        // --- LOGIKA BARU: JADWAL MAHASISWA (Mencegah Error SQLSTATE Unknown Column) ---
+        // Kita ambil ID mahasiswa dari user yang sedang login saat ini
+        $id_mahasiswa = Auth::user()->id_mahasiswa ?? null;
+
+        $jadwalMahasiswa = collect(); // Default berupa collection kosong jika tidak login/bukan mahasiswa
+
+        if ($id_mahasiswa) {
+            // Kita langsung query ke Model Jadwal yang dimiliki oleh mahasiswa ini lewat DetailFrs
+            $jadwalMahasiswa = Jadwal::whereHas('detailFrs.frs', function ($query) use ($id_mahasiswa) {
+                $query->where('id_mahasiswa', $id_mahasiswa);
+            })
+                // Pastikan status di detail_frs dipasang filter jika diperlukan, contoh:
+                ->whereHas('detailFrs', function ($query) {
+                    $query->where('status', true); // mengambil detail_frs yang disetujui/aktif
+                })
+                ->with(['matkul', 'dosen', 'ruangan', 'waktu', 'kelas'])
+                ->get()
+                ->groupBy('hari'); // Langsung group berdasarkan hari di sini
+        }
+
+
+        $user = Auth::user();
+        $jadwalDosen = collect();
+
+        if ($user->role === 'dosen') {
+            $dosen = $user->dosen;
+            if ($dosen) {
+                $jadwalDosen = Jadwal::with(['matkul', 'ruangan', 'waktu', 'kelas']) // <-- Pastikan 'kelas' ada di sini
+                    ->where('id_dosen', $dosen->id_dosen)
+                    ->get()
+                    ->groupBy('hari');
+            }
+        }
+
+        // Kirim semua variabel ke view dashboard
         return view('dashboard', compact(
             'totalMahasiswa',
             'totalDosen',
@@ -37,27 +74,10 @@ class DashboardController extends Controller
             'totalRuangan',
             'totalWaktu',
             'totalMataKuliah',
-            'totalJadwal'
+            'totalJadwal',
+            'jadwalMahasiswa',
+            'jadwalDosen'
         ));
-    }
-    // $mahasiswa = Mahasiswa::first();
-    // return view('dashboard', compact('mahasiswa'));
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -69,27 +89,5 @@ class DashboardController extends Controller
         return view('dashboard', compact('mahasiswa'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    // method create, store, edit, update, destroy dikosongkan seperti bawaanmu...
 }

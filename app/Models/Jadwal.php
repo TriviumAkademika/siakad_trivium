@@ -52,4 +52,10 @@ class Jadwal extends Model
     {
         return $this->belongsTo(Ruangan::class, 'id_ruangan');
     }
+    
+    public function detailFrs()
+    {
+        // Asumsi di tabel 'detail_frs' ada kolom 'id_jadwal' sebagai foreign key
+        return $this->hasMany(DetailFrs::class, 'id_jadwal');
+    }
 }
